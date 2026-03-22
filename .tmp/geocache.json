@@ -1,0 +1,626 @@
+{
+  "Mu Ko Ang Thong National Park": [
+    9.6116453,
+    99.6896068
+  ],
+  "Khao Yai National Park": [
+    14.3259751,
+    101.5113421
+  ],
+  "Mu Ko Similan National Park": [
+    8.7786069,
+    97.7228556
+  ],
+  "Khao Laem National Park": [
+    14.9127475,
+    98.528103
+  ],
+  "Mu Ko Phetra National Park": [
+    6.9531588,
+    99.5949743
+  ],
+  "Mu Ko Lanta National Park": [
+    7.4462559,
+    99.0239386
+  ],
+  "Than Bok Khorani National Park": [
+    8.2475174,
+    98.6813116
+  ],
+  "Mu Ko Chumphon National Park": [
+    10.3047372,
+    99.2753785
+  ],
+  "Laem Son National Park": [
+    9.4798142,
+    98.4135144
+  ],
+  "Phu Hin Rong Kla National Park": [
+    17.0013156,
+    101.0262845
+  ],
+  "Mu Ko Ranong National Park": [
+    9.7937118,
+    98.5112758
+  ],
+  "Namtok Ngao National Park": [
+    9.9813319,
+    98.7925008
+  ],
+  "Khuean Srinagarindra National Park": [
+    14.7488111,
+    99.0284281
+  ],
+  "Lam Khlong Ngu National Park": [
+    14.8452968,
+    98.8380206
+  ],
+  "Chaloem Rattanakosin National Park": [
+    14.6749741,
+    99.2763609
+  ],
+  "Thong Pha Phum National Park": [
+    14.877969,
+    98.4491091
+  ],
+  "Sai Yok National Park": [
+    14.3760208,
+    98.7961252
+  ],
+  "Thap Lan National Park": [
+    14.347209,
+    102.256587
+  ],
+  "Doi Inthanon National Park": [
+    18.5327878,
+    98.5461701
+  ],
+  "Khao Khitchakut National Park": [
+    12.8428032,
+    102.1579996
+  ],
+  "Mu Ko Chang National Park": [
+    11.9677532,
+    102.3799365
+  ],
+  "Mae Moei National Park": [
+    17.4015078,
+    98.125394
+  ],
+  "Khao Kho National Park": [
+    16.7078613,
+    100.9999489
+  ],
+  "Doi Pha Hom Pok National Park": [
+    19.9225317,
+    99.1848848
+  ],
+  "Huai Nam Dang National Park": [
+    19.4680883,
+    98.543472
+  ],
+  "Salawin National Park": [
+    18.177518,
+    97.7529155
+  ],
+  "Doi Luang National Park": [
+    19.3777134,
+    99.661175
+  ],
+  "Doi Phu Kha National Park": [
+    19.1069575,
+    101.0878299
+  ],
+  "Khun Chae National Park": [
+    19.1287717,
+    99.3952339
+  ],
+  "Lam Nam Nan National Park": [
+    17.9332031,
+    100.4582329
+  ],
+  "Mae Puem National Park": [
+    19.5605535,
+    99.8634039
+  ],
+  "Si Satchanalai National Park": [
+    17.6083965,
+    99.4746619
+  ],
+  "Thung Salaeng Luang National Park": [
+    16.6867882,
+    100.8018194
+  ],
+  "Khun Khan National Park": [
+    18.9248659,
+    98.6303358
+  ],
+  "Mae Wang National Park": [
+    18.5417,
+    98.694913
+  ],
+  "Khun Phawo National Park": [
+    16.9145768,
+    98.6876305
+  ],
+  "Op Luang National Park": [
+    18.2388866,
+    98.5284161
+  ],
+  "Chae Son National Park": [
+    18.8369198,
+    99.4651135
+  ],
+  "Doi Khun Tan National Park": [
+    18.4772229,
+    99.3059971
+  ],
+  "Pha Daeng National Park": [
+    19.6384197,
+    98.8765398
+  ],
+  "Si Lanna National Park": [
+    19.2960726,
+    99.1534233
+  ],
+  "Mae Ping National Park": [
+    17.5942266,
+    98.8028237
+  ],
+  "Mae Wa National Park": [
+    17.4259064,
+    99.271266
+  ],
+  "Doi Phu Nang National Park": [
+    19.0197663,
+    100.2541402
+  ],
+  "Phu Sang National Park": [
+    19.6010586,
+    100.3956582
+  ],
+  "Mae Wong National Park": [
+    15.8866198,
+    99.2230732
+  ],
+  "Khlong Lan National Park": [
+    16.1874285,
+    99.2083878
+  ],
+  "Khlong Wang Chao National Park": [
+    16.3337178,
+    99.1312951
+  ],
+  "Khun Nan National Park": [
+    19.1189302,
+    101.2560492
+  ],
+  "Mae Charim National Park": [
+    18.5821455,
+    101.1131582
+  ],
+  "Mae Yom National Park": [
+    18.7196782,
+    100.231358
+  ],
+  "Nam Nao National Park": [
+    16.730652,
+    101.5526548
+  ],
+  "Phu Soi Dao National Park": [
+    17.8363621,
+    101.0289894
+  ],
+  "Ramkhamhaeng National Park": [
+    16.8890471,
+    99.6595985
+  ],
+  "Si Nan National Park": [
+    18.2661722,
+    100.8551761
+  ],
+  "Tat Mok National Park": [
+    16.4723488,
+    101.3748456
+  ],
+  "Ton Sak Yai National Park": [
+    17.5615789,
+    100.5668965
+  ],
+  "Wiang Kosai National Park": [
+    17.8900461,
+    99.4936813
+  ],
+  "Khao Phra Wihan National Park": [
+    14.4238243,
+    104.8265308
+  ],
+  "Nam Phong National Park": [
+    16.410787,
+    102.470584
+  ],
+  "Pa Hin Ngam National Park": [
+    15.5509677,
+    101.4443482
+  ],
+  "Pha Taem National Park": [
+    15.5758415,
+    105.5510676
+  ],
+  "Phu Kradueng National Park": [
+    16.888506,
+    101.7667183
+  ],
+  "Phu Pha Lek National Park": [
+    17.0544247,
+    103.6282603
+  ],
+  "Phu Pha Yon National Park": [
+    16.8605946,
+    104.2766314
+  ],
+  "Phu Sa Dok Bua National Park": [
+    16.195803,
+    104.7051283
+  ],
+  "Phu Suan Sai National Park": [
+    17.524222,
+    100.9757714
+  ],
+  "Tat Ton National Park": [
+    15.9817656,
+    102.0280442
+  ],
+  "Kaeng Krachan National Park": [
+    12.8500858,
+    99.3944598
+  ],
+  "Ta Phraya National Park": [
+    14.2013467,
+    102.8622382
+  ],
+  "Pang Sida National Park": [
+    14.0749673,
+    102.2912764
+  ],
+  "Doi Chong National Park": [
+    17.7827635,
+    99.1603758
+  ],
+  "Mae Takhrai National Park": [
+    18.8037981,
+    99.2315603
+  ],
+  "Hat Chao Mai National Park": [
+    7.4118949,
+    99.3533919
+  ],
+  "Thale Ban National Park": [
+    6.6178137,
+    100.154457
+  ],
+  "Khao Nam Khang National Park": [
+    6.5633995,
+    100.5923222
+  ],
+  "Bang Lang National Park": [
+    5.9817514,
+    101.2805324
+  ],
+  "Namtok Si Khit National Park": [
+    8.9831071,
+    99.6924305
+  ],
+  "Tai Rom Yen National Park": [
+    8.7843439,
+    99.4864797
+  ],
+  "Khao Nan National Park": [
+    8.8153379,
+    99.6646264
+  ],
+  "Khao Luang National Park": [
+    8.5533869,
+    99.7402381
+  ],
+  "Namtok Yong National Park": [
+    8.2516594,
+    99.7376632
+  ],
+  "Khao Phanom Bencha National Park": [
+    8.2725537,
+    98.9257487
+  ],
+  "Ao Phang-nga National Park": [
+    8.2401148,
+    98.5354923
+  ],
+  "Si Phang-nga National Park": [
+    9.1162835,
+    98.4602314
+  ],
+  "Khlong Phanom National Park": [
+    8.7645372,
+    98.6330246
+  ],
+  "Khao Sok National Park": [
+    9.0686887,
+    98.637592
+  ],
+  "Kaeng Krung National Park": [
+    9.5065855,
+    98.834896
+  ],
+  "Hat Wanakon National Park": [
+    11.6490097,
+    99.7293802
+  ],
+  "Namtok Huai Yang National Park": [
+    11.5601056,
+    99.5075024
+  ],
+  "Chaloem Phra Kiat Thai Prachan National Park": [
+    13.3211261,
+    99.5028021
+  ],
+  "Kui Buri National Park": [
+    12.0941977,
+    99.6205653
+  ],
+  "Erawan National Park": [
+    14.348635,
+    99.0753656
+  ],
+  "Phu Toei National Park": [
+    14.9256946,
+    99.4047172
+  ],
+  "Namtok Mae Surin National Park": [
+    19.1231977,
+    98.0306614
+  ],
+  "Namtok Chat Trakan National Park": [
+    17.2975271,
+    100.775041
+  ],
+  "Phu Pha Man National Park": [
+    16.7407047,
+    101.8541331
+  ],
+  "Sai Thong National Park": [
+    15.8672318,
+    101.5383981
+  ],
+  "Namtok Chet Sao Noi National Park": [
+    14.7649439,
+    101.167726
+  ],
+  "Khao Sip Ha Chan National Park": [
+    13.1768996,
+    101.9732523
+  ],
+  "Namtok Khlong Kaeo National Park": [
+    12.5833423,
+    102.6240188
+  ],
+  "Kaeng Tana National Park": [
+    15.2782875,
+    105.528072
+  ],
+  "Phu Phan National Park": [
+    16.9956954,
+    103.8921765
+  ],
+  "Tham Sakoen National Park": [
+    19.4535389,
+    100.5506764
+  ],
+  "Khun Sathan National Park": [
+    18.2152687,
+    100.5204168
+  ],
+  "Namtok Sam Lan National Park": [
+    14.7,
+    100.88
+  ],
+  "Jedkod Pongkonsao National Park": [
+    14.72,
+    101.0
+  ],
+  "Khao Laem Ya Mu Ko Samet National Park": [
+    12.57,
+    101.65
+  ],
+  "Namtok Phlio National Park": [
+    12.65,
+    102.12
+  ],
+  "Khao Chamao Khao Wong National Park": [
+    12.95,
+    101.87
+  ],
+  "Khao Sam Roi Yot National Park": [
+    12.17,
+    99.97
+  ],
+  "Ao Sayam National Park": [
+    10.5,
+    99.2
+  ],
+  "Than Sadet Ko Pha-ngan National Park": [
+    9.75,
+    100.0
+  ],
+  "Lam Nam Kraburi National Park": [
+    10.5,
+    98.8
+  ],
+  "Hat Noppharat Thara Mu Ko Phi Phi National Park": [
+    8.1,
+    98.7
+  ],
+  "Mu Ko Surin National Park": [
+    9.5,
+    97.9
+  ],
+  "Sirinat National Park": [
+    8.15,
+    98.28
+  ],
+  "Khao Lampi Hat Thai Mueang National Park": [
+    8.4,
+    98.4
+  ],
+  "Hat Khanom Mu Ko Thale Tai National Park": [
+    9.1,
+    99.8
+  ],
+  "Khao Lak Lam Ru National Park": [
+    8.7,
+    98.3
+  ],
+  "Khao Pu Khao Ya National Park": [
+    7.5,
+    99.9
+  ],
+  "San Kala Khiri National Park": [
+    6.5,
+    100.7
+  ],
+  "Tarutao National Park": [
+    6.6,
+    99.6
+  ],
+  "Namtok Sai Khao National Park": [
+    12.3,
+    102.0
+  ],
+  "Budo Su-ngai Padi National Park": [
+    6.0,
+    101.7
+  ],
+  "Ao Manao Khao Tanyong National Park": [
+    5.8,
+    101.7
+  ],
+  "Namtok Sipo National Park": [
+    6.0,
+    101.1
+  ],
+  "Phu Laenkha National Park": [
+    16.3,
+    101.8
+  ],
+  "Phu Ruea National Park": [
+    17.5,
+    101.4
+  ],
+  "Phu Wiang National Park": [
+    16.8,
+    102.5
+  ],
+  "Phu Chong Na Yoi National Park": [
+    14.4,
+    105.3
+  ],
+  "Phu Pha Thoep National Park": [
+    16.5,
+    104.5
+  ],
+  "Na Yung Nam Som National Park": [
+    17.6,
+    103.0
+  ],
+  "Phu Langka National Park": [
+    17.7,
+    104.2
+  ],
+  "Phu Kao Phu Phan Kham National Park": [
+    17.3,
+    102.7
+  ],
+  "Phu Hin Chom That Phu Phra Bat National Park": [
+    17.7,
+    102.5
+  ],
+  "Khwae Noi National Park": [
+    15.2,
+    98.7
+  ],
+  "Doi Pha Klong National Park": [
+    17.9,
+    100.2
+  ],
+  "Nanthaburi National Park": [
+    18.6,
+    100.8
+  ],
+  "Tham Pha Tai National Park": [
+    18.3,
+    99.7
+  ],
+  "Khelang Banphot National Park": [
+    18.0,
+    99.4
+  ],
+  "Taksin Maharat National Park": [
+    16.8,
+    99.0
+  ],
+  "Namtok Pha Charoen National Park": [
+    16.5,
+    99.3
+  ],
+  "Lan Sang National Park": [
+    16.9,
+    99.1
+  ],
+  "Doi Soi Malai National Park": [
+    19.6,
+    99.8
+  ],
+  "Lam Nam Kok National Park": [
+    20.0,
+    99.8
+  ],
+  "Tham Luang Khun Nam Nang Non National Park": [
+    20.35,
+    99.85
+  ],
+  "Phu Chi Fa National Park": [
+    20.27,
+    100.4
+  ],
+  "Doi Suthep Pui National Park": [
+    18.8,
+    98.9
+  ],
+  "Doi Wiang Pha National Park": [
+    18.95,
+    100.85
+  ],
+  "Op Khan National Park": [
+    18.7,
+    98.85
+  ],
+  "Mae Tho National Park": [
+    18.4,
+    98.7
+  ],
+  "Namtok Buatong Namphu Chet Si National Park": [
+    19.2,
+    98.8
+  ],
+  "Tham Pla Namtok Pha Suea National Park": [
+    19.45,
+    97.95
+  ],
+  "Mae Ngao National Park": [
+    18.5,
+    98.1
+  ],
+  "Mae Sariang National Park": [
+    18.2,
+    98.1
+  ]
+}
