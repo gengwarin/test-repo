@@ -1,0 +1,7 @@
+service_account.json
+credentials.json
+token.json
+.env
+*.pyc
+__pycache__/
+.tmp/sheet_id.txt

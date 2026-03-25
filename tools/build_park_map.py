@@ -17,7 +17,7 @@ import urllib.parse
 from pathlib import Path
 from datetime import date
 
-TODAY = date(2026, 3, 22)
+TODAY = date.today()
 GEOCACHE_FILE = Path(".tmp/geocache.json")
 OUTPUT_FILE   = Path(".tmp/national_parks_map.html")
 
@@ -319,34 +319,34 @@ PARKS = [
         {"site":"All Phu Kradueng summit sites, Zone 1 accommodation, Wang Kwang Campsite","period":"1 Jun–30 Sep","type":"Annual"},
     ]},
     {"id":74,"name_en":"Phu Ruea National Park","name_th":"ภูเรือ","region":"R8","closures":[
-        {"site":"Namtok Huai Phai","period":"1 Nov–1 May","type":"Annual"},
+        {"site":"Namtok Huai Phai","period":"1 Nov–1 May","type":"Annual","full":True},
     ]},
     {"id":75,"name_en":"Phu Wiang National Park","name_th":"ภูเวียง","region":"R8","closures":[
         {"site":"All tourist sites and accommodations","period":"–","type":"–"},
     ]},
     {"id":76,"name_en":"Phu Pha Man National Park","name_th":"ภูผาม่าน","region":"R8","closures":[
-        {"site":"Namtok Tat Fa, Namtok Tat Yai","period":"1 Jan–30 Apr","type":"Annual"},
+        {"site":"Namtok Tat Fa, Namtok Tat Yai","period":"1 Jan–30 Apr","type":"Annual","full":True},
         {"site":"Tham Phaya Nakkarat, Tham Lai Thaeng, Tham Klet Kaeo","period":"1 Jun–30 Sep","type":"Annual"},
     ]},
     {"id":77,"name_en":"Nam Phong National Park","name_th":"น้ำพอง","region":"R8","closures":[
-        {"site":"Namtok Huai Khe","period":"1 Dec–31 Jul","type":"Annual"},
+        {"site":"Namtok Huai Khe","period":"1 Dec–31 Jul","type":"Annual","full":True},
     ]},
     {"id":78,"name_en":"Phu Suan Sai National Park","name_th":"ภูสวนทราย","region":"R8","closures":[
         {"site":"Multiple peaks, viewpoints, and caves","period":"1 Jun–30 Sep","type":"Annual"},
     ]},
     # ── R9: Ubon Ratchathani ──────────────────────────────────────────────────
     {"id":79,"name_en":"Pha Taem National Park","name_th":"ผาแต้ม","region":"R9","closures":[
-        {"site":"Pha Cha Na Dai, Namtok Huai Phok, Pa Dong Natam, multiple waterfalls","period":"1 Mar–31 May","type":"Annual"},
-        {"site":"Pha Sok","period":"1 Nov–30 Jun","type":"Annual"},
+        {"site":"Pha Cha Na Dai, Namtok Huai Phok, Pa Dong Natam, multiple waterfalls","period":"1 Mar–31 May","type":"Annual","full":True},
+        {"site":"Pha Sok","period":"1 Nov–30 Jun","type":"Annual","full":True},
     ]},
     {"id":80,"name_en":"Kaeng Tana National Park","name_th":"แก่งตะนะ","region":"R9","closures":[
-        {"site":"Namtok Tat Ton","period":"1 Jan–31 Jul","type":"Annual"},
+        {"site":"Namtok Tat Ton","period":"1 Jan–31 Jul","type":"Annual","full":True},
     ]},
     {"id":81,"name_en":"Phu Chong Na Yoi National Park","name_th":"ภูจองนายอย","region":"R9","closures":[
-        {"site":"Neon 500, Reservoir, Namtok Jaruad","period":"Indefinite","type":"Indefinite"},
+        {"site":"Neon 500, Reservoir, Namtok Jaruad","period":"Indefinite","type":"Indefinite","full":True},
     ]},
     {"id":82,"name_en":"Khao Phra Wihan National Park","name_th":"เขาพระวิหาร","region":"R9","closures":[
-        {"site":"All tourist sites and accommodations","period":"From 28 May 2025 until further notice","type":"Temporary (Thai-Cambodian military clash)"},
+        {"site":"All tourist sites and accommodations","period":"From 28 May 2025 until further notice","type":"Temporary (Thai-Cambodian military clash)","full":True},
         {"site":"Namtok Tat Hai","period":"1 Jan–30 Apr","type":"Annual"},
     ]},
     {"id":83,"name_en":"Phu Pha Thoep National Park","name_th":"ภูผาเทิบ","region":"R9","closures":[
@@ -691,53 +691,107 @@ def parse_month(s):
     return MONTH_MAP.get(s)
 
 def period_active(period):
-    """Very rough check: is this period active on 2026-03-22?"""
-    p = period.lower()
-    if any(x in p for x in ["indefinite","permanent","all year","until normal","until further","onwards","from 1 mar 2026","from 12 feb","from 28 feb","from 16 may","from 8 may","from 15 may","from 11 nov","from 29 jan"]):
-        return True
-    # Try to parse "D Mon – D Mon"
+    """Check if a closure period string is active today (TODAY)."""
     import re
-    m = re.search(r'(\d+)\s+([a-z]+)[^0-9]*(\d+)\s+([a-z]+)', p)
+    p = period.lower().strip()
+
+    if any(x in p for x in ["indefinite","permanent","all year","until normal","until further"]):
+        return True
+
+    today_m, today_d, today_y = TODAY.month, TODAY.day, TODAY.year
+    today_t = (today_y, today_m, today_d)
+
+    # "From DD Mon YYYY" or "From DD Mon [onwards]" — open-ended start date
+    m = re.search(r'from\s+(\d+)\s+([a-z]+)(?:\s+(\d{4}))?', p)
     if m:
-        sm = parse_month(m.group(2))
-        em = parse_month(m.group(4))
         sd = int(m.group(1))
-        ed = int(m.group(3))
-        if sm and em:
-            today_m, today_d = TODAY.month, TODAY.day
-            start = (sm, sd)
-            end   = (em, ed)
-            today = (today_m, today_d)
-            if start <= end:
-                return start <= today <= end
-            else:  # wraps year
-                return today >= start or today <= end
+        sm = parse_month(m.group(2))
+        if sm:
+            if m.group(3):
+                # Explicit year given — check if that date has passed
+                sy = int(m.group(3))
+                if (today_y, today_m, today_d) >= (sy, sm, sd):
+                    return True
+            else:
+                # No year given — "From DD Mon onwards" means it already started.
+                # Use this year if the date has passed, else assume it started last year.
+                sy = today_y if (today_m, today_d) >= (sm, sd) else today_y - 1
+                if (today_y, today_m, today_d) >= (sy, sm, sd):
+                    return True
+
+    # Split compound periods like "1 May–28 Feb / 1 Jul–31 Oct"
+    sub_periods = [s.strip() for s in re.split(r'\s*/\s*', p)]
+    for sp in sub_periods:
+        # "D–D Mon"  e.g. "1–31 mar"
+        m = re.match(r'(\d+)[–\-](\d+)\s+([a-z]+)$', sp)
+        if m:
+            sd, ed, mon = int(m.group(1)), int(m.group(2)), parse_month(m.group(3))
+            if mon and mon == today_m and sd <= today_d <= ed:
+                return True
+            continue
+
+        # "D Mon–D Mon"  e.g. "1 mar–31 may"
+        m = re.search(r'(\d+)\s+([a-z]+)[–\-](\d+)\s+([a-z]+)', sp)
+        if m:
+            sd, sm = int(m.group(1)), parse_month(m.group(2))
+            ed, em = int(m.group(3)), parse_month(m.group(4))
+            if sm and em:
+                start = (sm, sd)
+                end   = (em, ed)
+                today = (today_m, today_d)
+                if start <= end:
+                    if start <= today <= end:
+                        return True
+                else:  # wraps year-end e.g. Nov–Feb
+                    if today >= start or today <= end:
+                        return True
+
     return False
 
+def closure_active(c):
+    """Check if any sub-period in a compound period string is currently active."""
+    sub_periods = [s.strip() for s in c["period"].split('/')]
+    return any(period_active(sp) for sp in sub_periods)
+
 def park_status(park):
-    types = [c["type"] for c in park["closures"]]
-    if any(t in ("Temporary","Temporary (drought)","Temporary (wild elephant)","Temporary (Thai-Cambodian military clash)") for t in types):
-        active = [c for c in park["closures"] if "Temporary" in c["type"] and period_active(c["period"])]
-        if active:
-            return "temporary"
-    if any(t in ("Indefinite","Permanent") for t in types):
-        return "indefinite"
-    # Check if any Annual closure is currently active
-    for c in park["closures"]:
-        if c["type"] == "Annual" and period_active(c["period"]):
-            return "active_annual"
-    return "open"
+    """
+    ตรวจสอบสถานะอุทยานจากพื้นที่ย่อยทั้งหมด:
+    - พื้นที่ย่อยทุกแห่งปิดอยู่วันนี้  → fully_closed (🔴)
+    - บางแห่งปิด บางแห่งเปิด           → active_annual / temporary (🟡)
+    - ไม่มีแห่งไหนปิดวันนี้             → open (🟢)
+    """
+    real = [c for c in park["closures"] if c["period"] not in ("–", "", "-")]
+    if not real:
+        return "open"
+
+    closed_now, open_now, has_temp = [], [], False
+    for c in real:
+        sub = [p.strip() for p in c["period"].split('/')]
+        if any(period_active(p) for p in sub):
+            closed_now.append(c)
+            if "Temporary" in c["type"]:
+                has_temp = True
+        else:
+            open_now.append(c)
+
+    if not closed_now:
+        return "open"
+    if open_now:
+        return "temporary" if has_temp else "active_annual"
+    return "fully_closed"
 
 STATUS_COLOR = {
-    "temporary":    "#e53e3e",  # red
-    "indefinite":   "#dd6b20",  # orange
+    "fully_closed": "#e53e3e",  # red
+    "temporary":    "#d69e2e",  # yellow
+    "indefinite":   "#d69e2e",  # yellow
     "active_annual":"#d69e2e",  # yellow
     "open":         "#38a169",  # green
 }
 STATUS_LABEL = {
-    "temporary":    "Temporarily Closed",
-    "indefinite":   "Indefinitely / Permanently Closed (partial)",
-    "active_annual":"Currently in Annual Closure Period",
+    "fully_closed": "Fully Closed",
+    "temporary":    "Partially Closed (Temporary)",
+    "indefinite":   "Partially Closed (Indefinite)",
+    "active_annual":"Partially Closed (Annual)",
     "open":         "Open (no active closure today)",
 }
 

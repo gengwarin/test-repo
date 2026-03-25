@@ -6,7 +6,7 @@ const PARKS_CLOSURES = [
 "region": "Region 1 – Prachin Buri",
 "lat": 14.3259751,
 "lon": 101.5113421,
-"status": "indefinite",
+"status": "active_annual",
 "closures": [
 {
 "site": "Namtok Kaeng Hin Phoeng, Namtok Takhro",
@@ -63,7 +63,7 @@ const PARKS_CLOSURES = [
 "region": "Region 1 – Prachin Buri",
 "lat": 14.0749673,
 "lon": 102.2912764,
-"status": "indefinite",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Namtok Pha Takhian, Namtok Khwae Makha, Namtok Tham Khang Khao, Namtok Thap Thewa, Namtok Thap Sung",
@@ -132,7 +132,7 @@ const PARKS_CLOSURES = [
 "region": "Region 1 Branch – Saraburi",
 "lat": 14.72,
 "lon": 101.0,
-"status": "open",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Multiple waterfalls, reservoir, campsite",
@@ -211,7 +211,7 @@ const PARKS_CLOSURES = [
 "region": "Region 2 – Sri Racha",
 "lat": 12.95,
 "lon": 101.87,
-"status": "indefinite",
+"status": "fully_closed",
 "closures": [
 {
 "site": "All tourist sites and accommodations",
@@ -296,7 +296,7 @@ const PARKS_CLOSURES = [
 "region": "Region 3 – Ban Pong",
 "lat": 14.7488111,
 "lon": 99.0284281,
-"status": "temporary",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Zone 5 accommodation (Namtok Pha Tad)",
@@ -317,7 +317,7 @@ const PARKS_CLOSURES = [
 "region": "Region 3 – Ban Pong",
 "lat": 14.3760208,
 "lon": 98.7961252,
-"status": "indefinite",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Zone 1 accommodation (HQ)",
@@ -333,7 +333,7 @@ const PARKS_CLOSURES = [
 "region": "Region 3 – Ban Pong",
 "lat": 14.9127475,
 "lon": 98.528103,
-"status": "active_annual",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Son Nok Wua",
@@ -354,7 +354,7 @@ const PARKS_CLOSURES = [
 "region": "Region 3 – Ban Pong",
 "lat": 14.6749741,
 "lon": 99.2763609,
-"status": "temporary",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Yot Khao Kum Paeng hiking trail, Campsite",
@@ -375,7 +375,7 @@ const PARKS_CLOSURES = [
 "region": "Region 3 – Ban Pong",
 "lat": 14.877969,
 "lon": 98.4491091,
-"status": "active_annual",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Khao Chag Phueak hiking trail",
@@ -391,7 +391,7 @@ const PARKS_CLOSURES = [
 "region": "Region 3 – Ban Pong",
 "lat": 14.8452968,
 "lon": 98.8380206,
-"status": "open",
+"status": "temporary",
 "closures": [
 {
 "site": "Tham Sao Hin, Tham Nok Nang En, Zone 1 accommodation",
@@ -417,7 +417,7 @@ const PARKS_CLOSURES = [
 "region": "Region 3 – Ban Pong",
 "lat": 13.3211261,
 "lon": 99.5028021,
-"status": "active_annual",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Thai Prachan Campsite",
@@ -491,7 +491,7 @@ const PARKS_CLOSURES = [
 "region": "Region 3 Branch – Phetchaburi",
 "lat": 12.17,
 "lon": 99.97,
-"status": "indefinite",
+"status": "active_annual",
 "closures": [
 {
 "site": "Tham Sai, Tham Kaeo, Khao Daeng Viewpoint",
@@ -565,7 +565,7 @@ const PARKS_CLOSURES = [
 "region": "Region 4 – Surat Thani",
 "lat": 9.0686887,
 "lon": 98.637592,
-"status": "indefinite",
+"status": "active_annual",
 "closures": [
 {
 "site": "Bua Phut (Rafflesia) km.111",
@@ -644,7 +644,7 @@ const PARKS_CLOSURES = [
 "region": "Region 4 – Surat Thani",
 "lat": 8.7843439,
 "lon": 99.4864797,
-"status": "indefinite",
+"status": "active_annual",
 "closures": [
 {
 "site": "Multiple waterfalls, San Yen trail, Campsite",
@@ -665,7 +665,7 @@ const PARKS_CLOSURES = [
 "region": "Region 4 – Surat Thani",
 "lat": 9.9813319,
 "lon": 98.7925008,
-"status": "indefinite",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Namtok Ngao, Hot spring, Namtok Khlong Phra",
@@ -702,7 +702,7 @@ const PARKS_CLOSURES = [
 "region": "Region 4 – Surat Thani",
 "lat": 8.7645372,
 "lon": 98.6330246,
-"status": "indefinite",
+"status": "active_annual",
 "closures": [
 {
 "site": "Bua Phut (Rafflesia) Ban Saphan Nak",
@@ -739,7 +739,7 @@ const PARKS_CLOSURES = [
 "region": "Region 4 – Surat Thani",
 "lat": 10.5,
 "lon": 98.8,
-"status": "indefinite",
+"status": "active_annual",
 "closures": [
 {
 "site": "Namtok Punyaban Nature trail",
@@ -855,7 +855,7 @@ const PARKS_CLOSURES = [
 "region": "Region 5 – Nakhon Si Thammarat",
 "lat": 8.7786069,
 "lon": 97.7228556,
-"status": "indefinite",
+"status": "active_annual",
 "closures": [
 {
 "site": "Ko Similan, Ko Miang",
@@ -876,7 +876,7 @@ const PARKS_CLOSURES = [
 "region": "Region 5 – Nakhon Si Thammarat",
 "lat": 7.4462559,
 "lon": 99.0239386,
-"status": "open",
+"status": "temporary",
 "closures": [
 {
 "site": "Ko Rok, Zone 2 accommodation, Campsite",
@@ -897,7 +897,7 @@ const PARKS_CLOSURES = [
 "region": "Region 5 – Nakhon Si Thammarat",
 "lat": 8.15,
 "lon": 98.28,
-"status": "temporary",
+"status": "fully_closed",
 "closures": [
 {
 "site": "All tourist sites and accommodations",
@@ -950,7 +950,7 @@ const PARKS_CLOSURES = [
 "region": "Region 5 – Nakhon Si Thammarat",
 "lat": 8.2475174,
 "lon": 98.6813116,
-"status": "temporary",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Tourist sites and accommodations",
@@ -1035,7 +1035,7 @@ const PARKS_CLOSURES = [
 "region": "Region 5 – Nakhon Si Thammarat",
 "lat": 9.1,
 "lon": 99.8,
-"status": "indefinite",
+"status": "active_annual",
 "closures": [
 {
 "site": "Ko Wang Nok, Ko Tha Rai",
@@ -1072,7 +1072,7 @@ const PARKS_CLOSURES = [
 "region": "Region 6 – Songkhla",
 "lat": 6.5633995,
 "lon": 100.5923222,
-"status": "indefinite",
+"status": "active_annual",
 "closures": [
 {
 "site": "All tourist sites and accommodations",
@@ -1177,7 +1177,7 @@ const PARKS_CLOSURES = [
 "region": "Region 6 – Songkhla",
 "lat": 6.9531588,
 "lon": 99.5949743,
-"status": "indefinite",
+"status": "active_annual",
 "closures": [
 {
 "site": "Ko Bu Lon Maipai, Ko Bu Lonle, Ko Bu London, Ko Lao Liang Nuea & Tai, Ko Beng, Campsites",
@@ -1310,7 +1310,7 @@ const PARKS_CLOSURES = [
 "region": "Region 7 – Nakhon Ratchasima",
 "lat": 15.8672318,
 "lon": 101.5383981,
-"status": "active_annual",
+"status": "fully_closed",
 "closures": [
 {
 "site": "All tourist sites and accommodations",
@@ -1342,7 +1342,7 @@ const PARKS_CLOSURES = [
 "region": "Region 7 – Nakhon Ratchasima",
 "lat": 16.3,
 "lon": 101.8,
-"status": "active_annual",
+"status": "fully_closed",
 "closures": [
 {
 "site": "All tourist sites and accommodations",
@@ -1374,12 +1374,13 @@ const PARKS_CLOSURES = [
 "region": "Region 8 – Khon Kaen",
 "lat": 17.5,
 "lon": 101.4,
-"status": "active_annual",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Namtok Huai Phai",
 "period": "1 Nov–1 May",
-"type": "Annual"
+"type": "Annual",
+"full": true
 }
 ]
 },
@@ -1411,7 +1412,8 @@ const PARKS_CLOSURES = [
 {
 "site": "Namtok Tat Fa, Namtok Tat Yai",
 "period": "1 Jan–30 Apr",
-"type": "Annual"
+"type": "Annual",
+"full": true
 },
 {
 "site": "Tham Phaya Nakkarat, Tham Lai Thaeng, Tham Klet Kaeo",
@@ -1427,12 +1429,13 @@ const PARKS_CLOSURES = [
 "region": "Region 8 – Khon Kaen",
 "lat": 16.410787,
 "lon": 102.470584,
-"status": "active_annual",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Namtok Huai Khe",
 "period": "1 Dec–31 Jul",
-"type": "Annual"
+"type": "Annual",
+"full": true
 }
 ]
 },
@@ -1459,17 +1462,19 @@ const PARKS_CLOSURES = [
 "region": "Region 9 – Ubon Ratchathani",
 "lat": 15.5758415,
 "lon": 105.5510676,
-"status": "active_annual",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Pha Cha Na Dai, Namtok Huai Phok, Pa Dong Natam, multiple waterfalls",
 "period": "1 Mar–31 May",
-"type": "Annual"
+"type": "Annual",
+"full": true
 },
 {
 "site": "Pha Sok",
 "period": "1 Nov–30 Jun",
-"type": "Annual"
+"type": "Annual",
+"full": true
 }
 ]
 },
@@ -1480,12 +1485,13 @@ const PARKS_CLOSURES = [
 "region": "Region 9 – Ubon Ratchathani",
 "lat": 15.2782875,
 "lon": 105.528072,
-"status": "active_annual",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Namtok Tat Ton",
 "period": "1 Jan–31 Jul",
-"type": "Annual"
+"type": "Annual",
+"full": true
 }
 ]
 },
@@ -1496,12 +1502,13 @@ const PARKS_CLOSURES = [
 "region": "Region 9 – Ubon Ratchathani",
 "lat": 14.4,
 "lon": 105.3,
-"status": "indefinite",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Neon 500, Reservoir, Namtok Jaruad",
 "period": "Indefinite",
-"type": "Indefinite"
+"type": "Indefinite",
+"full": true
 }
 ]
 },
@@ -1512,12 +1519,13 @@ const PARKS_CLOSURES = [
 "region": "Region 9 – Ubon Ratchathani",
 "lat": 14.4238243,
 "lon": 104.8265308,
-"status": "temporary",
+"status": "fully_closed",
 "closures": [
 {
 "site": "All tourist sites and accommodations",
 "period": "From 28 May 2025 until further notice",
-"type": "Temporary (Thai-Cambodian military clash)"
+"type": "Temporary (Thai-Cambodian military clash)",
+"full": true
 },
 {
 "site": "Namtok Tat Hai",
@@ -1549,7 +1557,7 @@ const PARKS_CLOSURES = [
 "region": "Region 9 – Ubon Ratchathani",
 "lat": 16.195803,
 "lon": 104.7051283,
-"status": "indefinite",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Phu Mu",
@@ -1570,7 +1578,7 @@ const PARKS_CLOSURES = [
 "region": "Region 10 – Udon Thani",
 "lat": 16.9956954,
 "lon": 103.8921765,
-"status": "active_annual",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Tham Seri Thai, bridge",
@@ -1607,7 +1615,7 @@ const PARKS_CLOSURES = [
 "region": "Region 10 – Udon Thani",
 "lat": 17.0544247,
 "lon": 103.6282603,
-"status": "active_annual",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Reservoir",
@@ -1743,7 +1751,7 @@ const PARKS_CLOSURES = [
 "region": "Region 11 – Phitsanulok",
 "lat": 17.0013156,
 "lon": 101.0262845,
-"status": "indefinite",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Phu Lomlo",
@@ -1801,7 +1809,7 @@ const PARKS_CLOSURES = [
 "region": "Region 11 – Phitsanulok",
 "lat": 17.8363621,
 "lon": 101.0289894,
-"status": "indefinite",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Lan Son Phu Soi Dao, Campsite",
@@ -1912,7 +1920,7 @@ const PARKS_CLOSURES = [
 "region": "Region 12 – Nakhon Sawan",
 "lat": 15.8866198,
 "lon": 99.2230732,
-"status": "indefinite",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Mo Ko Chu hiking trail, Namtok Mae Krasa, Mae Ki, Mae Riwa",
@@ -2023,7 +2031,7 @@ const PARKS_CLOSURES = [
 "region": "Region 13 – Phrae",
 "lat": 19.1189302,
 "lon": 101.2560492,
-"status": "active_annual",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Namwa white water rafting",
@@ -2039,7 +2047,7 @@ const PARKS_CLOSURES = [
 "region": "Region 13 – Phrae",
 "lat": 18.2152687,
 "lon": 100.5204168,
-"status": "active_annual",
+"status": "fully_closed",
 "closures": [
 {
 "site": "All tourist sites and accommodations",
@@ -2144,7 +2152,7 @@ const PARKS_CLOSURES = [
 "region": "Region 13 – Phrae",
 "lat": 18.2661722,
 "lon": 100.8551761,
-"status": "active_annual",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Pha Chu, Doi Samoe Dao, Pha Hua Sing, multiple accommodations, campsites",
@@ -2176,7 +2184,7 @@ const PARKS_CLOSURES = [
 "region": "Region 13 Branch – Lampang",
 "lat": 18.4772229,
 "lon": 99.3059971,
-"status": "active_annual",
+"status": "fully_closed",
 "closures": [
 {
 "site": "All tourist sites and accommodations",
@@ -2208,7 +2216,7 @@ const PARKS_CLOSURES = [
 "region": "Region 13 Branch – Lampang",
 "lat": 17.4259064,
 "lon": 99.271266,
-"status": "indefinite",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Doi Pha Daeng, Daen Song Tawan, Pa Mae Wa Nature Trail",
@@ -2229,7 +2237,7 @@ const PARKS_CLOSURES = [
 "region": "Region 13 Branch – Lampang",
 "lat": 17.7827635,
 "lon": 99.1603758,
-"status": "active_annual",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Doi Chong peak",
@@ -2324,7 +2332,7 @@ const PARKS_CLOSURES = [
 "region": "Region 14 – Tak",
 "lat": 16.8890471,
 "lon": 99.6595985,
-"status": "active_annual",
+"status": "fully_closed",
 "closures": [
 {
 "site": "All tourist sites and accommodations",
@@ -2377,7 +2385,7 @@ const PARKS_CLOSURES = [
 "region": "Region 14 – Tak",
 "lat": 16.9145768,
 "lon": 98.6876305,
-"status": "indefinite",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Namtok Huai Krating, Namtok Pa Mak, Namtok Huai Mae La Mao",
@@ -2414,7 +2422,7 @@ const PARKS_CLOSURES = [
 "region": "Region 15 – Chiang Rai",
 "lat": 19.3777134,
 "lon": 99.661175,
-"status": "indefinite",
+"status": "active_annual",
 "closures": [
 {
 "site": "All tourist sites and accommodations",
@@ -2435,7 +2443,7 @@ const PARKS_CLOSURES = [
 "region": "Region 15 – Chiang Rai",
 "lat": 19.1287717,
 "lon": 99.3952339,
-"status": "active_annual",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Doi Langka, Doi Mot, Doi Pha Ngom",
@@ -2451,7 +2459,7 @@ const PARKS_CLOSURES = [
 "region": "Region 15 – Chiang Rai",
 "lat": 19.6010586,
 "lon": 100.3956582,
-"status": "indefinite",
+"status": "active_annual",
 "closures": [
 {
 "site": "Tham Pha Daeng, Phu Pha Mon, Tham Nam Lot, Tham Nam Dan",
@@ -2504,7 +2512,7 @@ const PARKS_CLOSURES = [
 "region": "Region 15 – Chiang Rai",
 "lat": 19.5605535,
 "lon": 99.8634039,
-"status": "active_annual",
+"status": "fully_closed",
 "closures": [
 {
 "site": "All tourist sites and accommodations",
@@ -2599,7 +2607,7 @@ const PARKS_CLOSURES = [
 "region": "Region 16 – Chiang Mai",
 "lat": 19.6384197,
 "lon": 98.8765398,
-"status": "indefinite",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Doi Kham Fa Nature trail, Campsite",
@@ -2625,7 +2633,7 @@ const PARKS_CLOSURES = [
 "region": "Region 16 – Chiang Mai",
 "lat": 19.9225317,
 "lon": 99.1848848,
-"status": "indefinite",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Tham Huai Bon, Doi Pha Hom Pok, 3 campsites",
@@ -2715,7 +2723,7 @@ const PARKS_CLOSURES = [
 "region": "Region 16 – Chiang Mai",
 "lat": 18.95,
 "lon": 100.85,
-"status": "active_annual",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Doi Wiang Pha peak",
@@ -2805,7 +2813,7 @@ const PARKS_CLOSURES = [
 "region": "Region 16 – Chiang Mai",
 "lat": 18.5417,
 "lon": 98.694913,
-"status": "active_annual",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Pha Cho",
@@ -2842,7 +2850,7 @@ const PARKS_CLOSURES = [
 "region": "Region 16 Branch – Mae Sariang",
 "lat": 19.45,
 "lon": 97.95,
-"status": "indefinite",
+"status": "active_annual",
 "closures": [
 {
 "site": "Pang Ung, Campsite",
