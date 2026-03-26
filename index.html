@@ -75,10 +75,10 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: rgba(255, 239, 225, 0.88);
+            background: linear-gradient(to right, rgba(0,0,0,0.92) 0%, rgba(15,108,57,0.95) 100%);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--line);
+            border-bottom: 1px solid rgba(255,255,255,0.12);
         }
 
         .nav-logo img { height: 68px; width: auto; display: block; }
@@ -93,31 +93,103 @@
         .nav-links a {
             font-size: 14px;
             font-weight: 500;
-            color: var(--text);
+            color: rgba(255,255,255,0.85);
             text-decoration: none;
             letter-spacing: 0.01em;
             transition: color 0.2s;
         }
 
-        .nav-links a:hover { color: var(--nature); }
+        .nav-links a:hover { color: #ffffff; }
 
         .nav-cta {
-            background: var(--nature) !important;
-            color: var(--white) !important;
+            background: rgba(255,255,255,0.18) !important;
+            color: #ffffff !important;
             padding: 9px 22px;
             border-radius: 100px;
+            border: 1px solid rgba(255,255,255,0.35) !important;
         }
 
-        .nav-cta:hover { opacity: 0.88; }
+        .nav-cta:hover { background: rgba(255,255,255,0.28) !important; }
 
         /* ── HERO ── */
         .hero {
             padding: 148px 52px 64px;
             max-width: 860px;
             margin: 0 auto;
+            text-align: center;
         }
 
         .hero-left {}
+
+        /* ── HERO SEARCH ── */
+        .hero-search {
+            position: relative;
+            max-width: 520px;
+            margin: 36px auto 0;
+        }
+
+        .hs-input-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            border: 1.5px solid var(--line);
+            border-radius: 100px;
+            padding: 13px 22px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .hs-input-wrap:focus-within {
+            border-color: var(--nature);
+            box-shadow: 0 4px 24px rgba(15,108,57,0.12);
+        }
+
+        .hs-icon { color: var(--muted); flex-shrink: 0; }
+
+        .hs-input-wrap input {
+            border: none; outline: none;
+            font-family: 'Cloud Soft', 'Sarabun', sans-serif;
+            font-size: 15px; color: var(--text);
+            background: transparent; width: 100%;
+        }
+
+        .hs-input-wrap input::placeholder { color: #bbb; }
+
+        .hs-results {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0; right: 0;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+            overflow: hidden;
+            list-style: none;
+            z-index: 999;
+            display: none;
+        }
+
+        .hs-results.open { display: block; }
+
+        .hs-results li {
+            padding: 11px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--line);
+            transition: background 0.15s;
+            text-align: left;
+        }
+
+        .hs-results li:last-child { border-bottom: none; }
+        .hs-results li:hover, .hs-results li.hs-active { background: var(--nature-light); }
+
+        .hs-pip { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .hs-name { font-weight: 500; color: var(--dark); flex: 1; }
+        .hs-tag { font-size: 10px; color: #bbb; white-space: nowrap; }
+        .hs-loc { font-size: 12px; color: var(--muted); white-space: nowrap; }
 
         .hero-badge {
             display: inline-flex;
@@ -165,10 +237,12 @@
         .hero p {
             font-size: 17px;
             color: var(--muted);
-            max-width: 500px;
+            max-width: 560px;
             line-height: 1.75;
             font-weight: 300;
-            margin-bottom: 44px;
+            margin-bottom: 0;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .hero-stats {
@@ -395,6 +469,35 @@
             box-shadow: 0 16px 56px rgba(0,0,0,0.1);
         }
 
+        .social-bar {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 28px;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 100px;
+            border: 1px solid var(--line);
+            background: var(--white);
+            color: var(--text);
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background 0.2s, border-color 0.2s, color 0.2s;
+        }
+
+        .social-link:hover {
+            background: var(--nature);
+            border-color: var(--nature);
+            color: #ffffff;
+        }
+
         #parks-map { height: 600px; width: 100%; background: #f0f0f0; }
 
         /* ── NEWS SECTION ── */
@@ -412,11 +515,14 @@
         }
 
         .news-card {
+            display: block;
             background: white;
             border-radius: 20px;
             padding: 28px;
             border: 1px solid var(--line);
             transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            color: inherit;
         }
 
         .news-card:hover {
@@ -561,7 +667,7 @@
 <!-- ════════════════════════════ SPLASH ════════════════════════════ -->
 <div id="splash">
     <img src="brand_asset/WAVS Logo.png" alt="WAVS" id="splash-logo">
-    <p id="splash-tagline">nature needs to breathe,<br>before it ceases to be.</p>
+    <p id="splash-tagline">Nature needs to breathe,<br>before it ceases to be.</p>
     <div id="splash-bar"><div id="splash-bar-fill"></div></div>
 </div>
 
@@ -586,21 +692,28 @@
             ติดตามสถานการณ์ · ประเทศไทย
         </div>
         <h1>เมื่อธรรมชาติ<br>กำลัง<em>ปิดประตู</em></h1>
-        <p>วิทยานิพนธ์เชิงโต้ตอบที่สำรวจการปิดสถานที่ธรรมชาติอันเป็นที่รักของประเทศไทย — และนำทางค้นพบเส้นทางใหม่อย่างใส่ใจ</p>
+        <p>วิทยานิพนธ์เชิงโต้ตอบที่สำรวจการปิดสถานที่ธรรมชาติอันเป็นที่รักของประเทศไทย<br>และนำทางค้นพบเส้นทางใหม่อย่างใส่ใจ</p>
+        <div class="hero-search">
+            <div class="hs-input-wrap">
+                <svg class="hs-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input id="heroSearch" type="text" placeholder="ค้นหาอุทยาน หรือวนอุทยาน..." autocomplete="off" />
+            </div>
+            <ul id="heroSearchResults" class="hs-results"></ul>
+        </div>
     </div>
 </section>
 
 <!-- ════════════════════════════ ABOUT ════════════════════════════ -->
 <section class="about-section" id="about">
-    <div class="section-head">
-        <h2 class="section-title">เกี่ยวกับ<em>WAVS</em></h2>
-        <p class="section-desc">โครงการวิทยานิพนธ์ที่ติดตามสถานะการปิดอุทยานแห่งชาติทั่วประเทศไทย เพื่อส่งเสริมการท่องเที่ยวเชิงอนุรักษ์อย่างยั่งยืน</p>
+    <div class="section-head" style="flex-direction:column;align-items:center;text-align:center">
+        <h2 class="section-title" style="max-width:100%">เกี่ยวกับ <em>WAVS</em></h2>
+        <p class="section-desc" style="max-width:560px">โครงการวิทยานิพนธ์ที่ติดตามสถานะการปิดอุทยานแห่งชาติทั่วประเทศไทย<br>เพื่อส่งเสริมการท่องเที่ยวเชิงอนุรักษ์อย่างยั่งยืน</p>
     </div>
     <div class="about-grid">
         <div class="about-card">
             <div class="about-icon">🗺️</div>
-            <div class="about-card-title">ครอบคลุมทั่วประเทศ</div>
-            <div class="about-card-text">WAVS ติดตามอุทยานแห่งชาติทั้ง 156 แห่งใน 15 ภูมิภาคของประเทศไทย — ครอบคลุมการปิดตามฤดูกาล ชั่วคราว และไม่มีกำหนด โดยใช้ข้อมูลอย่างเป็นทางการจาก DNP</div>
+            <div class="about-card-title">อัพเดทข้อมูลครอบคลุมทั่วประเทศ</div>
+            <div class="about-card-text">WAVS ติดตามสถานะการเปิด-ปิดของอุทยานทั่วประเทศไทย ครอบคลุมการปิดตามฤดูกาล ชั่วคราว และไม่มีกำหนด โดยใช้ข้อมูลอย่างเป็นทางการจาก DNP</div>
         </div>
         <div class="about-card">
             <div class="about-icon">📊</div>
@@ -613,18 +726,32 @@
             <div class="about-card-text">สำหรับทุกสถานที่ที่ปิด WAVS จะระบุทางเลือกที่เปิดอยู่ซึ่งมอบประสบการณ์ธรรมชาติที่ใกล้เคียงกันแต่กระทบระบบนิเวศน้อยกว่า — เพื่อให้คุณยังสามารถสำรวจประเทศไทยได้อย่างรับผิดชอบ</div>
         </div>
     </div>
+    <div class="social-bar">
+        <a href="https://www.facebook.com/profile.php?id=61585201862761" target="_blank" rel="noopener" class="social-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            Facebook
+        </a>
+        <a href="https://www.instagram.com/wavs.project?igsh=czh0ZWlnOHBsa2Rj" target="_blank" rel="noopener" class="social-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            Instagram
+        </a>
+        <a href="https://www.tiktok.com/@wavs.project?_r=1&_t=ZS-9502kpXkei9" target="_blank" rel="noopener" class="social-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+            TikTok
+        </a>
+    </div>
 </section>
 
 <!-- ════════════════════════════ PARKS MAP ════════════════════════════ -->
 <section class="parks-section" id="parks-section">
     <div class="section-head">
         <h2 class="section-title">อุทยานแห่งชาติ<br><em>สถานะวันนี้</em></h2>
-        <p class="section-desc">สถานะการปิดของอุทยานแห่งชาติและวนอุทยานทั้ง 241 แห่งทั่วประเทศไทย คลิกหมุดเพื่อดูว่าสถานที่ใดได้รับผลกระทบและเพราะเหตุใด ข้อมูล: กรมอุทยานแห่งชาติ สัตว์ป่า และพันธุ์พืช (DNP)</p>
+        <p class="section-desc" style="text-align:right">สถานะการปิดของอุทยานแห่งชาติและวนอุทยานทั้ง 241 แห่งทั่วประเทศไทย<br>คลิกหมุดเพื่อดูว่าสถานที่ใดได้รับผลกระทบและเพราะเหตุใด<br>ข้อมูล: กรมอุทยานแห่งชาติ สัตว์ป่า และพันธุ์พืช (DNP)</p>
     </div>
     <div class="parks-stats-bar">
-        <div class="ps-stat"><div class="ps-dot" style="background:#e53e3e"></div><span class="ps-num">47</span>&nbsp;ปิดทั้งหมด</div>
-        <div class="ps-stat"><div class="ps-dot" style="background:#d69e2e"></div><span class="ps-num">38</span>&nbsp;บางส่วนปิด</div>
-        <div class="ps-stat"><div class="ps-dot" style="background:#38a169"></div><span class="ps-num">156</span>&nbsp;เปิดปกติ</div>
+        <div class="ps-stat"><div class="ps-dot" style="background:#D30D0E"></div><span class="ps-num">47</span>&nbsp;ปิดทั้งหมด</div>
+        <div class="ps-stat"><div class="ps-dot" style="background:#FFDD00"></div><span class="ps-num">38</span>&nbsp;บางส่วนปิด</div>
+        <div class="ps-stat"><div class="ps-dot" style="background:#55A630"></div><span class="ps-num">156</span>&nbsp;เปิดปกติ</div>
     </div>
     <div class="parks-filters">
         <button class="pf-pill active" onclick="filterParks('all', this)">ทั้งหมด 241</button>
@@ -644,42 +771,42 @@
         <p class="section-desc">ประกาศล่าสุดจากกรมอุทยานแห่งชาติและความเคลื่อนไหวในการบริหารจัดการพื้นที่คุ้มครองของไทย</p>
     </div>
     <div class="news-grid">
-        <div class="news-card">
-            <div class="news-meta">
-                <span class="news-tag closure">การปิด</span>
-                <span class="news-date">14 มีนาคม 2569</span>
-            </div>
-            <div class="news-headline">Khuean Srinagarindra ปิดชั่วคราวหลังการประเมินความเสี่ยงไฟป่า</div>
-            <div class="news-body">กรมอุทยานแห่งชาติออกคำสั่งปิดชั่วคราวสำหรับอุทยานแห่งชาติเขื่อนศรีนครินทร์ จังหวัดกาญจนบุรี เนื่องจากสภาวะความเสี่ยงไฟป่าสูง จุดเข้าชมและพื้นที่กางเต็นท์ทั้งหมดปิดจนกว่าจะมีประกาศเปลี่ยนแปลง</div>
-            <span class="news-read-more">ประกาศจาก DNP →</span>
-        </div>
-        <div class="news-card">
-            <div class="news-meta">
-                <span class="news-tag seasonal">ตามฤดูกาล</span>
-                <span class="news-date">1 มีนาคม 2569</span>
-            </div>
-            <div class="news-headline">การปิดประจำปีเริ่มต้นใน 41 อุทยานแห่งชาติสำหรับฤดูกาล 2569</div>
-            <div class="news-body">เมื่อฤดูแล้งดำเนินต่อไป อุทยานแห่งชาติ 41 แห่งทั่วประเทศไทยได้เข้าสู่ช่วงปิดประจำปีตามกำหนด — โดยหลักคือเส้นทางน้ำตกและพื้นที่ป่าเสี่ยงสูง ส่วนใหญ่ปิดถึงพฤษภาคม–กันยายน 2569</div>
-            <span class="news-read-more">ดูรายการปิด →</span>
-        </div>
-        <div class="news-card">
+        <a class="news-card" href="https://www.tatnews.org/2025/12/annual-seasonal-opening-closure-of-attractions-of-thailands-national-park-system/" target="_blank" rel="noopener">
             <div class="news-meta">
                 <span class="news-tag policy">นโยบาย</span>
-                <span class="news-date">20 มกราคม 2569</span>
+                <span class="news-date">15 มกราคม 2569</span>
             </div>
-            <div class="news-headline">DNP เปิดตัวระบบติดตามอุทยานแบบรวมศูนย์</div>
-            <div class="news-body">กรมอุทยานแห่งชาติ สัตว์ป่า และพันธุ์พืช ประกาศระบบดิจิทัลรวมศูนย์ใหม่เพื่อติดตามสถานะแบบเรียลไทม์ของอุทยานทั้ง 156 แห่ง — นับเป็นครั้งแรกในเอเชียตะวันออกเฉียงใต้</div>
-            <span class="news-read-more">อ่านต่อ →</span>
-        </div>
-        <div class="news-card">
+            <div class="news-headline">ปฏิทินเปิด–ปิดประจำปีของอุทยานแห่งชาติ 156 แห่งทั่วไทย</div>
+            <div class="news-body">TAT เผยแพร่คู่มือสถานะเปิด–ปิดของสถานที่ท่องเที่ยวในอุทยานแห่งชาติทุกแห่ง แนะนำนักท่องเที่ยวตรวจสอบที่ portal.dnp.go.th ก่อนเดินทางทุกครั้ง</div>
+            <span class="news-read-more">อ่านต่อที่ TAT Newsroom →</span>
+        </a>
+        <a class="news-card" href="https://www.bangkokbiznews.com/news/news-update/1213855" target="_blank" rel="noopener">
             <div class="news-meta">
-                <span class="news-tag research">งานวิจัย</span>
-                <span class="news-date">5 ธันวาคม 2568</span>
+                <span class="news-tag policy">นโยบาย</span>
+                <span class="news-date">25 ธันวาคม 2568</span>
             </div>
-            <div class="news-headline">งานวิจัยเชื่อมโยงการท่องเที่ยวเกินขีดจำกัดกับการฟอกขาวของปะการังในอุทยานทางทะเล</div>
-            <div class="news-body">การศึกษาร่วมของมหาวิทยาลัยมหิดลและ WWF Thailand พบว่า 7 ใน 15 อุทยานแห่งชาติทางทะเลของไทยแสดงการฟอกขาวของปะการังที่สัมพันธ์โดยตรงกับความหนาแน่นของนักท่องเที่ยว — อ้างอิงเป็นหลักฐานสำคัญเบื้องหลังการปิดแบบไม่มีกำหนดหลายแห่งในทะเลอันดามัน</div>
-            <span class="news-read-more">บทความเต็ม →</span>
-        </div>
+            <div class="news-headline">ของขวัญปีใหม่ 2569: เที่ยวอุทยานฟรีทุกแห่ง 31 ธ.ค. 68 – 4 ม.ค. 69</div>
+            <div class="news-body">กระทรวง ทส. และ DNP มอบของขวัญปีใหม่ ยกเว้นค่าเข้าชมอุทยานแห่งชาติ วนอุทยาน และสวนพฤกษศาสตร์ทั้ง 133 แห่งทั่วประเทศ พร้อมกิจกรรมปลูกต้นไม้และแจกปฏิทินท่องเที่ยว</div>
+            <span class="news-read-more">อ่านต่อที่ Bangkok Biz News →</span>
+        </a>
+        <a class="news-card" href="https://www.nationthailand.com/news/tourism/40050202" target="_blank" rel="noopener">
+            <div class="news-meta">
+                <span class="news-tag closure">การปิด</span>
+                <span class="news-date">20 พฤษภาคม 2568</span>
+            </div>
+            <div class="news-headline">สิมิลันปิด 5 เดือนเพื่อฟื้นฟูระบบนิเวศ</div>
+            <div class="news-body">Nation Thailand รายงานการปิดอุทยานแห่งชาติหมู่เกาะสิมิลัน จ.พังงา ตั้งแต่ 16 พ.ค.–14 ต.ค. 2568 เพื่อให้ปะการัง ปลา และสิ่งแวดล้อมทางทะเลฟื้นตัวจากจำนวนนักท่องเที่ยวที่หนาแน่น</div>
+            <span class="news-read-more">อ่านต่อที่ Nation Thailand →</span>
+        </a>
+        <a class="news-card" href="https://thailand.prd.go.th/en/content/category/detail/id/2078/iid/389350" target="_blank" rel="noopener">
+            <div class="news-meta">
+                <span class="news-tag seasonal">ตามฤดูกาล</span>
+                <span class="news-date">15 พฤษภาคม 2568</span>
+            </div>
+            <div class="news-headline">หมู่เกาะสิมิลัน–สุรินทร์ปิดประจำปี 16 พ.ค.–14 ต.ค. 2568</div>
+            <div class="news-body">DNP ประกาศปิดอุทยานแห่งชาติหมู่เกาะสิมิลันและหมู่เกาะสุรินทร์ตามฤดูกาล เพื่อให้ระบบนิเวศทางทะเลฟื้นตัว เมื่อเปิดใหม่ 15 ต.ค. จำกัดนักท่องเที่ยวไม่เกิน 3,850 คน/วัน</div>
+            <span class="news-read-more">อ่านต่อที่ PRD →</span>
+        </a>
     </div>
 </section>
 
@@ -695,7 +822,7 @@
     </div>
     <div class="footer-right">
         ข้อมูล: กรมอุทยานแห่งชาติไทย & งานวิจัยทางวิชาการ<br>
-        © 2024 WAVS
+        © 2026 WAVS
     </div>
 </footer>
 
@@ -873,12 +1000,14 @@ fetch('brand_asset/thailand.geojson')
 // ── PARKS MAP ────────────────────────────────────────────────────────────────
 
 const PARK_STATUS_COLOR = {
-    "fully_closed": "#e53e3e",
-    "temporary":    "#d69e2e",
-    "indefinite":   "#d69e2e",
-    "active_annual":"#d69e2e",
-    "open":         "#38a169",
+    "fully_closed": "#D30D0E",
+    "temporary":    "#FFDD00",
+    "indefinite":   "#FFDD00",
+    "active_annual":"#FFDD00",
+    "open":         "#55A630",
 };
+
+function statusTextColor(c) { return c === '#FFDD00' ? '#5a4000' : '#ffffff'; }
 
 const PARK_STATUS_LABEL = {
     "fully_closed": "ปิดทั้งหมด",
@@ -893,15 +1022,26 @@ const parksMap = L.map('parks-map', {
     zoom: 6,
     minZoom: 5,
     maxBounds: THAILAND_BOUNDS,
-    maxBoundsViscosity: 1.0,
+    maxBoundsViscosity: 0.6,
     zoomControl: false,
     attributionControl: true,
+    preferCanvas: true,
+    zoomSnap: 0.5,
+    zoomDelta: 0.5,
+    wheelPxPerZoomLevel: 120,
+    inertia: true,
+    inertiaDeceleration: 2000,
+    inertiaMaxSpeed: 1200,
+    easeLinearity: 0.35,
 });
 
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
     attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
     subdomains: 'abcd',
     maxZoom: 19,
+    keepBuffer: 4,
+    updateWhenIdle: false,
+    updateWhenZooming: false,
 }).addTo(parksMap);
 
 L.control.zoom({ position: 'bottomright' }).addTo(parksMap);
@@ -916,8 +1056,8 @@ function makeParkIcon(status) {
 
 function closureTypeColor(type) {
     if (!type || type === '–') return '#bbb';
-    if (type.includes('Indefinite') || type.includes('Permanent')) return '#e53e3e';
-    if (type.includes('Temporary')) return '#d69e2e';
+    if (type.includes('Indefinite') || type.includes('Permanent')) return '#D30D0E';
+    if (type.includes('Temporary')) return '#FFDD00';
     return '#888';
 }
 
@@ -992,6 +1132,19 @@ function nearestOpenParks(park, n = 3) {
         .slice(0, n);
 }
 
+function popupHeader(color, label, type, wikiQuery) {
+    return `<div class="popup-hero" data-wiki="${wikiQuery}" style="height:120px;border-radius:10px;overflow:hidden;margin-bottom:14px;position:relative;background:linear-gradient(150deg,${color}12 0%,${color}38 100%)">
+        <svg viewBox="0 0 420 120" preserveAspectRatio="xMidYMax slice" style="position:absolute;bottom:0;left:0;width:100%;height:80px;display:block">
+            <path d="M0,120 L0,65 L55,42 L110,62 L170,24 L230,52 L290,18 L350,46 L420,30 L420,120 Z" fill="${color}" opacity="0.18"/>
+            <path d="M0,120 L0,80 L65,58 L130,72 L195,46 L255,66 L315,40 L385,62 L420,52 L420,120 Z" fill="${color}" opacity="0.28"/>
+        </svg>
+        <img class="popup-hero-img" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.5s">
+        <div class="popup-hero-overlay" style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.05),rgba(0,0,0,0.52));opacity:0;transition:opacity 0.5s;pointer-events:none"></div>
+        <div style="position:absolute;top:10px;left:12px;background:rgba(255,255,255,0.92);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;color:${color};letter-spacing:.05em;z-index:2">${type}</div>
+        <div style="position:absolute;bottom:10px;left:12px;background:${color};border-radius:20px;padding:3px 12px;font-size:11px;font-weight:700;color:${statusTextColor(color)};z-index:2">${label}</div>
+    </div>`;
+}
+
 function buildParkPopup(p) {
     const color = PARK_STATUS_COLOR[p.status] || '#aaa';
     const label = PARK_STATUS_LABEL[p.status] || p.status;
@@ -1012,14 +1165,14 @@ function buildParkPopup(p) {
         const alts = nearestOpenParks(p);
         if (alts.length) {
             const altCards = alts.map(a => `
-                <div onclick="flyToPark(${a.id})" style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;cursor:pointer;transition:background 0.15s;margin-bottom:6px;background:#f7fdf9;border:1px solid rgba(56,161,105,0.15)"
+                <div onclick="flyToPark(${a.id})" style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;cursor:pointer;transition:background 0.15s;margin-bottom:6px;background:#f7fdf9;border:1px solid rgba(85,166,48,0.15)"
                      onmouseover="this.style.background='#edf7f1'" onmouseout="this.style.background='#f7fdf9'">
-                    <div style="width:8px;height:8px;border-radius:50%;background:#38a169;flex-shrink:0"></div>
+                    <div style="width:8px;height:8px;border-radius:50%;background:#55A630;flex-shrink:0"></div>
                     <div style="flex:1;min-width:0">
                         <div style="font-size:13px;font-weight:600;color:#1b1b1b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.name_th}</div>
                         <div style="font-size:11px;color:#999;margin-top:1px">${a.region}</div>
                     </div>
-                    <div style="font-size:11px;color:#38a169;font-weight:600;flex-shrink:0">${Math.round(a.km)} กม.</div>
+                    <div style="font-size:11px;color:#55A630;font-weight:600;flex-shrink:0">${Math.round(a.km)} กม.</div>
                 </div>`).join('');
             altsHtml = `
                 <div style="margin-top:14px;padding-top:12px;border-top:1px solid #f0f0f0">
@@ -1030,10 +1183,10 @@ function buildParkPopup(p) {
     }
 
     return `<div style="font-family:'Cloud Soft','Sarabun',sans-serif;min-width:300px;max-width:420px">
-        <div style="border-bottom:3px solid ${color};padding-bottom:10px;margin-bottom:10px">
-            <div style="font-size:16px;font-weight:600;color:#1b1b1b">${p.name_th}</div>
-            <div style="font-size:12px;color:#999;margin-top:2px">${p.name_en} &nbsp;·&nbsp; ${p.region}</div>
-            <div style="margin-top:8px;display:inline-block;background:${color}22;color:${color};font-size:11px;font-weight:700;letter-spacing:.04em;padding:3px 10px;border-radius:20px">${label}</div>
+        ${popupHeader(color, label, 'อุทยานแห่งชาติ', p.name_en + ' National Park')}
+        <div style="border-bottom:1px solid #f0f0f0;padding-bottom:10px;margin-bottom:10px">
+            <div style="font-size:16px;font-weight:700;color:#1b1b1b;line-height:1.3">${p.name_th}</div>
+            <div style="font-size:12px;color:#999;margin-top:3px">${p.name_en} &nbsp;·&nbsp; ${p.region}</div>
         </div>
         <table style="width:100%;border-collapse:collapse">
             <thead><tr style="background:#f9f9f9">
@@ -1059,9 +1212,12 @@ PARK_STATUSES.forEach(s => {
         showCoverageOnHover: false,
         iconCreateFunction: cluster => {
             const color = PARK_STATUS_COLOR[s] || '#aaa';
+            const count = cluster.getChildCount();
+            const size = count >= 100 ? 54 : count >= 50 ? 48 : count >= 20 ? 42 : count >= 10 ? 36 : 28;
+            const fontSize = size >= 48 ? 14 : size >= 36 ? 13 : 11;
             return L.divIcon({
-                html: `<div style="background:${color};color:white;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;font-family:'Cloud Soft','Sarabun',sans-serif;box-shadow:0 3px 10px rgba(0,0,0,0.2)">${cluster.getChildCount()}</div>`,
-                className: '', iconSize: [34, 34]
+                html: `<div style="background:${color};color:${statusTextColor(color)};border-radius:50%;width:${size}px;height:${size}px;display:flex;align-items:center;justify-content:center;font-size:${fontSize}px;font-weight:700;font-family:'Cloud Soft','Sarabun',sans-serif;box-shadow:0 3px 12px rgba(0,0,0,0.25);border:2px solid rgba(255,255,255,0.5)">${count}</div>`,
+                className: '', iconSize: [size, size], iconAnchor: [size/2, size/2]
             });
         }
     });
@@ -1084,9 +1240,12 @@ function flyToPark(id) {
     if (!entry) return;
     const park = PARKS_CLOSURES.find(p => p.id === id);
     if (!park) return;
-    parksMap.closePopup();
-    parksMap.flyTo([park.lat, park.lon], 10, { duration: 1.2, easeLinearity: 0.25 });
-    setTimeout(() => entry.marker.openPopup(), 1300);
+    document.getElementById('parks-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => {
+        parksMap.closePopup();
+        parksMap.flyTo([park.lat, park.lon], 10, { duration: 1.2, easeLinearity: 0.25 });
+        setTimeout(() => entry.marker.openPopup(), 1300);
+    }, 600);
 }
 
 function filterParks(status, btn) {
@@ -1110,7 +1269,7 @@ function buildAttractionPopup(a) {
     const rows = a.closures.map(c => {
         const isOpen = c.open_yr && c.period === '–';
         const periodTh = c.period === '–' ? (isOpen ? 'เปิดตลอดปี' : '–') : c.period;
-        const rowColor = isOpen ? '#999' : '#d69e2e';
+        const rowColor = isOpen ? '#999' : '#D4820E';
         return `<tr>
             <td style="padding:4px 8px;font-size:12px;border-bottom:1px solid #f0f0f0;line-height:1.4">${c.site}</td>
             <td style="padding:4px 8px;font-size:12px;border-bottom:1px solid #f0f0f0;white-space:nowrap;color:${rowColor}">${periodTh}</td>
@@ -1123,23 +1282,22 @@ function buildAttractionPopup(a) {
         <div style="margin-top:14px;padding-top:12px;border-top:1px solid #f0f0f0">
             <div style="font-size:10px;font-weight:600;color:#999;letter-spacing:.06em;margin-bottom:8px">🌿 อุทยานเปิดใกล้เคียง</div>
             ${alts.map(p => `
-            <div onclick="flyToPark(${p.id})" style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;cursor:pointer;margin-bottom:6px;background:#f7fdf9;border:1px solid rgba(56,161,105,0.15)"
+            <div onclick="flyToPark(${p.id})" style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;cursor:pointer;margin-bottom:6px;background:#f7fdf9;border:1px solid rgba(85,166,48,0.15)"
                  onmouseover="this.style.background='#edf7f1'" onmouseout="this.style.background='#f7fdf9'">
-                <div style="width:8px;height:8px;border-radius:50%;background:#38a169;flex-shrink:0"></div>
+                <div style="width:8px;height:8px;border-radius:50%;background:#55A630;flex-shrink:0"></div>
                 <div style="flex:1;min-width:0">
                     <div style="font-size:13px;font-weight:600;color:#1b1b1b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.name_th}</div>
                     <div style="font-size:11px;color:#999;margin-top:1px">${p.region}</div>
                 </div>
-                <div style="font-size:11px;color:#38a169;font-weight:600;flex-shrink:0">${Math.round(p.km)} กม.</div>
+                <div style="font-size:11px;color:#55A630;font-weight:600;flex-shrink:0">${Math.round(p.km)} กม.</div>
             </div>`).join('')}
         </div>` : '';
 
     return `<div style="font-family:'Cloud Soft','Sarabun',sans-serif;min-width:280px;max-width:400px">
-        <div style="border-bottom:3px solid ${color};padding-bottom:10px;margin-bottom:10px">
-            <div style="font-size:11px;font-weight:600;color:#aaa;letter-spacing:.06em;margin-bottom:4px">วนอุทยาน</div>
-            <div style="font-size:16px;font-weight:600;color:#1b1b1b">${a.name_th}</div>
-            <div style="font-size:12px;color:#999;margin-top:2px">${a.province}</div>
-            <div style="margin-top:8px;display:inline-block;background:${color}22;color:${color};font-size:11px;font-weight:700;letter-spacing:.04em;padding:3px 10px;border-radius:20px">${label}</div>
+        ${popupHeader(color, label, 'วนอุทยาน', a.name_th)}
+        <div style="border-bottom:1px solid #f0f0f0;padding-bottom:10px;margin-bottom:10px">
+            <div style="font-size:16px;font-weight:700;color:#1b1b1b;line-height:1.3">${a.name_th}</div>
+            <div style="font-size:12px;color:#999;margin-top:3px">${a.province}</div>
         </div>
         <table style="width:100%;border-collapse:collapse">
             <thead><tr style="background:#f9f9f9">
@@ -1153,13 +1311,154 @@ function buildAttractionPopup(a) {
     </div>`;
 }
 
+const attractionMarkersById = {};
+
 if (typeof ATTRACTIONS_DATA !== 'undefined') {
     ATTRACTIONS_DATA.forEach(a => {
         const m = L.marker([a.lat, a.lon], { icon: makeParkIcon(a.status) });
         m.bindPopup(buildAttractionPopup(a), { maxWidth: 420, minWidth: 280 });
         if (parkClusters[a.status]) parkClusters[a.status].addLayer(m);
+        attractionMarkersById[a.id] = m;
     });
 }
+
+function flyToAttraction(id) {
+    const entry = attractionMarkersById[id];
+    const a = (typeof ATTRACTIONS_DATA !== 'undefined') && ATTRACTIONS_DATA.find(x => x.id === id);
+    if (!entry || !a) return;
+    document.getElementById('parks-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => {
+        parksMap.flyTo([a.lat, a.lon], 11, { duration: 1.2, easeLinearity: 0.25 });
+        setTimeout(() => entry.openPopup(), 1300);
+    }, 600);
+}
+
+// ── HERO SEARCH ──────────────────────────────────────────────────────────────
+const searchInput   = document.getElementById('heroSearch');
+const searchResults = document.getElementById('heroSearchResults');
+let searchIdx = -1;
+
+searchInput.addEventListener('keydown', e => {
+    const items = searchResults.querySelectorAll('li');
+    if (!items.length || !searchResults.classList.contains('open')) return;
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        searchIdx = Math.min(searchIdx + 1, items.length - 1);
+    } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        searchIdx = Math.max(searchIdx - 1, 0);
+    } else if (e.key === 'Enter' && searchIdx >= 0) {
+        e.preventDefault();
+        items[searchIdx].click();
+        return;
+    } else if (e.key === 'Escape') {
+        searchResults.classList.remove('open');
+        searchIdx = -1;
+        return;
+    } else { return; }
+    items.forEach((li, i) => li.classList.toggle('hs-active', i === searchIdx));
+    items[searchIdx]?.scrollIntoView({ block: 'nearest' });
+});
+
+searchInput.addEventListener('input', () => {
+    searchIdx = -1;
+    const q = searchInput.value.trim().toLowerCase();
+    if (!q) { searchResults.classList.remove('open'); return; }
+
+    const parkMatches = (typeof PARKS_CLOSURES !== 'undefined')
+        ? PARKS_CLOSURES.filter(p =>
+            p.name_th.includes(q) ||
+            p.name_en.toLowerCase().includes(q) ||
+            p.region.toLowerCase().includes(q)
+          ).slice(0, 4).map(p => ({
+            key: `park_${p.id}`, id: p.id, kind: 'park',
+            name_th: p.name_th, sub: p.region, status: p.status,
+          }))
+        : [];
+
+    const attrMatches = (typeof ATTRACTIONS_DATA !== 'undefined')
+        ? ATTRACTIONS_DATA.filter(a =>
+            a.name_th.includes(q) || a.province.includes(q)
+          ).slice(0, 3).map(a => ({
+            key: `att_${a.id}`, id: a.id, kind: 'attraction',
+            name_th: a.name_th, sub: a.province, status: a.status,
+          }))
+        : [];
+
+    const matches = [...parkMatches, ...attrMatches].slice(0, 6);
+    if (!matches.length) { searchResults.classList.remove('open'); return; }
+
+    searchResults.innerHTML = matches.map(d => {
+        const color = PARK_STATUS_COLOR[d.status] || '#aaa';
+        const tag = d.kind === 'attraction' ? 'วนอุทยาน' : 'อุทยานแห่งชาติ';
+        return `<li onclick="goToResult('${d.kind}', '${d.id}')">
+            <span class="hs-pip" style="background:${color}"></span>
+            <span class="hs-name">${d.name_th}</span>
+            <span class="hs-tag">${tag}</span>
+        </li>`;
+    }).join('');
+    searchResults.classList.add('open');
+});
+
+function goToResult(kind, id) {
+    searchResults.classList.remove('open');
+    searchInput.value = '';
+    if (kind === 'park') flyToPark(Number(id));
+    else flyToAttraction(id);
+}
+
+document.addEventListener('click', e => {
+    if (!e.target.closest('.hero-search')) searchResults.classList.remove('open');
+});
+
+// ── WIKIPEDIA IMAGE FETCH ─────────────────────────────────────────────────────
+parksMap.on('popupopen', e => {
+    setTimeout(async () => {
+        const el = e.popup.getElement();
+        if (!el) return;
+        const hero = el.querySelector('.popup-hero');
+        if (!hero) return;
+        const query = hero.dataset.wiki;
+        if (!query) return;
+
+        const apis = [
+            `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`,
+            `https://th.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`,
+        ];
+
+        for (const url of apis) {
+            try {
+                const r = await fetch(url);
+                if (!r.ok) continue;
+                const d = await r.json();
+                if (!d.thumbnail?.source) continue;
+
+                const img = hero.querySelector('.popup-hero-img');
+                const overlay = hero.querySelector('.popup-hero-overlay');
+                const svgEl = hero.querySelector('svg');
+                const pageUrl = d.content_urls?.desktop?.page || '';
+
+                img.onload = () => {
+                    img.style.opacity = '1';
+                    overlay.style.opacity = '1';
+                    if (svgEl) svgEl.style.opacity = '0';
+                    if (pageUrl && !hero.querySelector('.popup-wiki-credit')) {
+                        const credit = document.createElement('a');
+                        credit.className = 'popup-wiki-credit';
+                        credit.href = pageUrl;
+                        credit.target = '_blank';
+                        credit.rel = 'noopener';
+                        credit.style.cssText = 'position:absolute;bottom:8px;right:10px;font-size:9px;color:rgba(255,255,255,0.75);text-decoration:none;z-index:3;background:rgba(0,0,0,0.35);padding:2px 7px;border-radius:4px;letter-spacing:.02em';
+                        credit.textContent = '© Wikipedia';
+                        hero.appendChild(credit);
+                    }
+                };
+                img.src = d.thumbnail.source.replace(/\/\d+px-/, '/600px-');
+                break;
+            } catch {}
+        }
+    }, 80);
+});
 
 </script>
 </body>

@@ -1,0 +1,5 @@
+{
+  "buildCommand": "python3 tools/build_park_map.py && python3 tools/build_attractions.py",
+  "outputDirectory": ".",
+  "installCommand": ""
+}
