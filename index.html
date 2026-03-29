@@ -60,66 +60,207 @@
 
         body {
             font-family: 'Cloud Soft', 'Sarabun', sans-serif;
-            background: var(--calm);
+            background: #f7faf8;
             color: var(--text);
             overflow-x: hidden;
         }
 
         /* ── NAV ── */
         nav {
-            position: fixed;
-            inset: 0 0 auto;
+            position: sticky;
+            top: 0;
             z-index: 1000;
-            height: 72px;
+            width: 100%;
+            background: rgba(247,250,248,0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: none;
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            height: 80px;
             padding: 0 52px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: linear-gradient(to right, rgba(0,0,0,0.92) 0%, rgba(15,108,57,0.95) 100%);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(255,255,255,0.12);
         }
 
-        .nav-logo img { height: 68px; width: auto; display: block; }
+        .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .nav-logo img { height: 96px; width: auto; display: block; }
+        .nav-brand {
+            font-family: 'Cloud Soft', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--dark);
+            letter-spacing: -0.01em;
+        }
 
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 36px;
+            gap: 4px;
             list-style: none;
         }
 
         .nav-links a {
             font-size: 14px;
             font-weight: 500;
-            color: rgba(255,255,255,0.85);
+            color: var(--muted);
             text-decoration: none;
-            letter-spacing: 0.01em;
-            transition: color 0.2s;
+            padding: 8px 14px;
+            border-radius: 8px;
+            transition: background 0.15s, color 0.15s;
+            white-space: nowrap;
         }
 
-        .nav-links a:hover { color: #ffffff; }
+        .nav-links a:hover { background: rgba(0,0,0,0.05); color: var(--dark); }
 
         .nav-cta {
-            background: rgba(255,255,255,0.18) !important;
+            background: var(--dark) !important;
             color: #ffffff !important;
-            padding: 9px 22px;
-            border-radius: 100px;
-            border: 1px solid rgba(255,255,255,0.35) !important;
+            padding: 8px 20px !important;
+            border-radius: 8px !important;
+            font-weight: 600 !important;
+            margin-left: 8px;
         }
 
-        .nav-cta:hover { background: rgba(255,255,255,0.28) !important; }
+        .nav-cta:hover { background: #333 !important; }
+
+        /* ── LANG TOGGLE ── */
+        .lang-toggle {
+            font-family: 'Cloud Soft', 'Sarabun', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            color: var(--muted);
+            background: transparent;
+            border: 1.5px solid rgba(0,0,0,0.12);
+            border-radius: 6px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: color 0.15s, border-color 0.15s;
+            flex-shrink: 0;
+        }
+        .lang-toggle:hover {
+            color: var(--dark);
+            border-color: var(--dark);
+        }
+
+        /* ── NAV MOBILE TOGGLE ── */
+        .nav-menu-btn {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .nav-menu-icon {
+            transition: transform 0.6s ease;
+        }
+        .nav-menu-btn.open .nav-menu-icon {
+            transform: rotate(-45deg);
+        }
+        .nav-menu-icon .mt-path {
+            transition: stroke-dasharray 0.6s ease, stroke-dashoffset 0.6s ease;
+            stroke-dasharray: 12 63;
+        }
+        .nav-menu-btn.open .nav-menu-icon .mt-path {
+            stroke-dasharray: 20 300;
+            stroke-dashoffset: -32.42px;
+        }
+
+        /* ── NAV MOBILE SHEET ── */
+        .nav-sheet-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            backdrop-filter: blur(4px);
+            z-index: 1100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .nav-sheet-overlay.open { opacity: 1; pointer-events: auto; }
+
+        .nav-sheet {
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            width: 75%;
+            max-width: 300px;
+            background: rgba(255,255,255,0.97);
+            backdrop-filter: blur(16px);
+            z-index: 1101;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(0,0,0,0.07);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        .nav-sheet.open { transform: translateX(0); }
+
+        .nav-sheet-links {
+            padding: 72px 16px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+        }
+        .nav-sheet-links a {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--muted);
+            text-decoration: none;
+            padding: 11px 16px;
+            border-radius: 8px;
+            transition: background 0.15s, color 0.15s;
+        }
+        .nav-sheet-links a:hover { background: rgba(0,0,0,0.05); color: var(--dark); }
+
+        .nav-sheet-footer {
+            padding: 16px;
+            border-top: 1px solid rgba(0,0,0,0.07);
+        }
+        .nav-sheet-footer .nav-cta {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            padding: 12px 20px !important;
+            border-radius: 8px !important;
+            font-size: 14px;
+        }
 
         /* ── HERO ── */
         .hero {
-            padding: 148px 52px 64px;
-            max-width: 860px;
-            margin: 0 auto;
+            padding: 100px 52px 72px;
+            width: 100%;
             text-align: center;
+            position: relative;
+            background: #f7faf8;
         }
 
-        .hero-left {}
+        .hero-glow {
+            position: absolute;
+            inset: 0 0 -80px 0;
+            z-index: 0;
+            pointer-events: none;
+            background-image: radial-gradient(circle at 50% 45%, rgba(168,223,192,0.55) 0%, transparent 65%);
+        }
+
+        .hero-left {
+            position: relative;
+            z-index: 1;
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
 
         /* ── HERO SEARCH ── */
         .hero-search {
@@ -352,7 +493,7 @@
 
         /* ── ABOUT SECTION ── */
         .about-section {
-            padding: 80px 52px 0;
+            padding: 40px 52px 0;
             max-width: 1400px;
             margin: 0 auto;
         }
@@ -407,32 +548,33 @@
 
         .parks-stats-bar {
             display: flex;
-            gap: 12px;
-            margin: 28px 0 22px;
-            flex-wrap: wrap;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
         }
 
         .ps-stat {
             display: flex;
             align-items: center;
             gap: 8px;
-            background: white;
-            border: 1px solid var(--line);
-            border-radius: 100px;
-            padding: 9px 18px;
             font-size: 13px;
-            color: var(--text);
-            font-weight: 400;
+            color: var(--muted);
         }
 
         .ps-dot {
-            width: 9px;
-            height: 9px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
             flex-shrink: 0;
         }
 
-        .ps-num { font-weight: 700; }
+        .ps-num {
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 15px;
+            min-width: 28px;
+            text-align: right;
+        }
 
         .parks-filters {
             display: flex;
@@ -647,19 +789,44 @@
 
         /* ── RESPONSIVE ── */
         @media (max-width: 900px) {
-            nav { padding: 0 24px; }
-            .hero { padding: 120px 24px 48px; }
+            /* Nav */
+            .nav-inner { padding: 0 20px; height: 64px; }
+            .nav-logo img { height: 52px; }
+            .nav-links { display: none; }
+            .nav-menu-btn { display: flex; }
+
+            /* Hero */
+            .hero { padding: 56px 20px 48px; }
+            /* Prevent iOS Safari auto-zoom on input focus */
+            .hs-input-wrap input { font-size: 16px; }
+
+            /* Parks stats: left-align when stacked */
+            .parks-stats-bar { align-items: flex-start; }
+
+            /* Sections */
             .map-wrapper { padding: 0 20px; }
             .section-wrap { padding: 60px 24px 0; }
             .cards-grid { grid-template-columns: 1fr; }
-            .section-head { flex-direction: column; align-items: flex-start; }
+            .section-head { flex-direction: column; align-items: flex-start; gap: 20px; }
             .side-panel { width: calc(100% - 40px); right: 20px; }
+
+            /* Footer */
             footer { padding: 36px 24px; flex-direction: column; align-items: flex-start; }
             .footer-right { text-align: left; }
+            .footer-mid { text-align: left; }
+
+            /* Grids */
             .about-grid, .news-grid { grid-template-columns: 1fr; }
             .about-section, .parks-section, .news-section { padding: 60px 24px 0; }
-            #parks-map { height: 450px; }
+
+            /* Map */
+            #parks-map { height: 420px; }
+
+            /* Filter pills wrap tighter */
+            .parks-filters { gap: 8px; }
+            .pf-pill { font-size: 12px; padding: 7px 14px; }
         }
+
     </style>
 </head>
 <body>
@@ -673,57 +840,103 @@
 
 <!-- ════════════════════════════ NAV ════════════════════════════ -->
 <nav>
-    <a href="#" class="nav-logo">
-        <img src="brand_asset/WAVS Logo.png" alt="WAVS">
-    </a>
-    <ul class="nav-links">
-        <li><a href="#about">เกี่ยวกับ</a></li>
-        <li><a href="#parks-section">สถานะอุทยาน</a></li>
-        <li><a href="#news-section">ข่าวสาร</a></li>
-        <li><a href="#" class="nav-cta">งานวิจัย</a></li>
-    </ul>
+    <div class="nav-inner">
+        <a href="#" class="nav-logo">
+            <img src="brand_asset/WAVS Logo.png" alt="WAVS">
+        </a>
+        <div class="nav-links">
+            <a href="#about"         data-i18n="nav_about">เกี่ยวกับ</a>
+            <a href="#parks-section" data-i18n="nav_parks">สถานะอุทยาน</a>
+            <a href="#news-section"  data-i18n="nav_news">ข่าวสาร</a>
+            <a href="#" class="nav-cta" data-i18n="nav_research">งานวิจัย</a>
+        </div>
+        <button id="langToggle" class="lang-toggle">EN</button>
+        <button class="nav-menu-btn" id="navMenuBtn" aria-label="เปิดเมนู">
+            <svg class="nav-menu-icon" viewBox="0 0 32 32" width="24" height="24"
+                 fill="none" stroke="currentColor" stroke-width="2.5"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <path class="mt-path" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"/>
+                <path d="M7 16 27 16"/>
+            </svg>
+        </button>
+    </div>
 </nav>
+
+<!-- Mobile Sheet -->
+<div class="nav-sheet-overlay" id="navOverlay"></div>
+<div class="nav-sheet" id="navSheet" aria-hidden="true">
+    <div class="nav-sheet-links">
+        <a href="#about"         onclick="closeSheet()" data-i18n="nav_about">เกี่ยวกับ</a>
+        <a href="#parks-section" onclick="closeSheet()" data-i18n="nav_parks">สถานะอุทยาน</a>
+        <a href="#news-section"  onclick="closeSheet()" data-i18n="nav_news">ข่าวสาร</a>
+    </div>
+    <div class="nav-sheet-footer">
+        <a href="#" class="nav-cta" onclick="closeSheet()" data-i18n="nav_research">งานวิจัย</a>
+    </div>
+</div>
 
 <!-- ════════════════════════════ HERO ════════════════════════════ -->
 <section class="hero">
+    <div class="hero-glow" aria-hidden="true"></div>
     <div class="hero-left">
         <div class="hero-badge">
             <span class="hero-badge-dot"></span>
-            ติดตามสถานการณ์ · ประเทศไทย
+            <span data-i18n="hero_badge">ติดตามสถานการณ์ · ประเทศไทย</span>
         </div>
-        <h1>เมื่อธรรมชาติ<br>กำลัง<em>ปิดประตู</em></h1>
-        <p>วิทยานิพนธ์เชิงโต้ตอบที่สำรวจการปิดสถานที่ธรรมชาติอันเป็นที่รักของประเทศไทย<br>และนำทางค้นพบเส้นทางใหม่อย่างใส่ใจ</p>
+        <h1 data-i18n="hero_h1">เมื่อธรรมชาติ<br>กำลัง<em>ปิดประตู</em></h1>
+        <p data-i18n="hero_p">วิทยานิพนธ์เชิงโต้ตอบที่สำรวจการปิดสถานที่ธรรมชาติอันเป็นที่รักของประเทศไทย<br>และนำทางค้นพบเส้นทางใหม่อย่างใส่ใจ</p>
         <div class="hero-search">
             <div class="hs-input-wrap">
                 <svg class="hs-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <input id="heroSearch" type="text" placeholder="ค้นหาอุทยาน หรือวนอุทยาน..." autocomplete="off" />
+                <input id="heroSearch" type="text" data-i18n-placeholder="search_placeholder" placeholder="ค้นหาอุทยาน หรือวนอุทยาน..." autocomplete="off" />
             </div>
             <ul id="heroSearchResults" class="hs-results"></ul>
         </div>
     </div>
 </section>
 
+<!-- ════════════════════════════ PARKS MAP ════════════════════════════ -->
+<section class="parks-section" id="parks-section">
+    <div class="section-head">
+        <h2 class="section-title" data-i18n="parks_title">อุทยานแห่งชาติ<br><em>สถานะวันนี้</em></h2>
+        <div class="parks-stats-bar">
+            <div class="ps-stat"><div class="ps-dot" style="background:#D30D0E"></div><span class="ps-num">47</span>&nbsp;<span data-i18n="stat_closed">ปิดทั้งหมด</span></div>
+            <div class="ps-stat"><div class="ps-dot" style="background:#FFDD00"></div><span class="ps-num">38</span>&nbsp;<span data-i18n="stat_partial">บางส่วนปิด</span></div>
+            <div class="ps-stat"><div class="ps-dot" style="background:#55A630"></div><span class="ps-num">156</span>&nbsp;<span data-i18n="stat_open">เปิดปกติ</span></div>
+        </div>
+    </div>
+    <div class="parks-filters">
+        <button class="pf-pill active" onclick="filterParks('all', this)"    data-i18n="filter_all">ทั้งหมด 241</button>
+        <button class="pf-pill" onclick="filterParks('fully_closed', this)"  data-i18n="filter_closed">🔴&nbsp;ปิดทั้งหมด</button>
+        <button class="pf-pill" onclick="filterParks('closed', this)"        data-i18n="filter_partial">🟡&nbsp;บางส่วนปิด</button>
+        <button class="pf-pill" onclick="filterParks('open', this)"          data-i18n="filter_open">🟢&nbsp;เปิดปกติ</button>
+    </div>
+    <div class="parks-map-container">
+        <div id="parks-map"></div>
+    </div>
+</section>
+
 <!-- ════════════════════════════ ABOUT ════════════════════════════ -->
 <section class="about-section" id="about">
     <div class="section-head" style="flex-direction:column;align-items:center;text-align:center">
-        <h2 class="section-title" style="max-width:100%">เกี่ยวกับ <em>WAVS</em></h2>
-        <p class="section-desc" style="max-width:560px">โครงการวิทยานิพนธ์ที่ติดตามสถานะการปิดอุทยานแห่งชาติทั่วประเทศไทย<br>เพื่อส่งเสริมการท่องเที่ยวเชิงอนุรักษ์อย่างยั่งยืน</p>
+        <h2 class="section-title" style="max-width:100%" data-i18n="about_title">เกี่ยวกับ <em>WAVS</em></h2>
+        <p class="section-desc" style="max-width:560px" data-i18n="about_desc">โครงการวิทยานิพนธ์ที่ติดตามสถานะการปิดอุทยานแห่งชาติทั่วประเทศไทย<br>เพื่อส่งเสริมการท่องเที่ยวเชิงอนุรักษ์อย่างยั่งยืน</p>
     </div>
     <div class="about-grid">
         <div class="about-card">
             <div class="about-icon">🗺️</div>
-            <div class="about-card-title">อัพเดทข้อมูลครอบคลุมทั่วประเทศ</div>
-            <div class="about-card-text">WAVS ติดตามสถานะการเปิด-ปิดของอุทยานทั่วประเทศไทย ครอบคลุมการปิดตามฤดูกาล ชั่วคราว และไม่มีกำหนด โดยใช้ข้อมูลอย่างเป็นทางการจาก DNP</div>
+            <div class="about-card-title" data-i18n="about1_title">อัพเดทข้อมูลครอบคลุมทั่วประเทศ</div>
+            <div class="about-card-text" data-i18n="about1_text">WAVS ติดตามสถานะการเปิด-ปิดของอุทยานทั่วประเทศไทย ครอบคลุมการปิดตามฤดูกาล ชั่วคราว และไม่มีกำหนด โดยใช้ข้อมูลอย่างเป็นทางการจาก DNP</div>
         </div>
         <div class="about-card">
             <div class="about-icon">📊</div>
-            <div class="about-card-title">การวิจัยเชิงข้อมูล</div>
-            <div class="about-card-text">วิทยานิพนธ์ระดับบัณฑิตศึกษาที่ศึกษาสภาพแวดล้อมและนโยบายที่อยู่เบื้องหลังการปิดอุทยาน — ทำไมระบบนิเวศถึงต้องปิดตัว และหมายความว่าอย่างไรต่อความสัมพันธ์ของไทยกับมรดกทางธรรมชาติ</div>
+            <div class="about-card-title" data-i18n="about2_title">การวิจัยเชิงข้อมูล</div>
+            <div class="about-card-text" data-i18n="about2_text">วิทยานิพนธ์ระดับบัณฑิตศึกษาที่ศึกษาสภาพแวดล้อมและนโยบายที่อยู่เบื้องหลังการปิดอุทยาน — ทำไมระบบนิเวศถึงต้องปิดตัว และหมายความว่าอย่างไรต่อความสัมพันธ์ของไทยกับมรดกทางธรรมชาติ</div>
         </div>
         <div class="about-card">
             <div class="about-icon">🌿</div>
-            <div class="about-card-title">ทางเลือกที่ใส่ใจ</div>
-            <div class="about-card-text">สำหรับทุกสถานที่ที่ปิด WAVS จะระบุทางเลือกที่เปิดอยู่ซึ่งมอบประสบการณ์ธรรมชาติที่ใกล้เคียงกันแต่กระทบระบบนิเวศน้อยกว่า — เพื่อให้คุณยังสามารถสำรวจประเทศไทยได้อย่างรับผิดชอบ</div>
+            <div class="about-card-title" data-i18n="about3_title">ทางเลือกที่ใส่ใจ</div>
+            <div class="about-card-text" data-i18n="about3_text">สำหรับทุกสถานที่ที่ปิด WAVS จะระบุทางเลือกที่เปิดอยู่ซึ่งมอบประสบการณ์ธรรมชาติที่ใกล้เคียงกันแต่กระทบระบบนิเวศน้อยกว่า — เพื่อให้คุณยังสามารถสำรวจประเทศไทยได้อย่างรับผิดชอบ</div>
         </div>
     </div>
     <div class="social-bar">
@@ -742,33 +955,11 @@
     </div>
 </section>
 
-<!-- ════════════════════════════ PARKS MAP ════════════════════════════ -->
-<section class="parks-section" id="parks-section">
-    <div class="section-head">
-        <h2 class="section-title">อุทยานแห่งชาติ<br><em>สถานะวันนี้</em></h2>
-        <p class="section-desc" style="text-align:right">สถานะการปิดของอุทยานแห่งชาติและวนอุทยานทั้ง 241 แห่งทั่วประเทศไทย<br>คลิกหมุดเพื่อดูว่าสถานที่ใดได้รับผลกระทบและเพราะเหตุใด<br>ข้อมูล: กรมอุทยานแห่งชาติ สัตว์ป่า และพันธุ์พืช (DNP)</p>
-    </div>
-    <div class="parks-stats-bar">
-        <div class="ps-stat"><div class="ps-dot" style="background:#D30D0E"></div><span class="ps-num">47</span>&nbsp;ปิดทั้งหมด</div>
-        <div class="ps-stat"><div class="ps-dot" style="background:#FFDD00"></div><span class="ps-num">38</span>&nbsp;บางส่วนปิด</div>
-        <div class="ps-stat"><div class="ps-dot" style="background:#55A630"></div><span class="ps-num">156</span>&nbsp;เปิดปกติ</div>
-    </div>
-    <div class="parks-filters">
-        <button class="pf-pill active" onclick="filterParks('all', this)">ทั้งหมด 241</button>
-        <button class="pf-pill" onclick="filterParks('fully_closed', this)">🔴&nbsp;ปิดทั้งหมด</button>
-        <button class="pf-pill" onclick="filterParks('closed', this)">🟡&nbsp;บางส่วนปิด</button>
-        <button class="pf-pill" onclick="filterParks('open', this)">🟢&nbsp;เปิดปกติ</button>
-    </div>
-    <div class="parks-map-container">
-        <div id="parks-map"></div>
-    </div>
-</section>
-
 <!-- ════════════════════════════ NEWS ════════════════════════════ -->
 <section class="news-section" id="news-section">
     <div class="section-head">
-        <h2 class="section-title">ข่าวสาร<em>ล่าสุด</em></h2>
-        <p class="section-desc">ประกาศล่าสุดจากกรมอุทยานแห่งชาติและความเคลื่อนไหวในการบริหารจัดการพื้นที่คุ้มครองของไทย</p>
+        <h2 class="section-title" data-i18n="news_title">ข่าวสาร<em>ล่าสุด</em></h2>
+        <p class="section-desc" data-i18n="news_desc">ประกาศล่าสุดจากกรมอุทยานแห่งชาติและความเคลื่อนไหวในการบริหารจัดการพื้นที่คุ้มครองของไทย</p>
     </div>
     <div class="news-grid">
         <a class="news-card" href="https://www.tatnews.org/2025/12/annual-seasonal-opening-closure-of-attractions-of-thailands-national-park-system/" target="_blank" rel="noopener">
@@ -817,11 +1008,11 @@
         <img src="brand_asset/WAVS Logo.png" alt="WAVS">
     </div>
     <div class="footer-mid">
-        โครงการวิทยานิพนธ์ WAVS · ติดตามสถานที่ธรรมชาติไทย<br>
-        <span style="font-size:11px;opacity:.6">คลื่นแห่งความใส่ใจในโลกที่วุ่นวาย</span>
+        <span data-i18n="footer_mid">โครงการวิทยานิพนธ์ WAVS · ติดตามสถานที่ธรรมชาติไทย</span><br>
+        <span style="font-size:11px;opacity:.6" data-i18n="footer_tagline">คลื่นแห่งความใส่ใจในโลกที่วุ่นวาย</span>
     </div>
     <div class="footer-right">
-        ข้อมูล: กรมอุทยานแห่งชาติไทย & งานวิจัยทางวิชาการ<br>
+        <span data-i18n="footer_right">ข้อมูล: กรมอุทยานแห่งชาติไทย & งานวิจัยทางวิชาการ</span><br>
         © 2026 WAVS
     </div>
 </footer>
@@ -1459,6 +1650,116 @@ parksMap.on('popupopen', e => {
         }
     }, 80);
 });
+
+// ── i18n ─────────────────────────────────────────────────────────
+const i18n = {
+    th: {
+        nav_about:      'เกี่ยวกับ',
+        nav_parks:      'สถานะอุทยาน',
+        nav_news:       'ข่าวสาร',
+        nav_research:   'งานวิจัย',
+        hero_badge:     'ติดตามสถานการณ์ · ประเทศไทย',
+        hero_h1:        'เมื่อธรรมชาติ<br>กำลัง<em>ปิดประตู</em>',
+        hero_p:         'วิทยานิพนธ์เชิงโต้ตอบที่สำรวจการปิดสถานที่ธรรมชาติอันเป็นที่รักของประเทศไทย<br>และนำทางค้นพบเส้นทางใหม่อย่างใส่ใจ',
+        search_placeholder: 'ค้นหาอุทยาน หรือวนอุทยาน...',
+        parks_title:    'อุทยานแห่งชาติ<br><em>สถานะวันนี้</em>',
+        stat_closed:    'ปิดทั้งหมด',
+        stat_partial:   'บางส่วนปิด',
+        stat_open:      'เปิดปกติ',
+        filter_all:     'ทั้งหมด 241',
+        filter_closed:  '🔴\u00a0ปิดทั้งหมด',
+        filter_partial: '🟡\u00a0บางส่วนปิด',
+        filter_open:    '🟢\u00a0เปิดปกติ',
+        about_title:    'เกี่ยวกับ <em>WAVS</em>',
+        about_desc:     'โครงการวิทยานิพนธ์ที่ติดตามสถานะการปิดอุทยานแห่งชาติทั่วประเทศไทย<br>เพื่อส่งเสริมการท่องเที่ยวเชิงอนุรักษ์อย่างยั่งยืน',
+        about1_title:   'อัพเดทข้อมูลครอบคลุมทั่วประเทศ',
+        about1_text:    'WAVS ติดตามสถานะการเปิด-ปิดของอุทยานทั่วประเทศไทย ครอบคลุมการปิดตามฤดูกาล ชั่วคราว และไม่มีกำหนด โดยใช้ข้อมูลอย่างเป็นทางการจาก DNP',
+        about2_title:   'การวิจัยเชิงข้อมูล',
+        about2_text:    'วิทยานิพนธ์ระดับบัณฑิตศึกษาที่ศึกษาสภาพแวดล้อมและนโยบายที่อยู่เบื้องหลังการปิดอุทยาน — ทำไมระบบนิเวศถึงต้องปิดตัว และหมายความว่าอย่างไรต่อความสัมพันธ์ของไทยกับมรดกทางธรรมชาติ',
+        about3_title:   'ทางเลือกที่ใส่ใจ',
+        about3_text:    'สำหรับทุกสถานที่ที่ปิด WAVS จะระบุทางเลือกที่เปิดอยู่ซึ่งมอบประสบการณ์ธรรมชาติที่ใกล้เคียงกันแต่กระทบระบบนิเวศน้อยกว่า — เพื่อให้คุณยังสามารถสำรวจประเทศไทยได้อย่างรับผิดชอบ',
+        news_title:     'ข่าวสาร<em>ล่าสุด</em>',
+        news_desc:      'ประกาศล่าสุดจากกรมอุทยานแห่งชาติและความเคลื่อนไหวในการบริหารจัดการพื้นที่คุ้มครองของไทย',
+        footer_mid:     'โครงการวิทยานิพนธ์ WAVS · ติดตามสถานที่ธรรมชาติไทย',
+        footer_tagline: 'คลื่นแห่งความใส่ใจในโลกที่วุ่นวาย',
+        footer_right:   'ข้อมูล: กรมอุทยานแห่งชาติไทย & งานวิจัยทางวิชาการ',
+    },
+    en: {
+        nav_about:      'About',
+        nav_parks:      'Park Status',
+        nav_news:       'News',
+        nav_research:   'Research',
+        hero_badge:     'Tracking Thailand · In Real Time',
+        hero_h1:        'When Nature<br>Closes Its <em>Doors</em>',
+        hero_p:         'An interactive thesis exploring the closure of Thailand\'s beloved natural sites<br>and guiding mindful discovery of alternative paths.',
+        search_placeholder: 'Search national parks or forest parks...',
+        parks_title:    'National Parks<br><em>Status Today</em>',
+        stat_closed:    'Fully Closed',
+        stat_partial:   'Partially Closed',
+        stat_open:      'Open',
+        filter_all:     'All 241',
+        filter_closed:  '🔴\u00a0Fully Closed',
+        filter_partial: '🟡\u00a0Partially Closed',
+        filter_open:    '🟢\u00a0Open',
+        about_title:    'About <em>WAVS</em>',
+        about_desc:     'A thesis project tracking the closure status of national parks across Thailand<br>to promote sustainable, conservation-minded tourism.',
+        about1_title:   'Nationwide Coverage',
+        about1_text:    'WAVS tracks the open/closed status of parks across Thailand — covering seasonal, temporary, and indefinite closures — using official data from the DNP.',
+        about2_title:   'Data-Driven Research',
+        about2_text:    'A graduate thesis examining the environmental and policy forces behind park closures — why ecosystems need to shut down, and what that means for Thailand\'s relationship with its natural heritage.',
+        about3_title:   'Mindful Alternatives',
+        about3_text:    'For every closed site, WAVS identifies open alternatives that offer a similar natural experience with less ecological impact — so you can still explore Thailand responsibly.',
+        news_title:     'Latest <em>News</em>',
+        news_desc:      'Recent announcements from the Department of National Parks and developments in Thailand\'s protected area management.',
+        footer_mid:     'WAVS Thesis Project · Tracking Thailand\'s Natural Sites',
+        footer_tagline: 'A wave of care in a turbulent world',
+        footer_right:   'Data: Thailand DNP & Academic Research',
+    }
+};
+
+let currentLang = 'th';
+
+function applyLang(lang) {
+    const dict = i18n[lang];
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key] !== undefined) el.innerHTML = dict[key];
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (dict[key] !== undefined) el.placeholder = dict[key];
+    });
+    document.documentElement.lang = lang;
+    const btn = document.getElementById('langToggle');
+    btn.textContent = lang === 'th' ? 'EN' : 'TH';
+    currentLang = lang;
+}
+
+document.getElementById('langToggle').addEventListener('click', () => {
+    applyLang(currentLang === 'th' ? 'en' : 'th');
+});
+
+// ── MOBILE NAV SHEET ─────────────────────────────────────────────
+const navMenuBtn  = document.getElementById('navMenuBtn');
+const navSheet    = document.getElementById('navSheet');
+const navOverlay  = document.getElementById('navOverlay');
+
+function openSheet() {
+    navSheet.classList.add('open');
+    navOverlay.classList.add('open');
+    navMenuBtn.classList.add('open');
+    navSheet.setAttribute('aria-hidden', 'false');
+}
+function closeSheet() {
+    navSheet.classList.remove('open');
+    navOverlay.classList.remove('open');
+    navMenuBtn.classList.remove('open');
+    navSheet.setAttribute('aria-hidden', 'true');
+}
+navMenuBtn.addEventListener('click', () =>
+    navSheet.classList.contains('open') ? closeSheet() : openSheet()
+);
+navOverlay.addEventListener('click', closeSheet);
 
 </script>
 </body>
