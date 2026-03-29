@@ -1224,6 +1224,8 @@ const parksMap = L.map('parks-map', {
     inertiaDeceleration: 2000,
     inertiaMaxSpeed: 1200,
     easeLinearity: 0.35,
+    closePopupOnClick: false,
+    tap: false,
 });
 
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
@@ -1419,7 +1421,7 @@ if (typeof PARKS_CLOSURES !== 'undefined') {
     PARKS_CLOSURES.forEach(p => {
         if (!p.lat || !p.lon) return;
         const m = L.marker([p.lat, p.lon], { icon: makeParkIcon(p.status) });
-        m.bindPopup(buildParkPopup(p), { maxWidth: 440, minWidth: 300 });
+        m.bindPopup(buildParkPopup(p), { maxWidth: 440, minWidth: 300, autoPan: true, autoPanPaddingTopLeft: [20, 80], autoPanPaddingBottomRight: [20, 20] });
         if (parkClusters[p.status]) parkClusters[p.status].addLayer(m);
         parkMarkerList.push({ marker: m, status: p.status });
         parkMarkersById[p.id] = { marker: m, status: p.status };
@@ -1507,7 +1509,7 @@ const attractionMarkersById = {};
 if (typeof ATTRACTIONS_DATA !== 'undefined') {
     ATTRACTIONS_DATA.forEach(a => {
         const m = L.marker([a.lat, a.lon], { icon: makeParkIcon(a.status) });
-        m.bindPopup(buildAttractionPopup(a), { maxWidth: 420, minWidth: 280 });
+        m.bindPopup(buildAttractionPopup(a), { maxWidth: 420, minWidth: 280, autoPan: true, autoPanPaddingTopLeft: [20, 80], autoPanPaddingBottomRight: [20, 20] });
         if (parkClusters[a.status]) parkClusters[a.status].addLayer(m);
         attractionMarkersById[a.id] = m;
     });
