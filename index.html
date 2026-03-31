@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WAVS — ติดตามสถานที่ธรรมชาติไทย</title>
 
+    <!-- Social sharing (OG) -->
+    <meta property="og:title"       content="WAVS — ติดตามสถานที่ธรรมชาติไทย">
+    <meta property="og:description" content="วิทยานิพนธ์เชิงโต้ตอบที่สำรวจการปิดสถานที่ธรรมชาติอันเป็นที่รักของประเทศไทย และนำทางค้นพบเส้นทางใหม่อย่างใส่ใจ">
+    <meta property="og:image"       content="brand_asset/WAVS Logo.png">
+    <meta property="og:type"        content="website">
+    <meta name="twitter:card"       content="summary_large_image">
+    <meta name="twitter:title"      content="WAVS — ติดตามสถานที่ธรรมชาติไทย">
+    <meta name="twitter:description" content="วิทยานิพนธ์เชิงโต้ตอบที่สำรวจการปิดสถานที่ธรรมชาติอันเป็นที่รักของประเทศไทย">
+    <meta name="description"        content="วิทยานิพนธ์เชิงโต้ตอบที่สำรวจการปิดสถานที่ธรรมชาติอันเป็นที่รักของประเทศไทย และนำทางค้นพบเส้นทางใหม่อย่างใส่ใจ">
+
     <!-- Leaflet Map -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -909,13 +919,13 @@
     <div class="section-head">
         <h2 class="section-title" data-i18n="parks_title">อุทยานแห่งชาติ<br><em>สถานะวันนี้</em></h2>
         <div class="parks-stats-bar">
-            <div class="ps-stat"><div class="ps-dot" style="background:#D30D0E"></div><span class="ps-num">47</span>&nbsp;<span data-i18n="stat_closed">ปิดทั้งหมด</span></div>
-            <div class="ps-stat"><div class="ps-dot" style="background:#FFDD00"></div><span class="ps-num">38</span>&nbsp;<span data-i18n="stat_partial">บางส่วนปิด</span></div>
-            <div class="ps-stat"><div class="ps-dot" style="background:#55A630"></div><span class="ps-num">156</span>&nbsp;<span data-i18n="stat_open">เปิดปกติ</span></div>
+            <div class="ps-stat"><div class="ps-dot" style="background:#D30D0E"></div><span class="ps-num" id="stat-n-closed">–</span>&nbsp;<span data-i18n="stat_closed">ปิดทั้งหมด</span></div>
+            <div class="ps-stat"><div class="ps-dot" style="background:#FFDD00"></div><span class="ps-num" id="stat-n-partial">–</span>&nbsp;<span data-i18n="stat_partial">บางส่วนปิด</span></div>
+            <div class="ps-stat"><div class="ps-dot" style="background:#55A630"></div><span class="ps-num" id="stat-n-open">–</span>&nbsp;<span data-i18n="stat_open">เปิดปกติ</span></div>
         </div>
     </div>
     <div class="parks-filters">
-        <button class="pf-pill active" onclick="filterParks('all', this)"    data-i18n="filter_all">ทั้งหมด 241</button>
+        <button class="pf-pill active" id="filter-all-btn" onclick="filterParks('all', this)" data-i18n="filter_all">ทั้งหมด –</button>
         <button class="pf-pill" onclick="filterParks('fully_closed', this)"  data-i18n="filter_closed">🔴&nbsp;ปิดทั้งหมด</button>
         <button class="pf-pill" onclick="filterParks('closed', this)"        data-i18n="filter_partial">🟡&nbsp;บางส่วนปิด</button>
         <button class="pf-pill" onclick="filterParks('open', this)"          data-i18n="filter_open">🟢&nbsp;เปิดปกติ</button>
@@ -1032,153 +1042,9 @@
 setTimeout(() => {
     const splash = document.getElementById('splash');
     splash.classList.add('hidden');
-    setTimeout(() => splash.remove(), 800);
-}, 3200);
+    setTimeout(() => splash.remove(), 600);
+}, 1500);
 
-const _REMOVED = [
-    {
-        id: 1,
-        name: "Maya Bay",
-        name_th: "อ่าวมาหยา",
-        location: "Koh Phi Phi Leh, Krabi",
-        loc_th: "เกาะพีพีเล, กระบี่",
-        coords: [7.6782, 98.7625],
-        status: "restricted",
-        reason: "หลังจากรองรับนักท่องเที่ยวสูงสุดถึง 5,000 คนต่อวัน Maya Bay เผชิญกับการเสื่อมโทรมของแนวปะการังอย่างรุนแรง — ปะการังกว่า 80% ถูกฟอกขาวหรือตายภายในปี 2561 รัฐบาลไทยจึงสั่งปิดอย่างสมบูรณ์เพื่อฟื้นฟูระบบนิเวศ และเปิดใหม่ในปี 2565 ด้วยโควตาผู้เข้าชมสูงสุด 300 คนต่อวัน",
-        closedSince: "2561",
-        statusLabel: "2565 · จำกัดการเข้าชม",
-        alternatives: [2, 3]
-    },
-    {
-        id: 2,
-        name: "Emerald Cave (Tham Morakot)",
-        name_th: "ถ้ำมรกต",
-        location: "Koh Muk, Trang",
-        loc_th: "เกาะมุก, ตรัง",
-        coords: [7.3753, 99.3044],
-        status: "alternative",
-        forClosed: [1],
-        description: "เข้าถึงได้โดยการว่ายน้ำ 80 เมตรผ่านถ้ำทะเลมืด Tham Morakot เปิดออกสู่ชายหาดซ่อนเร้นที่งดงามล้อมรอบด้วยผนังหินปูนสูง — ทั้งหมดนี้ไม่มีฝูงชนเหมือน Maya Bay มหัศจรรย์เท่ากัน และบริหารจัดการอย่างยั่งยืน"
-    },
-    {
-        id: 3,
-        name: "Koh Rok",
-        name_th: "เกาะรอก",
-        location: "Mu Ko Lanta NP, Krabi",
-        loc_th: "อุทยานแห่งชาติหมู่เกาะลันตา, กระบี่",
-        coords: [7.1833, 99.0500],
-        status: "alternative",
-        forClosed: [1],
-        description: "น้ำตื้นสีฟ้าใสราวคริสตัล สวนปะการังสีสันสดใส และชายหาดทรายขาวที่ชวนนึกถึง Maya Bay ในยุครุ่งเรือง เข้าถึงได้แบบทริปวันเดียวพร้อมโควตาต่อวัน รับประกันว่าแนวปะการังจะอยู่ในสุขภาพดีต่อไปอีกหลายปี"
-    },
-    {
-        id: 4,
-        name: "Koh Tachai",
-        name_th: "เกาะตาชัย",
-        location: "Mu Ko Similan NP, Phang-nga",
-        loc_th: "อุทยานแห่งชาติมู่โก้สิมิลัน, พังงา",
-        coords: [9.0150, 97.7872],
-        status: "closed",
-        reason: "ในปี 2559 นักชีววิทยาทางทะเลได้บันทึกความเสียหายอย่างรุนแรงและอาจไม่สามารถฟื้นฟูได้ต่อแนวปะการังของ Koh Tachai จากการท่องเที่ยวเกินขีดจำกัด กรมอุทยานแห่งชาติไทยตัดสินใจครั้งสำคัญปิดเกาะนี้ถาวร ต่างจากการปิดชั่วคราว การห้ามครั้งนี้ไม่มีกำหนดและยังไม่มีแผนเปิดใหม่ในปัจจุบัน",
-        closedSince: "2559",
-        statusLabel: "ไม่มีกำหนด — ไม่มีแผนเปิดใหม่",
-        alternatives: [5, 6]
-    },
-    {
-        id: 5,
-        name: "Richelieu Rock",
-        name_th: "หินริเชลิว",
-        location: "Near Surin Islands, Phang-nga",
-        loc_th: "ใกล้หมู่เกาะสุรินทร์, พังงา",
-        coords: [9.0833, 97.6167],
-        status: "alternative",
-        forClosed: [4],
-        description: "หินโสโครกใต้น้ำรูปเกือกม้าที่ได้รับการจัดอันดับเป็นหนึ่งในแหล่งดำน้ำที่ดีที่สุดในโลก ฉลามวาฬ กระเบนแมนต้า และม้าน้ำรวมตัวกันที่นี่ เข้าถึงได้ด้วยลิฟว์อะบอร์ดที่ได้รับอนุญาต — น่านน้ำอันดามันที่บริสุทธิ์เช่นเดิม ด้วยการดูแลรักษาที่เหมาะสม"
-    },
-    {
-        id: 6,
-        name: "Surin Islands",
-        name_th: "หมู่เกาะสุรินทร์",
-        location: "Phang-nga",
-        loc_th: "พังงา",
-        coords: [9.4167, 97.8667],
-        status: "alternative",
-        forClosed: [4],
-        description: "เกาะบริสุทธิ์ห้าเกาะพร้อมแนวปะการังน้ำตื้นที่สุขภาพดีที่สุดแห่งหนึ่งของไทย อุทยานบังคับใช้การปิดตามฤดูกาล (พ.ค.–ต.ค.) และโควตาผู้เข้าชม — มอบประสบการณ์อันดามันที่ห่างไกลแบบที่ Koh Tachai เคยให้ไว้ อย่างยั่งยืน"
-    },
-    {
-        id: 7,
-        name: "Similan Islands (Full Access)",
-        name_th: "หมู่เกาะสิมิลัน",
-        location: "Mu Ko Similan NP, Phang-nga",
-        loc_th: "อุทยานแห่งชาติมู่โก้สิมิลัน, พังงา",
-        coords: [8.6511, 97.6395],
-        status: "restricted",
-        reason: "การเข้าชมอุทยานทั้งหมดปิดทุกปีตั้งแต่พฤษภาคมถึงตุลาคม เพื่อให้ระบบนิเวศทางทะเลฟื้นตัวตลอดฤดูมรสุม แหล่งดำน้ำและชายหาดด้านในหลายแห่งถูกจำกัดถาวรเนื่องจากการฟอกขาวของปะการังที่บันทึกไว้และระบบนิเวศที่เปราะบาง",
-        closedSince: "ตามฤดูกาล · พ.ค.–ต.ค.",
-        statusLabel: "เปิดใหม่ทุกเดือนพฤศจิกายน",
-        alternatives: [5, 6]
-    },
-    {
-        id: 8,
-        name: "Doi Inthanon (Summit Trails)",
-        name_th: "ดอยอินทนนท์ (เส้นทางยอดดอย)",
-        location: "Chiang Mai",
-        loc_th: "เชียงใหม่",
-        coords: [18.5888, 98.4869],
-        status: "restricted",
-        reason: "เส้นทางยอดเขาหลายสายของยอดเขาสูงที่สุดในประเทศไทย (2,565 ม.) ถูกปิดบางส่วนตั้งแต่ปี 2562 เนื่องจากการพังทลายของดินอย่างรุนแรง การเหยียบทำลายกล้วยไม้เฉพาะถิ่น และการรบกวนที่อยู่อาศัยของนก การค้างคืนต้องขออนุญาตล่วงหน้าและบางโซนปิดถาวร",
-        closedSince: "2562 (บางส่วน)",
-        statusLabel: "เปิดพร้อมต้องมีใบอนุญาต",
-        alternatives: [9, 10]
-    },
-    {
-        id: 9,
-        name: "Doi Chiang Dao",
-        name_th: "ดอยเชียงดาว",
-        location: "Chiang Mai",
-        loc_th: "เชียงใหม่",
-        coords: [19.4083, 98.9167],
-        status: "alternative",
-        forClosed: [8],
-        description: "ยอดเขาสูงอันดับสามของไทยที่ห่อหุ้มด้วยป่าทึบหมอกและหินปูนคาร์สต์ที่ตระการตา ยอดเยี่ยมสำหรับการดูนก — บันทึกไว้มากกว่า 300 ชนิด เส้นทางเดินป่าที่ได้รับอนุญาตในเขตรักษาพันธุ์สัตว์ป่าที่มีนักท่องเที่ยวน้อยกว่า Doi Inthanon มาก"
-    },
-    {
-        id: 10,
-        name: "Doi Pha Hom Pok",
-        name_th: "ดอยผ้าห่มปก",
-        location: "Chiang Mai / Fang District",
-        loc_th: "เชียงใหม่ / อำเภอฝาง",
-        coords: [19.9833, 99.1500],
-        status: "alternative",
-        forClosed: [8],
-        description: "ยอดเขาสูงอันดับสองของไทย (2,285 ม.) ที่เป็นบ้านของป่าเมฆ กล้วยไม้หายาก และลิงอัสสัมที่ใกล้สูญพันธุ์ ประสบการณ์เดินป่าในป่าดงดิบแท้จริงสำหรับผู้ที่ต้องการธรรมชาติบนที่สูงโดยไม่มีฝูงชน"
-    },
-    {
-        id: 11,
-        name: "Ang Thong Marine Park",
-        name_th: "อุทยานแห่งชาติหมู่เกาะอ่างทอง",
-        location: "Surat Thani",
-        loc_th: "สุราษฎร์ธานี",
-        coords: [9.7167, 99.9833],
-        status: "restricted",
-        reason: "Ang Thong National Marine Park ปิดทุกฤดูมรสุม (พฤษภาคม–ตุลาคม) เกาะด้านในบางแห่งมีข้อจำกัดเพิ่มเติมตลอดทั้งปีหลังเหตุการณ์ฟอกขาวของปะการังที่บันทึกไว้และประชากรแมงกะพรุนที่เพิ่มขึ้น จำนวนเรือทริปวันเดียวถูกจำกัดในช่วงเปิด",
-        closedSince: "ตามฤดูกาล · พ.ค.–ต.ค.",
-        statusLabel: "เปิดใหม่ทุกเดือนพฤศจิกายน",
-        alternatives: [12]
-    },
-    {
-        id: 12,
-        name: "Koh Tao",
-        name_th: "เกาะเต่า",
-        location: "Surat Thani",
-        loc_th: "สุราษฎร์ธานี",
-        coords: [10.0956, 99.8397],
-        status: "alternative",
-        forClosed: [11],
-        description: "จุดหมายปลายทางการฝึกดำน้ำในตำนานที่มีทัศนวิสัยใต้น้ำยอดเยี่ยมตลอดปีและพื้นที่ฟื้นฟูแนวปะการังที่ขยายตัวนำโดย Save Koh Tao Foundation เข้าถึงได้ง่ายกว่า พร้อมกีฬาทางน้ำครบครัน และสัตว์ทะเลสีสันสดใส — เปิดอยู่ในขณะที่ Ang Thong พักฟื้น"
-    }
-];
 
 // ── THAILAND BORDER ───────────────────────────────────────────────────────────
 const THAILAND_BOUNDS = [[4.074, 93.861], [22.539, 109.110]];
@@ -1335,7 +1201,7 @@ function nearestOpenParks(park, n = 3) {
 }
 
 function popupHeader(color, label, type, wikiQuery, parkId) {
-    return `<div class="popup-hero" data-wiki="${wikiQuery}" data-park-id="${parkId || ''}" style="height:120px;border-radius:10px;overflow:hidden;margin-bottom:14px;position:relative;background:linear-gradient(150deg,${color}12 0%,${color}38 100%)">
+    return `<div class="popup-hero" data-wiki="${wikiQuery}" data-park-id="${parkId || ''}" style="height:160px;border-radius:10px;overflow:hidden;margin-bottom:14px;position:relative;background:linear-gradient(150deg,${color}12 0%,${color}38 100%)">
         <svg viewBox="0 0 420 120" preserveAspectRatio="xMidYMax slice" style="position:absolute;bottom:0;left:0;width:100%;height:80px;display:block">
             <path d="M0,120 L0,65 L55,42 L110,62 L170,24 L230,52 L290,18 L350,46 L420,30 L420,120 Z" fill="${color}" opacity="0.18"/>
             <path d="M0,120 L0,80 L65,58 L130,72 L195,46 L255,66 L315,40 L385,62 L420,52 L420,120 Z" fill="${color}" opacity="0.28"/>
@@ -1435,6 +1301,27 @@ if (typeof PARKS_CLOSURES !== 'undefined') {
         parkMarkerList.push({ marker: m, status: p.status });
         parkMarkersById[p.id] = { marker: m, status: p.status };
     });
+
+    // ── Dynamic stats from actual data ────────────────────────────
+    const CLOSED_STATUSES = new Set(['fully_closed', 'temporary', 'indefinite']);
+    const PARTIAL_STATUSES = new Set(['active_annual']);
+    let nClosed = 0, nPartial = 0, nOpen = 0;
+    PARKS_CLOSURES.forEach(p => {
+        if (CLOSED_STATUSES.has(p.status))       nClosed++;
+        else if (PARTIAL_STATUSES.has(p.status)) nPartial++;
+        else                                      nOpen++;
+    });
+    const nTotal = PARKS_CLOSURES.length;
+    document.getElementById('stat-n-closed').textContent  = nClosed;
+    document.getElementById('stat-n-partial').textContent = nPartial;
+    document.getElementById('stat-n-open').textContent    = nOpen;
+    // Update filter button + i18n keys so they stay in sync after language switch
+    const allBtn = document.getElementById('filter-all-btn');
+    if (allBtn) allBtn.textContent = 'ทั้งหมด ' + nTotal; // default Thai; i18n switch handles EN
+    if (window.i18n) {
+        i18n.th.filter_all = 'ทั้งหมด ' + nTotal;
+        i18n.en.filter_all = 'All '      + nTotal;
+    }
 }
 
 function flyToPark(id) {
