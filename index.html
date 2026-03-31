@@ -307,7 +307,8 @@
 
         /* ── PARKS UPDATED ── */
         .parks-updated {
-            font-size: 11px; color: var(--muted); margin-top: 6px; letter-spacing: .03em;
+            font-size: 11px; color: var(--muted); margin-top: 8px;
+            letter-spacing: .03em; text-align: right;
         }
 
         /* ── HERO SEARCH ── */
@@ -558,18 +559,20 @@
             border-radius: 20px;
             padding: 32px 28px;
             border: 1px solid var(--line);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .about-icon {
-            width: 44px;
-            height: 44px;
-            background: var(--nature-light);
-            border-radius: 12px;
+            width: 64px;
+            height: 64px;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 20px;
-            font-size: 20px;
+            margin-bottom: 22px;
         }
 
         .about-card-title {
@@ -594,35 +597,6 @@
             margin: 0 auto;
         }
 
-        .parks-stats-bar {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 8px;
-        }
-
-        .ps-stat {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            color: var(--muted);
-        }
-
-        .ps-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .ps-num {
-            font-weight: 700;
-            color: var(--dark);
-            font-size: 15px;
-            min-width: 28px;
-            text-align: right;
-        }
 
         .parks-filters {
             display: flex;
@@ -636,6 +610,7 @@
             border-radius: 100px;
             border: 1.5px solid var(--line);
             background: white;
+            display: inline-flex; align-items: center; gap: 7px;
             font-size: 13px;
             font-weight: 500;
             cursor: pointer;
@@ -644,6 +619,10 @@
             font-family: 'Cloud Soft', sans-serif;
         }
 
+        .pf-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        #stat-n-total, #stat-n-closed, #stat-n-partial, #stat-n-open {
+            opacity: 0.55; font-size: 12px;
+        }
         .pf-pill:hover { border-color: var(--nature); color: var(--nature); }
 
         .pf-pill.active {
@@ -857,9 +836,6 @@
             /* Prevent iOS Safari auto-zoom on input focus */
             .hs-input-wrap input { font-size: 16px; }
 
-            /* Parks stats: left-align when stacked */
-            .parks-stats-bar { align-items: flex-start; }
-
             /* Sections */
             .map-wrapper { padding: 0 20px; }
             .section-wrap { padding: 60px 24px 0; }
@@ -902,8 +878,8 @@
             <img src="brand_asset/WAVS Logo.png" alt="WAVS">
         </a>
         <div class="nav-links">
-            <a href="#about"         data-i18n="nav_about">เกี่ยวกับ</a>
             <a href="#parks-section" data-i18n="nav_parks">สถานะอุทยาน</a>
+            <a href="#about"         data-i18n="nav_about">เกี่ยวกับ</a>
             <a href="#news-section"  data-i18n="nav_news">ข่าวสาร</a>
             <a href="#" class="nav-cta" data-i18n="nav_research">งานวิจัย</a>
         </div>
@@ -923,8 +899,8 @@
 <div class="nav-sheet-overlay" id="navOverlay"></div>
 <div class="nav-sheet" id="navSheet" aria-hidden="true">
     <div class="nav-sheet-links">
-        <a href="#about"         onclick="closeSheet()" data-i18n="nav_about">เกี่ยวกับ</a>
         <a href="#parks-section" onclick="closeSheet()" data-i18n="nav_parks">สถานะอุทยาน</a>
+        <a href="#about"         onclick="closeSheet()" data-i18n="nav_about">เกี่ยวกับ</a>
         <a href="#news-section"  onclick="closeSheet()" data-i18n="nav_news">ข่าวสาร</a>
     </div>
     <div class="nav-sheet-footer">
@@ -960,22 +936,17 @@
 <section class="parks-section" id="parks-section">
     <div class="section-head">
         <h2 class="section-title" data-i18n="parks_title">อุทยานแห่งชาติ<br><em>สถานะวันนี้</em></h2>
-        <div class="parks-updated" data-i18n="parks_updated">ข้อมูล ณ มีนาคม 2569</div>
-        <div class="parks-stats-bar">
-            <div class="ps-stat"><div class="ps-dot" style="background:#D30D0E"></div><span class="ps-num" id="stat-n-closed">–</span>&nbsp;<span data-i18n="stat_closed">ปิดทั้งหมด</span></div>
-            <div class="ps-stat"><div class="ps-dot" style="background:#FFDD00"></div><span class="ps-num" id="stat-n-partial">–</span>&nbsp;<span data-i18n="stat_partial">บางส่วนปิด</span></div>
-            <div class="ps-stat"><div class="ps-dot" style="background:#55A630"></div><span class="ps-num" id="stat-n-open">–</span>&nbsp;<span data-i18n="stat_open">เปิดปกติ</span></div>
-        </div>
     </div>
     <div class="parks-filters">
-        <button class="pf-pill active" id="filter-all-btn" onclick="filterParks('all', this)" data-i18n="filter_all">ทั้งหมด –</button>
-        <button class="pf-pill" onclick="filterParks('fully_closed', this)"  data-i18n="filter_closed">🔴&nbsp;ปิดทั้งหมด</button>
-        <button class="pf-pill" onclick="filterParks('closed', this)"        data-i18n="filter_partial">🟡&nbsp;บางส่วนปิด</button>
-        <button class="pf-pill" onclick="filterParks('open', this)"          data-i18n="filter_open">🟢&nbsp;เปิดปกติ</button>
+        <button class="pf-pill active" id="filter-all-btn" onclick="filterParks('all', this)"><span data-i18n="filter_all_text">ทั้งหมด</span>&nbsp;<span id="stat-n-total">–</span></button>
+        <button class="pf-pill" onclick="filterParks('fully_closed', this)"><span class="pf-dot" style="background:#B8583E"></span><span data-i18n="stat_closed">ปิดทั้งหมด</span>&nbsp;<span id="stat-n-closed">–</span></button>
+        <button class="pf-pill" onclick="filterParks('closed', this)"><span class="pf-dot" style="background:#BF8E38"></span><span data-i18n="stat_partial">บางส่วนปิด</span>&nbsp;<span id="stat-n-partial">–</span></button>
+        <button class="pf-pill" onclick="filterParks('open', this)"><span class="pf-dot" style="background:#3D9468"></span><span data-i18n="stat_open">เปิดปกติ</span>&nbsp;<span id="stat-n-open">–</span></button>
     </div>
     <div class="parks-map-container">
         <div id="parks-map"></div>
     </div>
+    <div class="parks-updated" data-i18n="parks_updated">ข้อมูล ณ มีนาคม 2569</div>
 </section>
 
 <!-- ════════════════════════════ ABOUT ════════════════════════════ -->
@@ -986,17 +957,52 @@
     </div>
     <div class="about-grid">
         <div class="about-card">
-            <div class="about-icon">🗺️</div>
+            <div class="about-icon" style="background:rgba(15,108,57,0.08)">
+                <!-- Map with pins illustration -->
+                <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                    <rect x="4" y="7" width="28" height="22" rx="3" fill="#0F6C39" opacity="0.12"/>
+                    <line x1="4" y1="14" x2="32" y2="14" stroke="#0F6C39" stroke-width="0.8" opacity="0.35"/>
+                    <line x1="4" y1="21" x2="32" y2="21" stroke="#0F6C39" stroke-width="0.8" opacity="0.35"/>
+                    <line x1="13" y1="7"  x2="13" y2="29" stroke="#0F6C39" stroke-width="0.8" opacity="0.35"/>
+                    <line x1="23" y1="7"  x2="23" y2="29" stroke="#0F6C39" stroke-width="0.8" opacity="0.35"/>
+                    <circle cx="13" cy="13" r="3" fill="#B8583E"/>
+                    <line x1="13" y1="16" x2="13" y2="19" stroke="#B8583E" stroke-width="1.4" stroke-linecap="round"/>
+                    <circle cx="23" cy="20" r="2.5" fill="#BF8E38"/>
+                    <line x1="23" y1="22.5" x2="23" y2="25" stroke="#BF8E38" stroke-width="1.4" stroke-linecap="round"/>
+                    <circle cx="10" cy="22" r="2" fill="#3D9468"/>
+                    <line x1="10" y1="24" x2="10" y2="27" stroke="#3D9468" stroke-width="1.4" stroke-linecap="round"/>
+                </svg>
+            </div>
             <div class="about-card-title" data-i18n="about1_title">อัพเดทข้อมูลครอบคลุมทั่วประเทศ</div>
             <div class="about-card-text" data-i18n="about1_text">WAVS ติดตามสถานะการเปิด-ปิดของอุทยานทั่วประเทศไทย ครอบคลุมการปิดตามฤดูกาล ชั่วคราว และไม่มีกำหนด โดยใช้ข้อมูลอย่างเป็นทางการจาก DNP</div>
         </div>
         <div class="about-card">
-            <div class="about-icon">📊</div>
+            <div class="about-icon" style="background:rgba(196,136,42,0.10)">
+                <!-- Bar chart + magnifier illustration -->
+                <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                    <line x1="6" y1="28" x2="30" y2="28" stroke="#1b1b1b" stroke-width="1.4" stroke-linecap="round" opacity="0.18"/>
+                    <rect x="8"  y="18" width="5" height="10" rx="1.5" fill="#3D9468" opacity="0.55"/>
+                    <rect x="15" y="12" width="5" height="16" rx="1.5" fill="#3D9468"/>
+                    <rect x="22" y="15" width="5" height="13" rx="1.5" fill="#3D9468" opacity="0.75"/>
+                    <circle cx="27" cy="10" r="5" stroke="#BF8E38" stroke-width="2" fill="none"/>
+                    <line x1="31" y1="14" x2="34" y2="17" stroke="#BF8E38" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </div>
             <div class="about-card-title" data-i18n="about2_title">การวิจัยเชิงข้อมูล</div>
             <div class="about-card-text" data-i18n="about2_text">วิทยานิพนธ์ระดับบัณฑิตศึกษาที่ศึกษาสภาพแวดล้อมและนโยบายที่อยู่เบื้องหลังการปิดอุทยาน — ทำไมระบบนิเวศถึงต้องปิดตัว และหมายความว่าอย่างไรต่อความสัมพันธ์ของไทยกับมรดกทางธรรมชาติ</div>
         </div>
         <div class="about-card">
-            <div class="about-icon">🌿</div>
+            <div class="about-icon" style="background:rgba(181,67,42,0.08)">
+                <!-- Branching path + leaves illustration -->
+                <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                    <path d="M18 31 L18 20" stroke="#B8583E" stroke-width="2.2" stroke-linecap="round"/>
+                    <path d="M18 20 Q11 15 8 7" stroke="#3D9468" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+                    <path d="M18 20 Q25 15 28 7" stroke="#0F6C39" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+                    <ellipse cx="7"  cy="5.5" rx="4.5" ry="3" fill="#3D9468" opacity="0.75" transform="rotate(-20 7 5.5)"/>
+                    <ellipse cx="29" cy="5.5" rx="4"   ry="3" fill="#0F6C39" opacity="0.80" transform="rotate(20 29 5.5)"/>
+                    <ellipse cx="24" cy="8"   rx="3"   ry="2.2" fill="#0F6C39" opacity="0.45" transform="rotate(30 24 8)"/>
+                </svg>
+            </div>
             <div class="about-card-title" data-i18n="about3_title">ทางเลือกที่ใส่ใจ</div>
             <div class="about-card-text" data-i18n="about3_text">สำหรับทุกสถานที่ที่ปิด WAVS จะระบุทางเลือกที่เปิดอยู่ซึ่งมอบประสบการณ์ธรรมชาติที่ใกล้เคียงกันแต่กระทบระบบนิเวศน้อยกว่า — เพื่อให้คุณยังสามารถสำรวจประเทศไทยได้อย่างรับผิดชอบ</div>
         </div>
@@ -1021,7 +1027,6 @@
 <section class="news-section" id="news-section">
     <div class="section-head">
         <h2 class="section-title" data-i18n="news_title">ข่าวสาร<em>ล่าสุด</em></h2>
-        <p class="section-desc" data-i18n="news_desc">ประกาศล่าสุดจากกรมอุทยานแห่งชาติและความเคลื่อนไหวในการบริหารจัดการพื้นที่คุ้มครองของไทย</p>
     </div>
     <div class="news-grid">
         <a class="news-card" href="https://www.tatnews.org/2025/12/annual-seasonal-opening-closure-of-attractions-of-thailands-national-park-system/" target="_blank" rel="noopener">
@@ -1109,14 +1114,14 @@ fetch('brand_asset/thailand.geojson')
 // ── PARKS MAP ────────────────────────────────────────────────────────────────
 
 const PARK_STATUS_COLOR = {
-    "fully_closed": "#D30D0E",
-    "temporary":    "#FFDD00",
-    "indefinite":   "#FFDD00",
-    "active_annual":"#FFDD00",
-    "open":         "#55A630",
+    "fully_closed": "#B8583E",
+    "temporary":    "#BF8E38",
+    "indefinite":   "#BF8E38",
+    "active_annual":"#BF8E38",
+    "open":         "#3D9468",
 };
 
-function statusTextColor(c) { return c === '#FFDD00' ? '#5a4000' : '#ffffff'; }
+function statusTextColor(c) { return '#ffffff'; }
 
 const PARK_STATUS_LABEL = {
     "fully_closed": "ปิดทั้งหมด",
@@ -1152,9 +1157,9 @@ mapLegend.onAdd = function() {
     const div = L.DomUtil.create('div', 'map-legend');
     div.id = 'map-legend-ctrl';
     div.innerHTML = `
-        <div class="map-legend-row"><span class="map-legend-dot" style="background:#D30D0E"></span><span data-i18n="stat_closed">ปิดทั้งหมด</span></div>
-        <div class="map-legend-row"><span class="map-legend-dot" style="background:#FFDD00"></span><span data-i18n="stat_partial">บางส่วนปิด</span></div>
-        <div class="map-legend-row"><span class="map-legend-dot" style="background:#55A630"></span><span data-i18n="stat_open">เปิดปกติ</span></div>`;
+        <div class="map-legend-row"><span class="map-legend-dot" style="background:#B8583E"></span><span data-i18n="stat_closed">ปิดทั้งหมด</span></div>
+        <div class="map-legend-row"><span class="map-legend-dot" style="background:#BF8E38"></span><span data-i18n="stat_partial">บางส่วนปิด</span></div>
+        <div class="map-legend-row"><span class="map-legend-dot" style="background:#3D9468"></span><span data-i18n="stat_open">เปิดปกติ</span></div>`;
     L.DomEvent.disableClickPropagation(div);
     return div;
 };
@@ -1181,8 +1186,8 @@ function makeParkIcon(status) {
 
 function closureTypeColor(type) {
     if (!type || type === '–') return '#bbb';
-    if (type.includes('Indefinite') || type.includes('Permanent')) return '#D30D0E';
-    if (type.includes('Temporary')) return '#FFDD00';
+    if (type.includes('Indefinite') || type.includes('Permanent')) return '#B8583E';
+    if (type.includes('Temporary')) return '#BF8E38';
     return '#888';
 }
 
@@ -1292,13 +1297,13 @@ function buildParkPopup(p) {
             const altCards = alts.map(a => `
                 <div onclick="flyToPark(${a.id})" style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;cursor:pointer;transition:background 0.15s;margin-bottom:6px;background:#f7fdf9;border:1px solid rgba(85,166,48,0.15)"
                      onmouseover="this.style.background='#edf7f1'" onmouseout="this.style.background='#f7fdf9'">
-                    <div style="width:8px;height:8px;border-radius:50%;background:#55A630;flex-shrink:0"></div>
+                    <div style="width:8px;height:8px;border-radius:50%;background:#3D9468;flex-shrink:0"></div>
                     <div style="flex:1;min-width:0">
                         <div style="font-size:13px;font-weight:600;color:#1b1b1b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.name_th}</div>
                         <div style="font-size:11px;color:#999;margin-top:1px">${a.region}</div>
                     </div>
                     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:1px;flex-shrink:0">
-                        <div style="font-size:11px;color:#55A630;font-weight:600">${Math.round(a.km)} กม.</div>
+                        <div style="font-size:11px;color:#3D9468;font-weight:600">${Math.round(a.km)} กม.</div>
                         <div style="font-size:10px;color:#bbb">ดูแผนที่ →</div>
                     </div>
                 </div>`).join('');
@@ -1342,9 +1347,8 @@ PARK_STATUSES.forEach(s => {
             const color = PARK_STATUS_COLOR[s] || '#aaa';
             const count = cluster.getChildCount();
             const size = count >= 100 ? 54 : count >= 50 ? 48 : count >= 20 ? 42 : count >= 10 ? 36 : 28;
-            const fontSize = size >= 48 ? 14 : size >= 36 ? 13 : 11;
             return L.divIcon({
-                html: `<div style="background:${color};color:${statusTextColor(color)};border-radius:50%;width:${size}px;height:${size}px;display:flex;align-items:center;justify-content:center;font-size:${fontSize}px;font-weight:700;font-family:'Cloud Soft','Sarabun',sans-serif;box-shadow:0 3px 12px rgba(0,0,0,0.25);border:2px solid rgba(255,255,255,0.5)">${count}</div>`,
+                html: `<div style="background:${color};border-radius:50%;width:${size}px;height:${size}px;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px rgba(0,0,0,0.25);border:2px solid rgba(255,255,255,0.5);font-size:9px;font-weight:600;color:#fff;font-family:'Cloud Soft','Sarabun',sans-serif;letter-spacing:.01em;line-height:1;text-align:center">${count}</div>`,
                 className: '', iconSize: [size, size], iconAnchor: [size/2, size/2]
             });
         }
@@ -1372,16 +1376,10 @@ if (typeof PARKS_CLOSURES !== 'undefined') {
         else                                      nOpen++;
     });
     const nTotal = PARKS_CLOSURES.length;
+    document.getElementById('stat-n-total').textContent   = nTotal;
     document.getElementById('stat-n-closed').textContent  = nClosed;
     document.getElementById('stat-n-partial').textContent = nPartial;
     document.getElementById('stat-n-open').textContent    = nOpen;
-    // Update filter button + i18n keys so they stay in sync after language switch
-    const allBtn = document.getElementById('filter-all-btn');
-    if (allBtn) allBtn.textContent = 'ทั้งหมด ' + nTotal; // default Thai; i18n switch handles EN
-    if (window.i18n) {
-        i18n.th.filter_all = 'ทั้งหมด ' + nTotal;
-        i18n.en.filter_all = 'All '      + nTotal;
-    }
 }
 
 function flyToPark(id) {
@@ -1433,12 +1431,12 @@ function buildAttractionPopup(a) {
             ${alts.map(p => `
             <div onclick="flyToPark(${p.id})" style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;cursor:pointer;margin-bottom:6px;background:#f7fdf9;border:1px solid rgba(85,166,48,0.15)"
                  onmouseover="this.style.background='#edf7f1'" onmouseout="this.style.background='#f7fdf9'">
-                <div style="width:8px;height:8px;border-radius:50%;background:#55A630;flex-shrink:0"></div>
+                <div style="width:8px;height:8px;border-radius:50%;background:#3D9468;flex-shrink:0"></div>
                 <div style="flex:1;min-width:0">
                     <div style="font-size:13px;font-weight:600;color:#1b1b1b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.name_th}</div>
                     <div style="font-size:11px;color:#999;margin-top:1px">${p.region}</div>
                 </div>
-                <div style="font-size:11px;color:#55A630;font-weight:600;flex-shrink:0">${Math.round(p.km)} กม.</div>
+                <div style="font-size:11px;color:#3D9468;font-weight:600;flex-shrink:0">${Math.round(p.km)} กม.</div>
             </div>`).join('')}
         </div>` : '';
 
@@ -1688,9 +1686,10 @@ const i18n = {
         stat_partial:   'บางส่วนปิด',
         stat_open:      'เปิดปกติ',
         filter_all:     'ทั้งหมด 241',
-        filter_closed:  '🔴\u00a0ปิดทั้งหมด',
-        filter_partial: '🟡\u00a0บางส่วนปิด',
-        filter_open:    '🟢\u00a0เปิดปกติ',
+        filter_all_text: 'ทั้งหมด',
+        filter_closed:  '<span class="pf-dot" style="background:#B8583E"></span>ปิดทั้งหมด',
+        filter_partial: '<span class="pf-dot" style="background:#BF8E38"></span>บางส่วนปิด',
+        filter_open:    '<span class="pf-dot" style="background:#3D9468"></span>เปิดปกติ',
         about_title:    'เกี่ยวกับ <em>WAVS</em>',
         about_desc:     'โครงการวิทยานิพนธ์ที่ติดตามสถานะการปิดอุทยานแห่งชาติทั่วประเทศไทย<br>เพื่อส่งเสริมการท่องเที่ยวเชิงอนุรักษ์อย่างยั่งยืน',
         about1_title:   'อัพเดทข้อมูลครอบคลุมทั่วประเทศ',
@@ -1721,9 +1720,10 @@ const i18n = {
         stat_partial:   'Partially Closed',
         stat_open:      'Open',
         filter_all:     'All 241',
-        filter_closed:  '🔴\u00a0Fully Closed',
-        filter_partial: '🟡\u00a0Partially Closed',
-        filter_open:    '🟢\u00a0Open',
+        filter_all_text: 'All',
+        filter_closed:  '<span class="pf-dot" style="background:#B8583E"></span>Fully Closed',
+        filter_partial: '<span class="pf-dot" style="background:#BF8E38"></span>Partially Closed',
+        filter_open:    '<span class="pf-dot" style="background:#3D9468"></span>Open',
         about_title:    'About <em>WAVS</em>',
         about_desc:     'A thesis project tracking the closure status of national parks across Thailand<br>to promote sustainable, conservation-minded tourism.',
         about1_title:   'Nationwide Coverage',
