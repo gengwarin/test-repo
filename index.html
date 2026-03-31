@@ -812,7 +812,7 @@
             width: 0%;
             background: var(--nature);
             border-radius: 2px;
-            animation: splashProgress 2s linear 1.1s forwards;
+            animation: splashProgress 1.7s linear 1.1s forwards;
         }
 
         @keyframes splashFadeUp {
@@ -867,7 +867,7 @@
 <!-- ════════════════════════════ SPLASH ════════════════════════════ -->
 <div id="splash">
     <img src="brand_asset/WAVS Logo.png" alt="WAVS" id="splash-logo">
-    <p id="splash-tagline">Nature needs to breathe,<br>before it ceases to be.</p>
+    <p id="splash-tagline">ให้ธรรมชาติหยุดหายใจ ก่อนจะหายไป<br><span style="font-size:0.82em;opacity:0.6">Nature needs to breathe, before it ceases to be.</span></p>
     <div id="splash-bar"><div id="splash-bar-fill"></div></div>
 </div>
 
@@ -940,7 +940,7 @@
     <div class="parks-filters">
         <button class="pf-pill active" id="filter-all-btn" onclick="filterParks('all', this)"><span data-i18n="filter_all_text">ทั้งหมด</span>&nbsp;<span id="stat-n-total">–</span></button>
         <button class="pf-pill" onclick="filterParks('fully_closed', this)"><span class="pf-dot" style="background:#B8583E"></span><span data-i18n="stat_closed">ปิดทั้งหมด</span>&nbsp;<span id="stat-n-closed">–</span></button>
-        <button class="pf-pill" onclick="filterParks('closed', this)"><span class="pf-dot" style="background:#BF8E38"></span><span data-i18n="stat_partial">บางส่วนปิด</span>&nbsp;<span id="stat-n-partial">–</span></button>
+        <button class="pf-pill" onclick="filterParks('partial', this)"><span class="pf-dot" style="background:#BF8E38"></span><span data-i18n="stat_partial">บางส่วนปิด</span>&nbsp;<span id="stat-n-partial">–</span></button>
         <button class="pf-pill" onclick="filterParks('open', this)"><span class="pf-dot" style="background:#3D9468"></span><span data-i18n="stat_open">เปิดปกติ</span>&nbsp;<span id="stat-n-open">–</span></button>
     </div>
     <div class="parks-map-container">
@@ -1056,14 +1056,14 @@
             <div class="news-body">Nation Thailand รายงานการปิดอุทยานแห่งชาติหมู่เกาะสิมิลัน จ.พังงา ตั้งแต่ 16 พ.ค.–14 ต.ค. 2568 เพื่อให้ปะการัง ปลา และสิ่งแวดล้อมทางทะเลฟื้นตัวจากจำนวนนักท่องเที่ยวที่หนาแน่น</div>
             <span class="news-read-more">อ่านต่อที่ Nation Thailand →</span>
         </a>
-        <a class="news-card" href="https://thailand.prd.go.th/en/content/category/detail/id/2078/iid/389350" target="_blank" rel="noopener">
+        <a class="news-card" href="https://www.bangkokpost.com/thailand/general/2863044" target="_blank" rel="noopener">
             <div class="news-meta">
-                <span class="news-tag seasonal">ตามฤดูกาล</span>
-                <span class="news-date">15 พฤษภาคม 2568</span>
+                <span class="news-tag research">วิจัย</span>
+                <span class="news-date">18 กุมภาพันธ์ 2569</span>
             </div>
-            <div class="news-headline">หมู่เกาะสิมิลัน–สุรินทร์ปิดประจำปี 16 พ.ค.–14 ต.ค. 2568</div>
-            <div class="news-body">DNP ประกาศปิดอุทยานแห่งชาติหมู่เกาะสิมิลันและหมู่เกาะสุรินทร์ตามฤดูกาล เพื่อให้ระบบนิเวศทางทะเลฟื้นตัว เมื่อเปิดใหม่ 15 ต.ค. จำกัดนักท่องเที่ยวไม่เกิน 3,850 คน/วัน</div>
-            <span class="news-read-more">อ่านต่อที่ PRD →</span>
+            <div class="news-headline">DNP ขยายระบบ e-Ticket จำกัดโควตาเพิ่มอีก 30 อุทยาน ภายในปี 2569</div>
+            <div class="news-body">กรมอุทยานฯ เตรียมขยายระบบจองล่วงหน้าและจำกัดจำนวนนักท่องเที่ยวออนไลน์ไปยังอุทยานแห่งชาติเพิ่มอีก 30 แห่ง หลังนำร่องสำเร็จที่เขาใหญ่และสิมิลัน เพื่อปกป้องความหลากหลายทางชีวภาพระยะยาว</div>
+            <span class="news-read-more">อ่านต่อที่ Bangkok Post →</span>
         </a>
     </div>
 </section>
@@ -1086,12 +1086,15 @@
 
 <!-- ════════════════════════════ SCRIPTS ════════════════════════════ -->
 <script>
+// ── LANG (must be before map code so buildParkPopup can read it) ──────────────
+let currentLang = 'th';
+
 // ── SPLASH ───────────────────────────────────────────────────────────────────
 setTimeout(() => {
     const splash = document.getElementById('splash');
     splash.classList.add('hidden');
     setTimeout(() => splash.remove(), 600);
-}, 1500);
+}, 2800);
 
 
 // ── THAILAND BORDER ───────────────────────────────────────────────────────────
@@ -1124,11 +1127,8 @@ const PARK_STATUS_COLOR = {
 function statusTextColor(c) { return '#ffffff'; }
 
 const PARK_STATUS_LABEL = {
-    "fully_closed": "ปิดทั้งหมด",
-    "temporary":    "บางส่วนปิด",
-    "indefinite":   "บางส่วนปิด",
-    "active_annual":"บางส่วนปิด",
-    "open":         "เปิดปกติ",
+    th: { fully_closed:'ปิดทั้งหมด', temporary:'บางส่วนปิด', indefinite:'บางส่วนปิด', active_annual:'บางส่วนปิด', open:'เปิดปกติ' },
+    en: { fully_closed:'Fully Closed', temporary:'Partially Closed', indefinite:'Partially Closed', active_annual:'Partially Closed', open:'Open' },
 };
 
 const parksMap = L.map('parks-map', {
@@ -1206,9 +1206,10 @@ const TYPE_NOTE_TH = {
     '(landslide risk)': '(ความเสี่ยงดินถล่ม)',
 };
 
-function typeLabel(type) {
+function typeLabel(type, lang) {
     if (!type || type === '–') return type;
-    if (type.includes(' / ')) return type.split(' / ').map(typeLabel).join(' / ');
+    if (lang === 'en') return type;
+    if (type.includes(' / ')) return type.split(' / ').map(t => typeLabel(t, lang)).join(' / ');
     for (const [en, th] of Object.entries(TYPE_TH)) {
         if (type.startsWith(en)) {
             const rest = type.slice(en.length).trim();
@@ -1225,10 +1226,11 @@ const MONTH_TH = {
     'Sep':'ก.ย.','Oct':'ต.ค.','Nov':'พ.ย.','Dec':'ธ.ค.'
 };
 
-function periodLabel(period) {
+function periodLabel(period, lang) {
     if (!period || period === '–') return period;
     // Expand "D–D Mon" → "D Mon–D Mon" (e.g. "1–31 Mar" → "1 Mar–31 Mar")
     let p = period.replace(/(\d+)[–\-](\d+)\s+([A-Za-z]+)/g, (_, d1, d2, mon) => `${d1} ${mon}–${d2} ${mon}`);
+    if (lang === 'en') return p;
     p = p
         .replace(/\bFrom\b/g, 'ตั้งแต่')
         .replace(/\bonwards\b/g, 'เป็นต้นไป')
@@ -1275,25 +1277,28 @@ function popupHeader(color, label, type, wikiQuery, parkId) {
     </div>`;
 }
 
-function buildParkPopup(p) {
+function buildParkPopup(p, lang) {
+    lang = lang || currentLang;
+    const L18 = (() => { try { return i18n[lang] || {}; } catch(e) { return {}; } })();
     const color = PARK_STATUS_COLOR[p.status] || '#aaa';
-    const label = PARK_STATUS_LABEL[p.status] || p.status;
+    const label = (PARK_STATUS_LABEL[lang] || PARK_STATUS_LABEL.th)[p.status] || p.status;
     const rows = p.closures.map(c => {
         const tc = closureTypeColor(c.type);
         const bg = (c.type.includes('Indefinite') || c.type.includes('Permanent')) ? 'background:#fff5f5;' : '';
         return `
         <tr style="${bg}">
             <td style="padding:4px 8px;font-size:12px;border-bottom:1px solid #f0f0f0;line-height:1.4">${c.site}</td>
-            <td style="padding:4px 8px;font-size:12px;border-bottom:1px solid #f0f0f0;white-space:nowrap">${periodLabel(c.period)}</td>
-            <td style="padding:4px 8px;font-size:12px;border-bottom:1px solid #f0f0f0;white-space:nowrap;font-weight:600;color:${tc}">${typeLabel(c.type)}</td>
+            <td style="padding:4px 8px;font-size:12px;border-bottom:1px solid #f0f0f0;white-space:nowrap">${periodLabel(c.period, lang)}</td>
+            <td style="padding:4px 8px;font-size:12px;border-bottom:1px solid #f0f0f0;white-space:nowrap;font-weight:600;color:${tc}">${typeLabel(c.type, lang)}</td>
         </tr>`;
     }).join('');
 
-    // Alternatives section (only for closed/partial parks)
     let altsHtml = '';
     if (p.status !== 'open') {
         const alts = nearestOpenParks(p);
         if (alts.length) {
+            const kmUnit = L18.popup_km || 'กม.';
+            const viewMap = L18.popup_view_map || 'ดูแผนที่ →';
             const altCards = alts.map(a => `
                 <div onclick="flyToPark(${a.id})" style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;cursor:pointer;transition:background 0.15s;margin-bottom:6px;background:#f7fdf9;border:1px solid rgba(85,166,48,0.15)"
                      onmouseover="this.style.background='#edf7f1'" onmouseout="this.style.background='#f7fdf9'">
@@ -1303,29 +1308,29 @@ function buildParkPopup(p) {
                         <div style="font-size:11px;color:#999;margin-top:1px">${a.region}</div>
                     </div>
                     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:1px;flex-shrink:0">
-                        <div style="font-size:11px;color:#3D9468;font-weight:600">${Math.round(a.km)} กม.</div>
-                        <div style="font-size:10px;color:#bbb">ดูแผนที่ →</div>
+                        <div style="font-size:11px;color:#3D9468;font-weight:600">${Math.round(a.km)} ${kmUnit}</div>
+                        <div style="font-size:10px;color:#bbb">${viewMap}</div>
                     </div>
                 </div>`).join('');
             altsHtml = `
                 <div style="margin-top:14px;padding-top:12px;border-top:1px solid #f0f0f0">
-                    <div style="font-size:10px;font-weight:600;color:#999;letter-spacing:.06em;margin-bottom:8px">🌿 อุทยานเปิดใกล้เคียง</div>
+                    <div style="font-size:10px;font-weight:600;color:#999;letter-spacing:.06em;margin-bottom:8px">${L18.popup_nearby || 'อุทยานเปิดใกล้เคียง'}</div>
                     ${altCards}
                 </div>`;
         }
     }
 
     return `<div style="font-family:'Cloud Soft','Sarabun',sans-serif;min-width:300px;max-width:420px">
-        ${popupHeader(color, label, 'อุทยานแห่งชาติ', p.name_en, p.id)}
+        ${popupHeader(color, label, L18.popup_nat_park || 'อุทยานแห่งชาติ', p.name_en, p.id)}
         <div style="border-bottom:1px solid #f0f0f0;padding-bottom:10px;margin-bottom:10px">
             <div style="font-size:16px;font-weight:700;color:#1b1b1b;line-height:1.3">${p.name_th}</div>
             <div style="font-size:12px;color:#999;margin-top:3px">${p.name_en} &nbsp;·&nbsp; ${p.region}</div>
         </div>
         <table style="width:100%;border-collapse:collapse">
             <thead><tr style="background:#f9f9f9">
-                <th style="padding:4px 8px;font-size:10px;text-align:left;color:#999;font-weight:600;letter-spacing:.05em">พื้นที่ / บริเวณ</th>
-                <th style="padding:4px 8px;font-size:10px;text-align:left;color:#999;font-weight:600;letter-spacing:.05em">ช่วงเวลา</th>
-                <th style="padding:4px 8px;font-size:10px;text-align:left;color:#999;font-weight:600;letter-spacing:.05em">ประเภท</th>
+                <th style="padding:4px 8px;font-size:10px;text-align:left;color:#999;font-weight:600;letter-spacing:.05em">${L18.popup_area || 'พื้นที่ / บริเวณ'}</th>
+                <th style="padding:4px 8px;font-size:10px;text-align:left;color:#999;font-weight:600;letter-spacing:.05em">${L18.popup_period || 'ช่วงเวลา'}</th>
+                <th style="padding:4px 8px;font-size:10px;text-align:left;color:#999;font-weight:600;letter-spacing:.05em">${L18.popup_type || 'ประเภท'}</th>
             </tr></thead>
             <tbody>${rows}</tbody>
         </table>
@@ -1360,6 +1365,7 @@ if (typeof PARKS_CLOSURES !== 'undefined') {
     PARKS_CLOSURES.forEach(p => {
         if (!p.lat || !p.lon) return;
         const m = L.marker([p.lat, p.lon], { icon: makeParkIcon(p.status) });
+        m._wavsPark = p;
         m.bindPopup(buildParkPopup(p), { maxWidth: 440, minWidth: 300, autoPan: true, autoPanPaddingTopLeft: [20, 80], autoPanPaddingBottomRight: [20, 20] });
         if (parkClusters[p.status]) parkClusters[p.status].addLayer(m);
         parkMarkerList.push({ marker: m, status: p.status });
@@ -1367,8 +1373,8 @@ if (typeof PARKS_CLOSURES !== 'undefined') {
     });
 
     // ── Dynamic stats from actual data ────────────────────────────
-    const CLOSED_STATUSES = new Set(['fully_closed', 'temporary', 'indefinite']);
-    const PARTIAL_STATUSES = new Set(['active_annual']);
+    const CLOSED_STATUSES  = new Set(['fully_closed', 'temporary', 'indefinite']);
+    const PARTIAL_STATUSES = new Set(['active_annual']); // matches filter 'partial'
     let nClosed = 0, nPartial = 0, nOpen = 0;
     PARKS_CLOSURES.forEach(p => {
         if (CLOSED_STATUSES.has(p.status))       nClosed++;
@@ -1400,9 +1406,9 @@ function filterParks(status, btn) {
     btn.classList.add('active');
     PARK_STATUSES.forEach(s => {
         const show = status === 'all'
-            || s === status
-            || (status === 'closed' && (s === 'temporary' || s === 'indefinite' || s === 'active_annual'))
-            || (status === 'fully_closed' && s === 'fully_closed');
+            || (status === 'fully_closed' && (s === 'fully_closed' || s === 'temporary' || s === 'indefinite'))
+            || (status === 'partial' && s === 'active_annual')
+            || (status === 'open' && s === 'open');
         if (show) parksMap.addLayer(parkClusters[s]);
         else       parksMap.removeLayer(parkClusters[s]);
     });
@@ -1410,12 +1416,15 @@ function filterParks(status, btn) {
 
 // ── ATTRACTIONS (วนอุทยาน) ────────────────────────────────────────────────────
 
-function buildAttractionPopup(a) {
+function buildAttractionPopup(a, lang) {
+    lang = lang || currentLang;
+    const L18 = (() => { try { return i18n[lang] || {}; } catch(e) { return {}; } })();
     const color = PARK_STATUS_COLOR[a.status] || '#aaa';
-    const label = PARK_STATUS_LABEL[a.status] || a.status;
+    const label = (PARK_STATUS_LABEL[lang] || PARK_STATUS_LABEL.th)[a.status] || a.status;
+    const openLabel = lang === 'en' ? 'Open year-round' : 'เปิดตลอดปี';
     const rows = a.closures.map(c => {
         const isOpen = c.open_yr && c.period === '–';
-        const periodTh = c.period === '–' ? (isOpen ? 'เปิดตลอดปี' : '–') : c.period;
+        const periodTh = c.period === '–' ? (isOpen ? openLabel : '–') : periodLabel(c.period, lang);
         const rowColor = isOpen ? '#999' : '#D4820E';
         return `<tr>
             <td style="padding:4px 8px;font-size:12px;border-bottom:1px solid #f0f0f0;line-height:1.4">${c.site}</td>
@@ -1425,9 +1434,10 @@ function buildAttractionPopup(a) {
     }).join('');
 
     const alts = a.status !== 'open' ? nearestOpenParks({ lat: a.lat, lon: a.lon, id: a.id }, 3, true) : [];
+    const kmUnit = L18.popup_km || 'กม.';
     const altsHtml = alts.length ? `
         <div style="margin-top:14px;padding-top:12px;border-top:1px solid #f0f0f0">
-            <div style="font-size:10px;font-weight:600;color:#999;letter-spacing:.06em;margin-bottom:8px">🌿 อุทยานเปิดใกล้เคียง</div>
+            <div style="font-size:10px;font-weight:600;color:#999;letter-spacing:.06em;margin-bottom:8px">${L18.popup_nearby || 'อุทยานเปิดใกล้เคียง'}</div>
             ${alts.map(p => `
             <div onclick="flyToPark(${p.id})" style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;cursor:pointer;margin-bottom:6px;background:#f7fdf9;border:1px solid rgba(85,166,48,0.15)"
                  onmouseover="this.style.background='#edf7f1'" onmouseout="this.style.background='#f7fdf9'">
@@ -1436,21 +1446,21 @@ function buildAttractionPopup(a) {
                     <div style="font-size:13px;font-weight:600;color:#1b1b1b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.name_th}</div>
                     <div style="font-size:11px;color:#999;margin-top:1px">${p.region}</div>
                 </div>
-                <div style="font-size:11px;color:#3D9468;font-weight:600;flex-shrink:0">${Math.round(p.km)} กม.</div>
+                <div style="font-size:11px;color:#3D9468;font-weight:600;flex-shrink:0">${Math.round(p.km)} ${kmUnit}</div>
             </div>`).join('')}
         </div>` : '';
 
     return `<div style="font-family:'Cloud Soft','Sarabun',sans-serif;min-width:280px;max-width:400px">
-        ${popupHeader(color, label, 'วนอุทยาน', a.name_th)}
+        ${popupHeader(color, label, L18.popup_forest_park || 'วนอุทยาน', a.name_th)}
         <div style="border-bottom:1px solid #f0f0f0;padding-bottom:10px;margin-bottom:10px">
             <div style="font-size:16px;font-weight:700;color:#1b1b1b;line-height:1.3">${a.name_th}</div>
             <div style="font-size:12px;color:#999;margin-top:3px">${a.province}</div>
         </div>
         <table style="width:100%;border-collapse:collapse">
             <thead><tr style="background:#f9f9f9">
-                <th style="padding:4px 8px;font-size:10px;text-align:left;color:#999;font-weight:600;letter-spacing:.05em">แหล่งท่องเที่ยว</th>
-                <th style="padding:4px 8px;font-size:10px;text-align:left;color:#999;font-weight:600;letter-spacing:.05em">ช่วงปิด</th>
-                <th style="padding:4px 8px;font-size:10px;text-align:left;color:#999;font-weight:600;letter-spacing:.05em">สาเหตุ</th>
+                <th style="padding:4px 8px;font-size:10px;text-align:left;color:#999;font-weight:600;letter-spacing:.05em">${L18.popup_attraction || 'แหล่งท่องเที่ยว'}</th>
+                <th style="padding:4px 8px;font-size:10px;text-align:left;color:#999;font-weight:600;letter-spacing:.05em">${L18.popup_closed_period || 'ช่วงปิด'}</th>
+                <th style="padding:4px 8px;font-size:10px;text-align:left;color:#999;font-weight:600;letter-spacing:.05em">${L18.popup_reason || 'สาเหตุ'}</th>
             </tr></thead>
             <tbody>${rows}</tbody>
         </table>
@@ -1463,6 +1473,7 @@ const attractionMarkersById = {};
 if (typeof ATTRACTIONS_DATA !== 'undefined') {
     ATTRACTIONS_DATA.forEach(a => {
         const m = L.marker([a.lat, a.lon], { icon: makeParkIcon(a.status) });
+        m._wavsAttraction = a;
         m.bindPopup(buildAttractionPopup(a), { maxWidth: 420, minWidth: 280, autoPan: true, autoPanPaddingTopLeft: [20, 80], autoPanPaddingBottomRight: [20, 20] });
         if (parkClusters[a.status]) parkClusters[a.status].addLayer(m);
         attractionMarkersById[a.id] = m;
@@ -1703,6 +1714,17 @@ const i18n = {
         footer_mid:     'โครงการวิทยานิพนธ์ WAVS · ติดตามสถานที่ธรรมชาติไทย',
         footer_tagline: 'คลื่นแห่งความใส่ใจในโลกที่วุ่นวาย',
         footer_right:   'ข้อมูล: กรมอุทยานแห่งชาติไทย & งานวิจัยทางวิชาการ',
+        popup_nat_park:     'อุทยานแห่งชาติ',
+        popup_forest_park:  'วนอุทยาน',
+        popup_area:         'พื้นที่ / บริเวณ',
+        popup_period:       'ช่วงเวลา',
+        popup_type:         'ประเภท',
+        popup_attraction:   'แหล่งท่องเที่ยว',
+        popup_closed_period:'ช่วงปิด',
+        popup_reason:       'สาเหตุ',
+        popup_nearby:       'อุทยานเปิดใกล้เคียง',
+        popup_view_map:     'ดูแผนที่ →',
+        popup_km:           'กม.',
     },
     en: {
         nav_about:      'About',
@@ -1737,10 +1759,19 @@ const i18n = {
         footer_mid:     'WAVS Thesis Project · Tracking Thailand\'s Natural Sites',
         footer_tagline: 'A wave of care in a turbulent world',
         footer_right:   'Data: Thailand DNP & Academic Research',
+        popup_nat_park:     'National Park',
+        popup_forest_park:  'Forest Park',
+        popup_area:         'Area / Site',
+        popup_period:       'Period',
+        popup_type:         'Type',
+        popup_attraction:   'Attraction',
+        popup_closed_period:'Closure Period',
+        popup_reason:       'Reason',
+        popup_nearby:       'Nearby Open Parks',
+        popup_view_map:     'View map →',
+        popup_km:           'km',
     }
 };
-
-let currentLang = 'th';
 
 function applyLang(lang) {
     const dict = i18n[lang];
@@ -1756,6 +1787,14 @@ function applyLang(lang) {
     const btn = document.getElementById('langToggle');
     btn.textContent = lang === 'th' ? 'EN' : 'TH';
     currentLang = lang;
+
+    // Rebuild popup content for all markers to reflect new language
+    Object.values(parkMarkersById).forEach(({ marker }) => {
+        if (marker._wavsPark) marker.setPopupContent(buildParkPopup(marker._wavsPark, lang));
+    });
+    Object.values(attractionMarkersById).forEach(marker => {
+        if (marker._wavsAttraction) marker.setPopupContent(buildAttractionPopup(marker._wavsAttraction, lang));
+    });
 }
 
 document.getElementById('langToggle').addEventListener('click', () => {
