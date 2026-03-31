@@ -858,6 +858,21 @@
             /* Filter pills wrap tighter */
             .parks-filters { gap: 8px; }
             .pf-pill { font-size: 12px; padding: 7px 14px; }
+
+            /* Popup — shrink to fit screen */
+            .leaflet-popup-content-wrapper {
+                max-width: calc(100vw - 32px) !important;
+            }
+            .leaflet-popup-content {
+                margin: 12px 14px !important;
+            }
+            .leaflet-popup-content > div {
+                min-width: 0 !important;
+                max-width: 100% !important;
+            }
+            .popup-hero {
+                height: 120px !important;
+            }
         }
 
     </style>
@@ -1373,8 +1388,8 @@ if (typeof PARKS_CLOSURES !== 'undefined') {
     });
 
     // ── Dynamic stats from actual data ────────────────────────────
-    const CLOSED_STATUSES  = new Set(['fully_closed', 'temporary', 'indefinite']);
-    const PARTIAL_STATUSES = new Set(['active_annual']); // matches filter 'partial'
+    const CLOSED_STATUSES  = new Set(['fully_closed']);
+    const PARTIAL_STATUSES = new Set(['temporary', 'indefinite', 'active_annual']);
     let nClosed = 0, nPartial = 0, nOpen = 0;
     PARKS_CLOSURES.forEach(p => {
         if (CLOSED_STATUSES.has(p.status))       nClosed++;
@@ -1406,8 +1421,8 @@ function filterParks(status, btn) {
     btn.classList.add('active');
     PARK_STATUSES.forEach(s => {
         const show = status === 'all'
-            || (status === 'fully_closed' && (s === 'fully_closed' || s === 'temporary' || s === 'indefinite'))
-            || (status === 'partial' && s === 'active_annual')
+            || (status === 'fully_closed' && s === 'fully_closed')
+            || (status === 'partial' && (s === 'temporary' || s === 'indefinite' || s === 'active_annual'))
             || (status === 'open' && s === 'open');
         if (show) parksMap.addLayer(parkClusters[s]);
         else       parksMap.removeLayer(parkClusters[s]);
