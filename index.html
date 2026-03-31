@@ -1666,46 +1666,59 @@ parksMap.on('popupopen', e => {
             return;
         }
 
-        // Fetch photo: Wikipedia REST → Wikipedia TH → Wikimedia Commons search
+        // Fetch photo: Wikipedia (EN/TH) + Commons run IN PARALLEL → pick best
         (async () => {
-            // Stage 1: Wikipedia REST API
-            for (const lang of ['en', 'th']) {
-                try {
-                    const r = await fetch(`https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`);
-                    if (!r.ok) continue;
-                    const d = await r.json();
-                    if (!d.thumbnail?.source) continue;
-                    const result = { src: d.thumbnail.source.replace(/\/\d+px-/, '/600px-'), page: d.content_urls?.desktop?.page || '' };
-                    if (parkId) parkPhotoCache[parkId] = result;
-                    if (e.popup.isOpen()) showPhotoInHero(hero, result.src, result.page);
-                    return;
-                } catch {}
-            }
+            const baseName = query.replace(/ National Park$/i, '').trim();
 
-            // Stage 2: Wikimedia Commons search (for parks without Wikipedia thumbnail)
-            try {
-                const baseName = query.replace(/ National Park$/i, '').trim();
-                const searchQ  = encodeURIComponent(baseName + ' national park thailand');
-                const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${searchQ}&gsrnamespace=6&gsrlimit=15&prop=imageinfo&iiprop=url&iiurlwidth=600&format=json&origin=*`;
-                const r = await fetch(url);
-                if (!r.ok) throw new Error();
-                const d = await r.json();
-                const pages = Object.values(d.query?.pages || {})
-                    .filter(p => {
-                        const t = (p.title || '').toLowerCase();
-                        const u = (p.imageinfo?.[0]?.url || '').toLowerCase();
-                        return /\.(jpg|jpeg|png)$/i.test(u)
-                            && !/map|logo|icon|flag|coat|seal|emblem|diagram|chart|plan/i.test(t);
-                    })
-                    .sort((a, b) => (b.index || 0) - (a.index || 0));
-
-                if (pages.length) {
-                    const imgUrl = pages[0].imageinfo[0].url;
-                    const result = { src: imgUrl, page: '' };
-                    if (parkId) parkPhotoCache[parkId] = result;
-                    if (e.popup.isOpen()) showPhotoInHero(hero, result.src, result.page);
+            // ── Wikipedia EN then TH ──────────────────────────────────────────
+            const wikiP = (async () => {
+                for (const lang of ['en', 'th']) {
+                    try {
+                        const r = await fetch(`https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`);
+                        if (!r.ok) continue;
+                        const d = await r.json();
+                        if (!d.thumbnail?.source) continue;
+                        return { src: d.thumbnail.source.replace(/\/\d+px-/, '/600px-'), page: d.content_urls?.desktop?.page || '' };
+                    } catch {}
                 }
-            } catch {}
+                return null;
+            })();
+
+            // ── Wikimedia Commons search (landscape JPG/PNG only) ─────────────
+            const commonsP = (async () => {
+                try {
+                    const q = encodeURIComponent(baseName + ' national park thailand');
+                    const r = await fetch(`https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${q}&gsrnamespace=6&gsrlimit=20&prop=imageinfo&iiprop=url|size&iiurlwidth=800&format=json&origin=*`);
+                    if (!r.ok) return null;
+                    const d = await r.json();
+                    const EXCLUDE = /map|logo|icon|flag|coat|seal|emblem|diagram|chart|plan|portrait|people|sign|symbol|entrance|gate|info|board|poster|stamp|statue|grave|road|administrative/i;
+                    const imgs = Object.values(d.query?.pages || {})
+                        .filter(p => {
+                            const t = p.title || '';
+                            const ii = p.imageinfo?.[0] || {};
+                            return /\.(jpg|jpeg|png)$/i.test(ii.url || '')
+                                && !EXCLUDE.test(t)
+                                && (ii.width || 0) >= 600
+                                && (ii.width || 0) > (ii.height || 0); // landscape only
+                        })
+                        .sort((a, b) => {
+                            // Prefer wider images (more scenic)
+                            const aw = a.imageinfo[0].width, bw = b.imageinfo[0].width;
+                            return bw - aw;
+                        });
+                    if (!imgs.length) return null;
+                    // Use thumburl (resized) if available, else original url
+                    const ii = imgs[0].imageinfo[0];
+                    return { src: ii.thumburl || ii.url, page: '' };
+                } catch { return null; }
+            })();
+
+            // Take Wikipedia first (higher quality curation), Commons as backup
+            const wiki = await wikiP;
+            const result = wiki || await commonsP;
+            if (!result) return;
+            if (parkId) parkPhotoCache[parkId] = result;
+            if (e.popup.isOpen()) showPhotoInHero(hero, result.src, result.page);
         })();
     });
 });
