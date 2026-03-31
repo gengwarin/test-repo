@@ -1613,116 +1613,79 @@ document.addEventListener('click', e => {
     if (!e.target.closest('.hero-search')) searchResults.classList.remove('open');
 });
 
-// ── PARK PHOTO CACHE (pre-fetched from Wikipedia) ─────────────────────────────
+// ── PARK PHOTO CACHE + POPUP PHOTOS ──────────────────────────────────────────
 const parkPhotoCache = {};
 
-function applyPhotoToHero(hero, imgUrl, pageUrl) {
+function showPhotoInHero(hero, src, pageUrl) {
     const img = hero.querySelector('.popup-hero-img');
     const overlay = hero.querySelector('.popup-hero-overlay');
     const svgEl = hero.querySelector('svg');
-    if (!img) return;
-    img.onload = () => {
+    if (!img || img.dataset.loaded) return;
+
+    const reveal = () => {
+        img.dataset.loaded = '1';
         img.style.opacity = '1';
-        overlay.style.opacity = '1';
+        if (overlay) overlay.style.opacity = '1';
         if (svgEl) svgEl.style.opacity = '0';
         if (pageUrl && !hero.querySelector('.popup-wiki-credit')) {
-            const credit = document.createElement('a');
-            credit.className = 'popup-wiki-credit';
-            credit.href = pageUrl;
-            credit.target = '_blank';
-            credit.rel = 'noopener';
-            credit.style.cssText = 'position:absolute;bottom:8px;right:10px;font-size:9px;color:rgba(255,255,255,0.75);text-decoration:none;z-index:3;background:rgba(0,0,0,0.35);padding:2px 7px;border-radius:4px;letter-spacing:.02em';
-            credit.textContent = '© Wikipedia';
-            hero.appendChild(credit);
+            const a = document.createElement('a');
+            a.className = 'popup-wiki-credit';
+            a.href = pageUrl; a.target = '_blank'; a.rel = 'noopener';
+            a.style.cssText = 'position:absolute;bottom:8px;right:10px;font-size:9px;color:rgba(255,255,255,0.75);text-decoration:none;z-index:3;background:rgba(0,0,0,0.35);padding:2px 7px;border-radius:4px;letter-spacing:.02em';
+            a.textContent = '© Wikipedia';
+            hero.appendChild(a);
         }
     };
-    img.src = imgUrl;
+    img.onload = reveal;
+    img.onerror = () => {};
+    img.src = src;
+    if (img.complete && img.naturalWidth > 0) reveal();
 }
-
-async function fetchWikiPhoto(query) {
-    const apis = [
-        `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`,
-        `https://th.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`,
-    ];
-    for (const url of apis) {
-        try {
-            const r = await fetch(url);
-            if (!r.ok) continue;
-            const d = await r.json();
-            if (!d.thumbnail?.source) continue;
-            return { src: d.thumbnail.source.replace(/\/\d+px-/, '/600px-'), page: d.content_urls?.desktop?.page || '' };
-        } catch {}
-    }
-    return null;
-}
-
-// Pre-fetch thumbnails for all parks in background using MediaWiki batch API
-(async function preFetchParkPhotos() {
-    if (typeof PARKS_CLOSURES === 'undefined') return;
-    const delay = ms => new Promise(r => setTimeout(r, ms));
-    const batchSize = 20;
-
-    const doFetch = async () => {
-        for (let i = 0; i < PARKS_CLOSURES.length; i += batchSize) {
-            const batch = PARKS_CLOSURES.slice(i, i + batchSize);
-            const titles = batch.map(p => p.name_en).join('|');
-            try {
-                const url = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(titles)}&prop=pageimages|info&pithumbsize=600&inprop=url&format=json&origin=*`;
-                const r = await fetch(url);
-                if (!r.ok) continue;
-                const d = await r.json();
-                const pages = d.query?.pages || {};
-                for (const page of Object.values(pages)) {
-                    if (!page.thumbnail?.source) continue;
-                    const ptitle = (page.title || '').toLowerCase();
-                    const park = batch.find(p => p.name_en.toLowerCase() === ptitle);
-                    if (park) {
-                        parkPhotoCache[park.id] = {
-                            src: page.thumbnail.source.replace(/\/\d+px-/, '/600px-'),
-                            page: page.fullurl || ''
-                        };
-                    }
-                }
-            } catch {}
-            await delay(300);
-        }
-    };
-
-    if ('requestIdleCallback' in window) {
-        requestIdleCallback(doFetch, { timeout: 5000 });
-    } else {
-        setTimeout(doFetch, 1500);
-    }
-})();
 
 // ── POPUP OPEN: iOS fix + photo display ───────────────────────────────────────
 parksMap.on('popupopen', e => {
-    const el = e.popup.getElement();
-    if (!el) return;
+    // Wait one frame so Leaflet finishes rendering the popup DOM
+    requestAnimationFrame(() => {
+        const el = e.popup.getElement();
+        if (!el) return;
 
-    // iOS fix: prevent touch scroll/tap from propagating to map (causes popup to close)
-    L.DomEvent.disableScrollPropagation(el);
-    L.DomEvent.disableClickPropagation(el);
+        // iOS fix: prevent touch events from propagating to map (closes popup)
+        L.DomEvent.disableScrollPropagation(el);
+        L.DomEvent.disableClickPropagation(el);
 
-    const hero = el.querySelector('.popup-hero');
-    if (!hero) return;
+        const hero = el.querySelector('.popup-hero');
+        if (!hero) return;
 
-    const parkId = parseInt(hero.dataset.parkId);
-    const query = hero.dataset.wiki;
+        const parkId = parseInt(hero.dataset.parkId) || 0;
+        const query  = hero.dataset.wiki;
+        if (!query) return;
 
-    // Use cached photo immediately if available
-    if (parkId && parkPhotoCache[parkId]) {
-        const c = parkPhotoCache[parkId];
-        applyPhotoToHero(hero, c.src, c.page);
-        return;
-    }
+        // Serve from cache immediately
+        if (parkPhotoCache[parkId]) {
+            showPhotoInHero(hero, parkPhotoCache[parkId].src, parkPhotoCache[parkId].page);
+            return;
+        }
 
-    // Otherwise fetch async and also cache for next time
-    if (!query) return;
-    fetchWikiPhoto(query).then(result => {
-        if (!result) return;
-        if (parkId) parkPhotoCache[parkId] = result;
-        applyPhotoToHero(hero, result.src, result.page);
+        // Fetch from Wikipedia REST API (en → th fallback)
+        (async () => {
+            const langs = ['en', 'th'];
+            for (const lang of langs) {
+                try {
+                    const r = await fetch(`https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`);
+                    if (!r.ok) continue;
+                    const d = await r.json();
+                    if (!d.thumbnail?.source) continue;
+                    const result = {
+                        src: d.thumbnail.source.replace(/\/\d+px-/, '/600px-'),
+                        page: d.content_urls?.desktop?.page || ''
+                    };
+                    if (parkId) parkPhotoCache[parkId] = result;
+                    // Only show if popup is still open
+                    if (e.popup.isOpen()) showPhotoInHero(hero, result.src, result.page);
+                    return;
+                } catch {}
+            }
+        })();
     });
 });
 
