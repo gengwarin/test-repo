@@ -1079,23 +1079,23 @@
             <div class="news-body">TAT เผยแพร่คู่มือสถานะเปิด–ปิดของสถานที่ท่องเที่ยวในอุทยานแห่งชาติทุกแห่ง แนะนำนักท่องเที่ยวตรวจสอบที่ portal.dnp.go.th ก่อนเดินทางทุกครั้ง</div>
             <span class="news-read-more">อ่านต่อที่ TAT Newsroom →</span>
         </a>
-        <a class="news-card" href="https://www.pattayamail.com/thailandnews/thailand-mobilizes-early-as-dnp-warns-of-tough-2026-wildfire-and-haze-season-526996" target="_blank" rel="noopener">
+        <a class="news-card" href="https://www.pattayamail.com/thailandnews/thailand-steps-up-aerial-and-ground-operations-to-tackle-northern-wildfires-and-pm2-5-crisis-540867" target="_blank" rel="noopener">
             <div class="news-meta">
                 <span class="news-tag policy">นโยบาย</span>
-                <span class="news-date">มีนาคม 2569</span>
+                <span class="news-date">28 มีนาคม 2569</span>
             </div>
-            <div class="news-headline">DNP เตือน: ฤดูไฟป่า 2569 รุนแรง — สั่งห้ามเผาป่าถึง 10 พ.ค.</div>
-            <div class="news-body">กรมอุทยานแห่งชาติระดมมาตรการรับมือฤดูแล้ง ออกคำสั่งห้ามเผาป่าทั่วประเทศถึง 10 พ.ค.69 โทษสูงสุดจำคุก 20 ปี ปรับ 2 ล้านบาท พร้อมตั้งจุดเฝ้าระวัง 3,895 จุด ภาคเหนือวิกฤตที่สุด</div>
+            <div class="news-headline">ไทยระดมเฮลิคอปเตอร์–กองกำลังภาคพื้นดินสกัดไฟป่าเหนือ 17 จังหวัด</div>
+            <div class="news-body">รองนายกฯ สั่งเดินหน้าปฏิบัติการทางอากาศและภาคพื้นดิน ปล่อยน้ำ 7,500 ลิตรใน 15 รอบที่อช.แม่ปิง ลำพูน ควบคุมสถานการณ์ได้แล้ว แต่ยังเฝ้าระวัง 17 จังหวัดภาคเหนือ</div>
             <span class="news-read-more">อ่านต่อที่ Pattaya Mail →</span>
         </a>
-        <a class="news-card" href="https://thethaiger.com/news/national/wildfires-force-indefinite-closure-of-north-thailand-park" target="_blank" rel="noopener">
+        <a class="news-card" href="https://www.nationthailand.com/news/general/40064502" target="_blank" rel="noopener">
             <div class="news-meta">
                 <span class="news-tag closure">การปิด</span>
-                <span class="news-date">มีนาคม 2569</span>
+                <span class="news-date">31 มีนาคม 2569</span>
             </div>
-            <div class="news-headline">ไฟป่าบังคับปิด "ดอยภูนาง" ไม่มีกำหนด หลังพบจุดความร้อนพุ่ง 557 จุด</div>
-            <div class="news-body">อุทยานแห่งชาติดอยภูนาง จ.พะเยา ประกาศปิดไม่มีกำหนดหลังตรวจพบจุดความร้อน 557 จุดตั้งแต่ ต.ค.68–25 มี.ค.69 เพิ่มขึ้น 38.9% จากปีก่อน — เป็นส่วนหนึ่งของวิกฤตไฟป่าภาคเหนือ 2569</div>
-            <span class="news-read-more">อ่านต่อที่ The Thaiger →</span>
+            <div class="news-headline">เชียงใหม่ประกาศ 2 อำเภอเป็นพื้นที่ภัยพิบัติไฟป่า — สะเมิงและฮอด</div>
+            <div class="news-body">จังหวัดเชียงใหม่ประกาศพื้นที่ภัยพิบัติไฟป่าในอำเภอสะเมิงและอำเภอฮอด เร่งสำรวจความเสียหายและกระจายความช่วยเหลือฉุกเฉินแก่ชุมชนที่ได้รับผลกระทบ</div>
+            <span class="news-read-more">อ่านต่อที่ Nation Thailand →</span>
         </a>
         <a class="news-card" href="https://www.bangkokpost.com/thailand/general/2863044" target="_blank" rel="noopener">
             <div class="news-meta">
@@ -1152,6 +1152,36 @@ fetch('brand_asset/thailand.geojson')
             interactive: false
         };
         L.geoJSON(thailand, { style: borderStyle }).addTo(parksMap);
+
+        // ── OUTSIDE-THAILAND FOG MASK ──────────────────────────────────────
+        // Build a Polygon: outer ring = world, inner rings = Thailand shapes (holes)
+        const worldRing = [[-180,-89],[-180,89],[180,89],[180,-89],[-180,-89]];
+        const holeRings = [];
+        function extractOuterRings(geom) {
+            if (geom.type === 'Polygon') {
+                holeRings.push(geom.coordinates[0]);
+            } else if (geom.type === 'MultiPolygon') {
+                geom.coordinates.forEach(poly => holeRings.push(poly[0]));
+            } else if (geom.type === 'GeometryCollection') {
+                geom.geometries.forEach(g => extractOuterRings(g));
+            }
+        }
+        const geom = thailand.features
+            ? thailand.features[0].geometry
+            : (thailand.geometry || thailand);
+        extractOuterRings(geom);
+
+        L.geoJSON({
+            type: 'Feature',
+            geometry: { type: 'Polygon', coordinates: [worldRing, ...holeRings] }
+        }, {
+            style: {
+                fillColor: '#FBFAF2',
+                fillOpacity: 0.62,
+                stroke: false,
+                interactive: false,
+            }
+        }).addTo(parksMap);
     })
     .catch(() => {});
 
