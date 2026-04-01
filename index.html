@@ -859,12 +859,15 @@
             .parks-filters { gap: 8px; }
             .pf-pill { font-size: 12px; padding: 7px 14px; }
 
-            /* Popup — shrink to fit screen */
+            /* Popup — shrink to fit screen, make long ones scrollable */
             .leaflet-popup-content-wrapper {
                 max-width: calc(100vw - 32px) !important;
             }
             .leaflet-popup-content {
                 margin: 12px 14px !important;
+                max-height: 55vh !important;
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch !important;
             }
             .leaflet-popup-content > div {
                 min-width: 0 !important;
