@@ -8,7 +8,7 @@
     <!-- Social sharing (OG) -->
     <meta property="og:title"       content="WAVS — ติดตามสถานที่ธรรมชาติไทย">
     <meta property="og:description" content="วิทยานิพนธ์เชิงโต้ตอบที่สำรวจการปิดสถานที่ธรรมชาติอันเป็นที่รักของประเทศไทย และนำทางค้นพบเส้นทางใหม่อย่างใส่ใจ">
-    <meta property="og:image"       content="brand_asset/WAVS Logo.png">
+    <meta property="og:image"       content="brand_asset/og_image.png">
     <meta property="og:type"        content="website">
     <meta name="twitter:card"       content="summary_large_image">
     <meta name="twitter:title"      content="WAVS — ติดตามสถานที่ธรรมชาติไทย">
@@ -855,9 +855,17 @@
             /* Map */
             #parks-map { height: 420px; }
 
-            /* Filter pills wrap tighter */
-            .parks-filters { gap: 8px; }
-            .pf-pill { font-size: 12px; padding: 7px 14px; }
+            /* Filter pills — horizontal scroll on mobile, no wrap */
+            .parks-filters {
+                gap: 8px;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 4px;
+                scrollbar-width: none;
+            }
+            .parks-filters::-webkit-scrollbar { display: none; }
+            .pf-pill { font-size: 12px; padding: 7px 14px; flex-shrink: 0; }
 
             /* Popup — compact on mobile */
             .leaflet-popup-content-wrapper {
@@ -1071,23 +1079,23 @@
             <div class="news-body">TAT เผยแพร่คู่มือสถานะเปิด–ปิดของสถานที่ท่องเที่ยวในอุทยานแห่งชาติทุกแห่ง แนะนำนักท่องเที่ยวตรวจสอบที่ portal.dnp.go.th ก่อนเดินทางทุกครั้ง</div>
             <span class="news-read-more">อ่านต่อที่ TAT Newsroom →</span>
         </a>
-        <a class="news-card" href="https://www.bangkokbiznews.com/news/news-update/1213855" target="_blank" rel="noopener">
+        <a class="news-card" href="https://www.pattayamail.com/thailandnews/thailand-mobilizes-early-as-dnp-warns-of-tough-2026-wildfire-and-haze-season-526996" target="_blank" rel="noopener">
             <div class="news-meta">
                 <span class="news-tag policy">นโยบาย</span>
-                <span class="news-date">25 ธันวาคม 2568</span>
+                <span class="news-date">มีนาคม 2569</span>
             </div>
-            <div class="news-headline">ของขวัญปีใหม่ 2569: เที่ยวอุทยานฟรีทุกแห่ง 31 ธ.ค. 68 – 4 ม.ค. 69</div>
-            <div class="news-body">กระทรวง ทส. และ DNP มอบของขวัญปีใหม่ ยกเว้นค่าเข้าชมอุทยานแห่งชาติ วนอุทยาน และสวนพฤกษศาสตร์ทั้ง 133 แห่งทั่วประเทศ พร้อมกิจกรรมปลูกต้นไม้และแจกปฏิทินท่องเที่ยว</div>
-            <span class="news-read-more">อ่านต่อที่ Bangkok Biz News →</span>
+            <div class="news-headline">DNP เตือน: ฤดูไฟป่า 2569 รุนแรง — สั่งห้ามเผาป่าถึง 10 พ.ค.</div>
+            <div class="news-body">กรมอุทยานแห่งชาติระดมมาตรการรับมือฤดูแล้ง ออกคำสั่งห้ามเผาป่าทั่วประเทศถึง 10 พ.ค.69 โทษสูงสุดจำคุก 20 ปี ปรับ 2 ล้านบาท พร้อมตั้งจุดเฝ้าระวัง 3,895 จุด ภาคเหนือวิกฤตที่สุด</div>
+            <span class="news-read-more">อ่านต่อที่ Pattaya Mail →</span>
         </a>
-        <a class="news-card" href="https://www.nationthailand.com/news/tourism/40050202" target="_blank" rel="noopener">
+        <a class="news-card" href="https://thethaiger.com/news/national/wildfires-force-indefinite-closure-of-north-thailand-park" target="_blank" rel="noopener">
             <div class="news-meta">
                 <span class="news-tag closure">การปิด</span>
-                <span class="news-date">20 พฤษภาคม 2568</span>
+                <span class="news-date">มีนาคม 2569</span>
             </div>
-            <div class="news-headline">สิมิลันปิด 5 เดือนเพื่อฟื้นฟูระบบนิเวศ</div>
-            <div class="news-body">Nation Thailand รายงานการปิดอุทยานแห่งชาติหมู่เกาะสิมิลัน จ.พังงา ตั้งแต่ 16 พ.ค.–14 ต.ค. 2568 เพื่อให้ปะการัง ปลา และสิ่งแวดล้อมทางทะเลฟื้นตัวจากจำนวนนักท่องเที่ยวที่หนาแน่น</div>
-            <span class="news-read-more">อ่านต่อที่ Nation Thailand →</span>
+            <div class="news-headline">ไฟป่าบังคับปิด "ดอยภูนาง" ไม่มีกำหนด หลังพบจุดความร้อนพุ่ง 557 จุด</div>
+            <div class="news-body">อุทยานแห่งชาติดอยภูนาง จ.พะเยา ประกาศปิดไม่มีกำหนดหลังตรวจพบจุดความร้อน 557 จุดตั้งแต่ ต.ค.68–25 มี.ค.69 เพิ่มขึ้น 38.9% จากปีก่อน — เป็นส่วนหนึ่งของวิกฤตไฟป่าภาคเหนือ 2569</div>
+            <span class="news-read-more">อ่านต่อที่ The Thaiger →</span>
         </a>
         <a class="news-card" href="https://www.bangkokpost.com/thailand/general/2863044" target="_blank" rel="noopener">
             <div class="news-meta">
