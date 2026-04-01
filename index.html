@@ -859,13 +859,14 @@
             .parks-filters { gap: 8px; }
             .pf-pill { font-size: 12px; padding: 7px 14px; }
 
-            /* Popup — shrink to fit screen, make long ones scrollable */
+            /* Popup — compact on mobile */
             .leaflet-popup-content-wrapper {
-                max-width: calc(100vw - 32px) !important;
+                max-width: calc(100vw - 40px) !important;
+                border-radius: 14px !important;
             }
             .leaflet-popup-content {
-                margin: 12px 14px !important;
-                max-height: 55vh !important;
+                margin: 10px 12px !important;
+                max-height: 48vh !important;
                 overflow-y: auto !important;
                 -webkit-overflow-scrolling: touch !important;
             }
@@ -873,8 +874,21 @@
                 min-width: 0 !important;
                 max-width: 100% !important;
             }
-            .popup-hero {
-                height: 120px !important;
+            /* Smaller hero image */
+            .popup-hero { height: 90px !important; }
+            /* Compact table cells */
+            .leaflet-popup-content td,
+            .leaflet-popup-content th {
+                padding: 3px 6px !important;
+                font-size: 11px !important;
+            }
+            /* Smaller park name */
+            .leaflet-popup-content [style*="font-size:16px"] {
+                font-size: 14px !important;
+            }
+            /* Smaller alt cards */
+            .leaflet-popup-content [style*="padding:8px 10px"] {
+                padding: 6px 8px !important;
             }
         }
 
