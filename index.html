@@ -1539,23 +1539,37 @@ searchInput.addEventListener('input', () => {
     if (!q) { searchResults.classList.remove('open'); return; }
 
     const parkMatches = (typeof PARKS_CLOSURES !== 'undefined')
-        ? PARKS_CLOSURES.filter(p =>
-            p.name_th.includes(q) ||
-            p.name_en.toLowerCase().includes(q) ||
-            p.region.toLowerCase().includes(q)
-          ).slice(0, 4).map(p => ({
-            key: `park_${p.id}`, id: p.id, kind: 'park',
-            name_th: p.name_th, sub: p.region, status: p.status,
-          }))
+        ? PARKS_CLOSURES.flatMap(p => {
+            const nameTh = p.name_th.includes(q);
+            const nameEn = p.name_en.toLowerCase().includes(q);
+            const region  = p.region.toLowerCase().includes(q);
+            if (nameTh || nameEn || region) {
+                return [{ key: `park_${p.id}`, id: p.id, kind: 'park',
+                          name_th: p.name_th, sub: p.region, status: p.status }];
+            }
+            // sub-site match — find first matching site name
+            const matched = p.closures.find(c => c.site.toLowerCase().includes(q));
+            if (matched) {
+                return [{ key: `park_${p.id}_site`, id: p.id, kind: 'park',
+                          name_th: p.name_th, sub: matched.site, status: p.status }];
+            }
+            return [];
+          }).slice(0, 5)
         : [];
 
     const attrMatches = (typeof ATTRACTIONS_DATA !== 'undefined')
-        ? ATTRACTIONS_DATA.filter(a =>
-            a.name_th.includes(q) || a.province.includes(q)
-          ).slice(0, 3).map(a => ({
-            key: `att_${a.id}`, id: a.id, kind: 'attraction',
-            name_th: a.name_th, sub: a.province, status: a.status,
-          }))
+        ? ATTRACTIONS_DATA.flatMap(a => {
+            if (a.name_th.includes(q) || a.province.includes(q)) {
+                return [{ key: `att_${a.id}`, id: a.id, kind: 'attraction',
+                          name_th: a.name_th, sub: a.province, status: a.status }];
+            }
+            const matched = a.closures && a.closures.find(c => c.site && c.site.toLowerCase().includes(q));
+            if (matched) {
+                return [{ key: `att_${a.id}_site`, id: a.id, kind: 'attraction',
+                          name_th: a.name_th, sub: matched.site, status: a.status }];
+            }
+            return [];
+          }).slice(0, 3)
         : [];
 
     const matches = [...parkMatches, ...attrMatches].slice(0, 6);
