@@ -1154,7 +1154,7 @@ const parksMap = L.map('parks-map', {
     zoom: 6,
     minZoom: 5,
     maxBounds: THAILAND_BOUNDS,
-    maxBoundsViscosity: 0.6,
+    maxBoundsViscosity: 1.0,
     zoomControl: false,
     attributionControl: true,
     preferCanvas: true,
@@ -1558,7 +1558,7 @@ if (typeof PARKS_CLOSURES !== 'undefined') {
         if (!p.lat || !p.lon) return;
         const m = L.marker([p.lat, p.lon], { icon: makeParkIcon(p.status) });
         m._wavsPark = p;
-        m.bindPopup(buildParkPopup(p), { maxWidth: 440, minWidth: 300, autoPan: true, autoPanPaddingTopLeft: [20, 80], autoPanPaddingBottomRight: [20, 20] });
+        m.bindPopup(buildParkPopup(p), { maxWidth: 440, minWidth: 300, autoPan: !L.Browser.mobile, autoPanPaddingTopLeft: [20, 80], autoPanPaddingBottomRight: [20, 20] });
         if (parkClusters[p.status]) parkClusters[p.status].addLayer(m);
         parkMarkerList.push({ marker: m, status: p.status });
         parkMarkersById[p.id] = { marker: m, status: p.status };
@@ -1666,7 +1666,7 @@ if (typeof ATTRACTIONS_DATA !== 'undefined') {
     ATTRACTIONS_DATA.forEach(a => {
         const m = L.marker([a.lat, a.lon], { icon: makeParkIcon(a.status) });
         m._wavsAttraction = a;
-        m.bindPopup(buildAttractionPopup(a), { maxWidth: 420, minWidth: 280, autoPan: true, autoPanPaddingTopLeft: [20, 80], autoPanPaddingBottomRight: [20, 20] });
+        m.bindPopup(buildAttractionPopup(a), { maxWidth: 420, minWidth: 280, autoPan: !L.Browser.mobile, autoPanPaddingTopLeft: [20, 80], autoPanPaddingBottomRight: [20, 20] });
         if (parkClusters[a.status]) parkClusters[a.status].addLayer(m);
         attractionMarkersById[a.id] = m;
     });
