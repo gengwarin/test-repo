@@ -376,7 +376,7 @@ const ATTRACTIONS_DATA = [
 "province": "อุทัยธานี",
 "lat": 15.00667,
 "lon": 99.45346,
-"status": "open",
+"status": "active_annual",
 "closures": [
 {
 "site": "ถ้ำพุหวาย",
@@ -405,7 +405,7 @@ const ATTRACTIONS_DATA = [
 "province": "นครสวรรค์",
 "lat": 15.30509,
 "lon": 100.39408,
-"status": "fully_closed",
+"status": "open",
 "closures": [
 {
 "site": "ถ้ำเพชร - ถ้ำทอง (บริเวณที่ทำการวนอุทยาน)",
