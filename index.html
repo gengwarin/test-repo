@@ -861,34 +861,35 @@
 
             /* Popup — compact on mobile */
             .leaflet-popup-content-wrapper {
-                max-width: calc(100vw - 40px) !important;
+                max-width: min(230px, 82vw) !important;
                 border-radius: 14px !important;
             }
             .leaflet-popup-content {
-                margin: 10px 12px !important;
-                max-height: 48vh !important;
+                margin: 6px 8px !important;
+                max-height: 24vh !important;
                 overflow-y: auto !important;
                 -webkit-overflow-scrolling: touch !important;
             }
             .leaflet-popup-content > div {
                 min-width: 0 !important;
-                max-width: 100% !important;
+                max-width: 214px !important;
             }
-            /* Smaller hero image */
-            .popup-hero { height: 90px !important; }
-            /* Compact table cells */
+            /* Hide hero image on mobile */
+            .popup-hero { display: none !important; }
+            /* Hide closure details table on mobile — scroll to see summary only */
+            .leaflet-popup-content table { display: none !important; }
+            /* Compact cells if table visible */
             .leaflet-popup-content td,
             .leaflet-popup-content th {
-                padding: 3px 6px !important;
-                font-size: 11px !important;
+                padding: 2px 4px !important;
+                font-size: 10px !important;
             }
             /* Smaller park name */
             .leaflet-popup-content [style*="font-size:16px"] {
-                font-size: 14px !important;
+                font-size: 13px !important;
             }
-            /* Smaller alt cards */
-            .leaflet-popup-content [style*="padding:8px 10px"] {
-                padding: 6px 8px !important;
+            .leaflet-popup-content [style*="font-size:12px;color:#999"] {
+                font-size: 10px !important;
             }
         }
 
