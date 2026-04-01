@@ -1241,6 +1241,73 @@ const MONTH_TH = {
     'Sep':'ก.ย.','Oct':'ต.ค.','Nov':'พ.ย.','Dec':'ธ.ค.'
 };
 
+const SITE_REPLACEMENTS_TH = [
+    // Full phrases first (longest → shortest to avoid partial overlap)
+    ['All tourist sites and accommodations', 'สถานที่ท่องเที่ยวและที่พักทั้งหมด'],
+    ['Tourist sites and accommodations',     'สถานที่ท่องเที่ยวและที่พัก'],
+    ['tourist sites and accommodations',     'สถานที่ท่องเที่ยวและที่พัก'],
+    ['All tourist sites',                    'สถานที่ท่องเที่ยวทั้งหมด'],
+    ['tourist sites',                        'สถานที่ท่องเที่ยว'],
+    ['Multiple waterfalls',                  'น้ำตกหลายแห่ง'],
+    ['Multiple caves',                       'ถ้ำหลายแห่ง'],
+    ['Multiple peaks',                       'ยอดเขาหลายแห่ง'],
+    ['Multiple Phu peaks',                   'ยอดภูหลายแห่ง'],
+    ['white water rafting',                  'ล่องแก่ง'],
+    ['coral reefs',                          'แนวปะการัง'],
+    ['coral reef',                           'แนวปะการัง'],
+    ['Prehistoric cave painting',            'ภาพเขียนสีถ้ำยุคก่อนประวัติศาสตร์'],
+    ['Prehistoric painting',                 'ภาพเขียนสียุคก่อนประวัติศาสตร์'],
+    ['Snorkeling/water activities',          'ดำน้ำตื้น/กิจกรรมทางน้ำ'],
+    ['Scuba dive site',                      'จุดดำน้ำ'],
+    ['Dive site',                            'จุดดำน้ำ'],
+    ['dive site',                            'จุดดำน้ำ'],
+    ['Nature trail',                         'เส้นทางธรรมชาติ'],
+    ['Nature Trail',                         'เส้นทางธรรมชาติ'],
+    ['nature trail',                         'เส้นทางธรรมชาติ'],
+    ['hiking trail',                         'เส้นทางเดินเท้า'],
+    ['Hiking Trail',                         'เส้นทางเดินเท้า'],
+    ['hiking trails',                        'เส้นทางเดินเท้า'],
+    ['Hot Spring',                           'น้ำพุร้อน'],
+    ['Hot spring',                           'น้ำพุร้อน'],
+    ['hot spring',                           'น้ำพุร้อน'],
+    ['Reservoir',                            'อ่างเก็บน้ำ'],
+    ['reservoir',                            'อ่างเก็บน้ำ'],
+    ['Viewpoint',                            'จุดชมวิว'],
+    ['viewpoint',                            'จุดชมวิว'],
+    ['viewpoints',                           'จุดชมวิว'],
+    ['Campsites',                            'แคมป์'],
+    ['Campsite',                             'แคมป์'],
+    ['campsite',                             'แคมป์'],
+    ['accommodation',                        'ที่พัก'],
+    ['Accommodation',                        'ที่พัก'],
+    ['accommodations',                       'ที่พัก'],
+    // Geographical prefixes
+    ['Namtok ',  'น้ำตก'],
+    ['Kaeng ',   'แก่ง'],
+    ['Tham ',    'ถ้ำ'],
+    ['Khao ',    'เขา'],
+    ['Huai ',    'ห้วย'],
+    ['Phu ',     'ภู'],
+    ['Pha ',     'ผา'],
+    ['Doi ',     'ดอย'],
+    ['Hat ',     'หาด'],
+    ['Ko ',      'เกาะ'],
+    ['Lan ',     'ลาน'],
+    ['Ao ',      'อ่าว'],
+    ['Thung ',   'ทุ่ง'],
+    ['Zone ',    'โซน '],
+    [' and ',    ' และ '],
+];
+
+function siteLabel(site, lang) {
+    if (!site || lang !== 'th') return site;
+    let s = site;
+    for (const [en, th] of SITE_REPLACEMENTS_TH) {
+        s = s.split(en).join(th);
+    }
+    return s;
+}
+
 function periodLabel(period, lang) {
     if (!period || period === '–') return period;
     // Expand "D–D Mon" → "D Mon–D Mon" (e.g. "1–31 Mar" → "1 Mar–31 Mar")
@@ -1302,7 +1369,7 @@ function buildParkPopup(p, lang) {
         const bg = (c.type.includes('Indefinite') || c.type.includes('Permanent')) ? 'background:#fff5f5;' : '';
         return `
         <tr style="${bg}">
-            <td style="padding:4px 8px;font-size:12px;border-bottom:1px solid #f0f0f0;line-height:1.4">${c.site}</td>
+            <td style="padding:4px 8px;font-size:12px;border-bottom:1px solid #f0f0f0;line-height:1.4">${siteLabel(c.site, lang)}</td>
             <td style="padding:4px 8px;font-size:12px;border-bottom:1px solid #f0f0f0;white-space:nowrap">${periodLabel(c.period, lang)}</td>
             <td style="padding:4px 8px;font-size:12px;border-bottom:1px solid #f0f0f0;white-space:nowrap;font-weight:600;color:${tc}">${typeLabel(c.type, lang)}</td>
         </tr>`;
@@ -1442,7 +1509,7 @@ function buildAttractionPopup(a, lang) {
         const periodTh = c.period === '–' ? (isOpen ? openLabel : '–') : periodLabel(c.period, lang);
         const rowColor = isOpen ? '#999' : '#D4820E';
         return `<tr>
-            <td style="padding:4px 8px;font-size:12px;border-bottom:1px solid #f0f0f0;line-height:1.4">${c.site}</td>
+            <td style="padding:4px 8px;font-size:12px;border-bottom:1px solid #f0f0f0;line-height:1.4">${siteLabel(c.site, lang)}</td>
             <td style="padding:4px 8px;font-size:12px;border-bottom:1px solid #f0f0f0;white-space:nowrap;color:${rowColor}">${periodTh}</td>
             <td style="padding:4px 8px;font-size:12px;border-bottom:1px solid #f0f0f0;font-size:11px;color:#aaa">${c.reason || '–'}</td>
         </tr>`;
