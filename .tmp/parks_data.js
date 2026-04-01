@@ -1347,7 +1347,7 @@ const PARKS_CLOSURES = [
 {
 "site": "All tourist sites and accommodations",
 "period": "1 Mar–30 Apr",
-"type": "Annual"
+"type": "Temporary (wildfire risk)"
 }
 ]
 },
@@ -2188,7 +2188,7 @@ const PARKS_CLOSURES = [
 "closures": [
 {
 "site": "All tourist sites and accommodations",
-"period": "1 Mar–30 Apr",
+"period": "20 Apr–20 Jun",
 "type": "Annual"
 }
 ]
@@ -2480,8 +2480,13 @@ const PARKS_CLOSURES = [
 "region": "Region 15 – Chiang Rai",
 "lat": 19.0197663,
 "lon": 100.2541402,
-"status": "open",
+"status": "indefinite",
 "closures": [
+{
+"site": "All tourist sites and accommodations",
+"period": "From 25 Mar onwards",
+"type": "Indefinite (wildfire)"
+},
 {
 "site": "All tourist sites and accommodations",
 "period": "1 Jul–30 Sep",
