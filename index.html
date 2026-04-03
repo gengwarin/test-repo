@@ -643,31 +643,31 @@
         #map-fs-search {
             display: none;
             position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% - 80px);
+            bottom: 18px;
+            left: 68px;   /* clear of fullscreen btn (40px + 16px + 12px gap) */
+            right: 16px;
             z-index: 1001;
         }
         .parks-map-container.map-fs #map-fs-search { display: block; }
         #map-fs-search-wrap {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             background: rgba(255,255,255,0.95);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(0,0,0,0.1);
             border-radius: 100px;
-            padding: 10px 16px;
+            padding: 7px 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
         }
         #map-fs-search-wrap input {
             border: none; outline: none;
             font-family: 'Cloud Soft', 'Sarabun', sans-serif;
-            font-size: 14px;
+            font-size: 13px;
             background: transparent;
             flex: 1;
+            min-width: 0;
             color: var(--dark);
         }
         #map-fs-search-wrap input::placeholder { color: #bbb; }
