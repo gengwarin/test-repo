@@ -870,34 +870,12 @@
             .parks-filters::-webkit-scrollbar { display: none; }
             .pf-pill { font-size: 12px; padding: 7px 14px; flex-shrink: 0; }
 
-            /* Popup — scaled down on mobile, no scroll */
+            /* Popup — zoom 50% on mobile, everything scales proportionally */
             .leaflet-popup-content-wrapper {
-                max-width: 72vw !important;
-                border-radius: 12px !important;
+                zoom: 0.5 !important;
+                border-radius: 14px !important;
             }
-            .leaflet-popup-content {
-                margin: 6px 8px !important;
-                overflow: visible !important;
-            }
-            .leaflet-popup-content > div {
-                min-width: 0 !important;
-                max-width: calc(72vw - 16px) !important;
-                font-size: 11px !important;
-            }
-            /* Scale down hero */
-            .popup-hero { height: 80px !important; margin-bottom: 8px !important; }
-            .popup-hero svg { height: 40px !important; }
-            /* Scale down park name */
-            .leaflet-popup-content [style*="font-size:16px"] { font-size: 12px !important; }
-            .leaflet-popup-content [style*="font-size:12px;color:#999"] { font-size: 10px !important; }
-            /* Scale down table */
-            .leaflet-popup-content td,
-            .leaflet-popup-content th {
-                padding: 2px 5px !important;
-                font-size: 10px !important;
-            }
-            /* Scale down alternatives, show only 2 */
-            .popup-alts { font-size: 10px !important; }
+            /* Show only 2 alternatives */
             .popup-alts > div > div:nth-child(4) { display: none !important; }
         }
 
