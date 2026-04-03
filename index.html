@@ -639,6 +639,64 @@
             position: relative;
         }
 
+        /* ── FULLSCREEN SEARCH BAR ── */
+        #map-fs-search {
+            display: none;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 80px);
+            z-index: 1001;
+        }
+        .parks-map-container.map-fs #map-fs-search { display: block; }
+        #map-fs-search-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 100px;
+            padding: 10px 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        #map-fs-search-wrap input {
+            border: none; outline: none;
+            font-family: 'Cloud Soft', 'Sarabun', sans-serif;
+            font-size: 14px;
+            background: transparent;
+            flex: 1;
+            color: var(--dark);
+        }
+        #map-fs-search-wrap input::placeholder { color: #bbb; }
+        #map-fs-results {
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 0; right: 0;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+            overflow: hidden;
+            display: none;
+        }
+        #map-fs-results.open { display: block; }
+        #map-fs-results li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            cursor: pointer;
+            list-style: none;
+            font-size: 13px;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        #map-fs-results li:last-child { border-bottom: none; }
+        #map-fs-results li:hover { background: #f9f9f9; }
+        #map-fs-results .hs-pip { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        #map-fs-results .hs-tag { font-size: 10px; color: #bbb; margin-left: auto; white-space: nowrap; }
+
         /* ── FULLSCREEN MAP (mobile only) ── */
         #map-fullscreen-btn {
             display: none;
@@ -712,6 +770,7 @@
         }
         .leaflet-popup-content-wrapper {
             overscroll-behavior: contain;
+            zoom: 0.5;
         }
 
         /* ── NEWS SECTION ── */
@@ -998,6 +1057,13 @@
     </div>
     <div class="parks-map-container" id="mapContainer">
         <div id="parks-map"></div>
+        <div id="map-fs-search">
+            <ul id="map-fs-results"></ul>
+            <div id="map-fs-search-wrap">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input id="mapFsSearch" type="text" placeholder="ค้นหาอุทยาน..." autocomplete="off" />
+            </div>
+        </div>
         <button id="map-fullscreen-btn" onclick="toggleMapFullscreen()" aria-label="เต็มจอ">
             <svg id="fs-icon-expand" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/>
@@ -2105,11 +2171,60 @@ function closeSheet() {
 function toggleMapFullscreen() {
     const container = document.getElementById('mapContainer');
     const isFs = container.classList.toggle('map-fs');
-    document.getElementById('fs-icon-expand').style.display  = isFs ? 'none'  : '';
+    document.getElementById('fs-icon-expand').style.display   = isFs ? 'none' : '';
     document.getElementById('fs-icon-compress').style.display = isFs ? ''     : 'none';
     document.body.style.overflow = isFs ? 'hidden' : '';
+    if (!isFs) {
+        document.getElementById('mapFsSearch').value = '';
+        document.getElementById('map-fs-results').classList.remove('open');
+    }
     setTimeout(() => parksMap.invalidateSize(), 50);
 }
+
+// ── FULLSCREEN SEARCH ─────────────────────────────────────────────────────────
+const mapFsInput   = document.getElementById('mapFsSearch');
+const mapFsResults = document.getElementById('map-fs-results');
+
+mapFsInput.addEventListener('input', () => {
+    const q = mapFsInput.value.trim().toLowerCase();
+    if (!q) { mapFsResults.classList.remove('open'); return; }
+
+    const parkMatches = (typeof PARKS_CLOSURES !== 'undefined')
+        ? PARKS_CLOSURES.flatMap(p => {
+            if (p.name_th.includes(q) || p.name_en.toLowerCase().includes(q) || p.region.toLowerCase().includes(q))
+                return [{ id: p.id, kind: 'park', name_th: p.name_th, sub: p.region, status: p.status }];
+            const matched = p.closures.find(c => c.site.toLowerCase().includes(q));
+            if (matched) return [{ id: p.id, kind: 'park', name_th: p.name_th, sub: matched.site, status: p.status }];
+            return [];
+          }).slice(0, 5) : [];
+
+    const attrMatches = (typeof ATTRACTIONS_DATA !== 'undefined')
+        ? ATTRACTIONS_DATA.flatMap(a => {
+            if (a.name_th.includes(q) || a.province.includes(q))
+                return [{ id: a.id, kind: 'attraction', name_th: a.name_th, sub: a.province, status: a.status }];
+            const matched = a.closures && a.closures.find(c => c.site && c.site.toLowerCase().includes(q));
+            if (matched) return [{ id: a.id, kind: 'attraction', name_th: a.name_th, sub: matched.site, status: a.status }];
+            return [];
+          }).slice(0, 3) : [];
+
+    const matches = [...parkMatches, ...attrMatches].slice(0, 6);
+    if (!matches.length) { mapFsResults.classList.remove('open'); return; }
+
+    mapFsResults.innerHTML = matches.map(d => {
+        const color = PARK_STATUS_COLOR[d.status] || '#aaa';
+        const tag = d.kind === 'attraction' ? 'วนอุทยาน' : 'อุทยานแห่งชาติ';
+        return `<li onclick="goToResult('${d.kind}','${d.id}');mapFsInput.value='';mapFsResults.classList.remove('open')">
+            <span class="hs-pip" style="background:${color}"></span>
+            <span>${d.name_th}</span>
+            <span class="hs-tag">${tag}</span>
+        </li>`;
+    }).join('');
+    mapFsResults.classList.add('open');
+});
+
+document.addEventListener('click', e => {
+    if (!e.target.closest('#map-fs-search')) mapFsResults.classList.remove('open');
+});
 navMenuBtn.addEventListener('click', () =>
     navSheet.classList.contains('open') ? closeSheet() : openSheet()
 );
