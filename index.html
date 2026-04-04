@@ -1264,6 +1264,20 @@ setTimeout(() => {
 // ── THAILAND BORDER ───────────────────────────────────────────────────────────
 const THAILAND_BOUNDS = [[4.074, 93.861], [22.539, 109.110]];
 
+// Province outlines
+fetch('brand_asset/thailand-provinces.geojson')
+    .then(r => r.json())
+    .then(provinces => {
+        L.geoJSON(provinces, {
+            style: {
+                color: 'rgba(0,0,0,0.18)',
+                weight: 0.8,
+                fillOpacity: 0,
+                interactive: false
+            }
+        }).addTo(parksMap);
+    });
+
 fetch('brand_asset/thailand.geojson')
     .then(r => r.json())
     .then(thailand => {
