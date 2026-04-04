@@ -132,7 +132,7 @@ const PARKS_CLOSURES = [
 "region": "Region 1 Branch – Saraburi",
 "lat": 14.72,
 "lon": 101.0,
-"status": "fully_closed",
+"status": "open",
 "closures": [
 {
 "site": "Multiple waterfalls, reservoir, campsite",
@@ -665,7 +665,7 @@ const PARKS_CLOSURES = [
 "region": "Region 4 – Surat Thani",
 "lat": 9.9813319,
 "lon": 98.7925008,
-"status": "fully_closed",
+"status": "active_annual",
 "closures": [
 {
 "site": "Namtok Ngao, Hot spring, Namtok Khlong Phra",
@@ -1599,7 +1599,7 @@ const PARKS_CLOSURES = [
 "region": "Region 10 – Udon Thani",
 "lat": 17.6,
 "lon": 103.0,
-"status": "open",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Namtok Yuang Thong, Namtok Tad Noi, Pha Daeng Viewpoint",
@@ -1615,7 +1615,7 @@ const PARKS_CLOSURES = [
 "region": "Region 10 – Udon Thani",
 "lat": 17.0544247,
 "lon": 103.6282603,
-"status": "fully_closed",
+"status": "active_annual",
 "closures": [
 {
 "site": "Reservoir",
@@ -2253,7 +2253,7 @@ const PARKS_CLOSURES = [
 "region": "Region 13 Branch – Lampang",
 "lat": 18.0,
 "lon": 99.4,
-"status": "active_annual",
+"status": "fully_closed",
 "closures": [
 {
 "site": "Mon Phraya Chae Campsite",
@@ -2517,7 +2517,7 @@ const PARKS_CLOSURES = [
 "region": "Region 15 – Chiang Rai",
 "lat": 19.5605535,
 "lon": 99.8634039,
-"status": "fully_closed",
+"status": "open",
 "closures": [
 {
 "site": "All tourist sites and accommodations",
@@ -2707,7 +2707,7 @@ const PARKS_CLOSURES = [
 "region": "Region 16 – Chiang Mai",
 "lat": 19.2960726,
 "lon": 99.1534233,
-"status": "open",
+"status": "active_annual",
 "closures": [
 {
 "site": "Doi Mon Lan, Zone 2 accommodation, Campsite",
