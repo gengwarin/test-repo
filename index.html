@@ -642,6 +642,34 @@
             position: relative;
         }
 
+        /* ── MAP ONBOARDING HINT ── */
+        #map-hint {
+            position: absolute;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 100px;
+            padding: 7px 14px;
+            font-size: 12px;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            pointer-events: none;
+            transition: opacity 0.5s, transform 0.5s;
+            white-space: nowrap;
+        }
+        #map-hint.hide {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-8px);
+        }
+
         /* ── FULLSCREEN SEARCH BAR ── */
         #map-fs-search {
             display: none;
@@ -1832,6 +1860,68 @@ function flyToAttraction(id) {
     }, 600);
 }
 
+// ── PROVINCE → PARK IDs MAPPING ──────────────────────────────────────────────
+const PROVINCE_PARKS = {
+    'นครราชสีมา': [1,2,6],
+    'นครนายก':    [1],
+    'ปราจีนบุรี': [1,2,3],
+    'สระบุรี':    [1,5,6],
+    'สระแก้ว':    [3,4],
+    'บุรีรัมย์':  [4],
+    'ตราด':       [8,13],
+    'ระยอง':      [9,11],
+    'จันทบุรี':   [10,11,12,14],
+    'กาญจนบุรี':  [15,16,17,18,19,20,21],
+    'ราชบุรี':    [22],
+    'สุพรรณบุรี': [23],
+    'เพชรบุรี':   [24],
+    'ประจวบคีรีขันธ์': [24,25,26,27,28,29],
+    'สุราษฎร์ธานี': [30,31,34,36,37,38,54,55],
+    'ชุมพร':      [32,35],
+    'ระนอง':      [33,35,39,40],
+    'พังงา':      [33,43,44,45,51,52,56],
+    'กระบี่':     [42,46,50,53],
+    'ภูเก็ต':     [47],
+    'นครศรีธรรมราช': [41,48,49,54,55,58],
+    'ตรัง':       [58,60,62],
+    'พัทลุง':     [58],
+    'สตูล':       [61,62,63],
+    'สงขลา':      [57,59,65],
+    'ปัตตานี':    [65,66],
+    'ยะลา':       [64,65,66],
+    'นราธิวาส':   [66,67,68],
+    'ชัยภูมิ':    [69,70,71,72,77],
+    'ขอนแก่น':    [75,76,77,90],
+    'เลย':        [73,74,76,78,86,91,93],
+    'หนองคาย':    [86],
+    'หนองบัวลำภู': [90,91],
+    'อุดรธานี':   [86,87,91],
+    'สกลนคร':    [85,87,88],
+    'กาฬสินธุ์':  [85,87],
+    'นครพนม':     [88,89],
+    'บึงกาฬ':     [89],
+    'มุกดาหาร':   [83,84,88],
+    'ยโสธร':      [84],
+    'อำนาจเจริญ': [84],
+    'อุบลราชธานี': [79,80,81,82],
+    'ศรีสะเกษ':   [82],
+    'พิษณุโลก':   [92,93,95,99],
+    'เพชรบูรณ์':  [92,94,98,101],
+    'อุตรดิตถ์':  [96,97,100],
+    'แพร่':       [97,105,106,107],
+    'น่าน':       [108,109,110,111,112,113,114],
+    'พะเยา':      [111,129,131,132,134],
+    'ลำปาง':      [105,106,115,117,118,119,120,129],
+    'ลำพูน':      [116,119,138,148],
+    'กำแพงเพชร':  [102,103,104],
+    'นครสวรรค์':  [102],
+    'ตาก':        [104,118,121,122,123,126,127,128,138,155],
+    'สุโขทัย':    [124,125],
+    'เชียงราย':   [129,130,131,133,134,135,136,145],
+    'เชียงใหม่':  [137,138,139,140,141,142,143,144,145,146,147,148,149,150,151],
+    'แม่ฮ่องสอน': [141,152,153,154,155,156],
+};
+
 // ── HERO SEARCH ──────────────────────────────────────────────────────────────
 const searchInput   = document.getElementById('heroSearch');
 const searchResults = document.getElementById('heroSearchResults');
@@ -1859,58 +1949,65 @@ searchInput.addEventListener('keydown', e => {
     items[searchIdx]?.scrollIntoView({ block: 'nearest' });
 });
 
+function getSearchMatches(q) {
+    const parkById = {};
+    if (typeof PARKS_CLOSURES !== 'undefined') PARKS_CLOSURES.forEach(p => parkById[p.id] = p);
+
+    // Province match — expand to all parks in that province
+    const provinceMatches = [];
+    for (const [prov, ids] of Object.entries(PROVINCE_PARKS)) {
+        if (prov.includes(q)) {
+            ids.forEach(id => {
+                const p = parkById[id];
+                if (p) provinceMatches.push({ key: `park_${p.id}_prov`, id: p.id, kind: 'park',
+                    name_th: p.name_th, sub: prov, status: p.status });
+            });
+            break; // match first province only to avoid dupes
+        }
+    }
+    if (provinceMatches.length) return provinceMatches.slice(0, 6);
+
+    // Normal name / site / region match
+    const parkMatches = (typeof PARKS_CLOSURES !== 'undefined')
+        ? PARKS_CLOSURES.flatMap(p => {
+            if (p.name_th.includes(q) || p.name_en.toLowerCase().includes(q) || p.region.toLowerCase().includes(q))
+                return [{ key: `park_${p.id}`, id: p.id, kind: 'park', name_th: p.name_th, sub: p.region, status: p.status }];
+            const matched = p.closures.find(c => c.site.toLowerCase().includes(q));
+            if (matched) return [{ key: `park_${p.id}_site`, id: p.id, kind: 'park', name_th: p.name_th, sub: matched.site, status: p.status }];
+            return [];
+          }).slice(0, 5) : [];
+
+    const attrMatches = (typeof ATTRACTIONS_DATA !== 'undefined')
+        ? ATTRACTIONS_DATA.flatMap(a => {
+            if (a.name_th.includes(q) || a.province.includes(q))
+                return [{ key: `att_${a.id}`, id: a.id, kind: 'attraction', name_th: a.name_th, sub: a.province, status: a.status }];
+            const matched = a.closures && a.closures.find(c => c.site && c.site.toLowerCase().includes(q));
+            if (matched) return [{ key: `att_${a.id}_site`, id: a.id, kind: 'attraction', name_th: a.name_th, sub: matched.site, status: a.status }];
+            return [];
+          }).slice(0, 3) : [];
+
+    return [...parkMatches, ...attrMatches].slice(0, 6);
+}
+
+function renderSearchResults(matches, resultsEl, onClickFn) {
+    if (!matches.length) { resultsEl.classList.remove('open'); return; }
+    resultsEl.innerHTML = matches.map(d => {
+        const color = PARK_STATUS_COLOR[d.status] || '#aaa';
+        const tag = d.kind === 'attraction' ? 'วนอุทยาน' : 'อุทยานแห่งชาติ';
+        return `<li onclick="${onClickFn}('${d.kind}','${d.id}')">
+            <span class="hs-pip" style="background:${color}"></span>
+            <span class="hs-name">${d.name_th}</span>
+            <span class="hs-tag">${tag} · ${d.sub}</span>
+        </li>`;
+    }).join('');
+    resultsEl.classList.add('open');
+}
+
 searchInput.addEventListener('input', () => {
     searchIdx = -1;
     const q = searchInput.value.trim().toLowerCase();
     if (!q) { searchResults.classList.remove('open'); return; }
-
-    const parkMatches = (typeof PARKS_CLOSURES !== 'undefined')
-        ? PARKS_CLOSURES.flatMap(p => {
-            const nameTh = p.name_th.includes(q);
-            const nameEn = p.name_en.toLowerCase().includes(q);
-            const region  = p.region.toLowerCase().includes(q);
-            if (nameTh || nameEn || region) {
-                return [{ key: `park_${p.id}`, id: p.id, kind: 'park',
-                          name_th: p.name_th, sub: p.region, status: p.status }];
-            }
-            // sub-site match — find first matching site name
-            const matched = p.closures.find(c => c.site.toLowerCase().includes(q));
-            if (matched) {
-                return [{ key: `park_${p.id}_site`, id: p.id, kind: 'park',
-                          name_th: p.name_th, sub: matched.site, status: p.status }];
-            }
-            return [];
-          }).slice(0, 5)
-        : [];
-
-    const attrMatches = (typeof ATTRACTIONS_DATA !== 'undefined')
-        ? ATTRACTIONS_DATA.flatMap(a => {
-            if (a.name_th.includes(q) || a.province.includes(q)) {
-                return [{ key: `att_${a.id}`, id: a.id, kind: 'attraction',
-                          name_th: a.name_th, sub: a.province, status: a.status }];
-            }
-            const matched = a.closures && a.closures.find(c => c.site && c.site.toLowerCase().includes(q));
-            if (matched) {
-                return [{ key: `att_${a.id}_site`, id: a.id, kind: 'attraction',
-                          name_th: a.name_th, sub: matched.site, status: a.status }];
-            }
-            return [];
-          }).slice(0, 3)
-        : [];
-
-    const matches = [...parkMatches, ...attrMatches].slice(0, 6);
-    if (!matches.length) { searchResults.classList.remove('open'); return; }
-
-    searchResults.innerHTML = matches.map(d => {
-        const color = PARK_STATUS_COLOR[d.status] || '#aaa';
-        const tag = d.kind === 'attraction' ? 'วนอุทยาน' : 'อุทยานแห่งชาติ';
-        return `<li onclick="goToResult('${d.kind}', '${d.id}')">
-            <span class="hs-pip" style="background:${color}"></span>
-            <span class="hs-name">${d.name_th}</span>
-            <span class="hs-tag">${tag}</span>
-        </li>`;
-    }).join('');
-    searchResults.classList.add('open');
+    renderSearchResults(getSearchMatches(q), searchResults, 'goToResult');
 });
 
 function goToResult(kind, id) {
@@ -2174,6 +2271,23 @@ function closeSheet() {
     navSheet.setAttribute('aria-hidden', 'true');
 }
 
+// ── MAP ONBOARDING HINT ───────────────────────────────────────────────────────
+(function() {
+    const hint = document.getElementById('map-hint');
+    if (!hint) return;
+    // Hide after 6s automatically
+    const autoHide = setTimeout(() => {
+        hint.classList.add('hide');
+        setTimeout(() => hint.remove(), 500);
+    }, 6000);
+    // Also hide on first map click
+    parksMap.once('click', () => {
+        clearTimeout(autoHide);
+        hint.classList.add('hide');
+        setTimeout(() => hint.remove(), 500);
+    });
+})();
+
 // ── FULLSCREEN MAP ────────────────────────────────────────────────────────────
 function toggleMapFullscreen() {
     const container = document.getElementById('mapContainer');
@@ -2192,41 +2306,16 @@ function toggleMapFullscreen() {
 const mapFsInput   = document.getElementById('mapFsSearch');
 const mapFsResults = document.getElementById('map-fs-results');
 
+function goToResultFs(kind, id) {
+    goToResult(kind, id);
+    mapFsInput.value = '';
+    mapFsResults.classList.remove('open');
+}
+
 mapFsInput.addEventListener('input', () => {
     const q = mapFsInput.value.trim().toLowerCase();
     if (!q) { mapFsResults.classList.remove('open'); return; }
-
-    const parkMatches = (typeof PARKS_CLOSURES !== 'undefined')
-        ? PARKS_CLOSURES.flatMap(p => {
-            if (p.name_th.includes(q) || p.name_en.toLowerCase().includes(q) || p.region.toLowerCase().includes(q))
-                return [{ id: p.id, kind: 'park', name_th: p.name_th, sub: p.region, status: p.status }];
-            const matched = p.closures.find(c => c.site.toLowerCase().includes(q));
-            if (matched) return [{ id: p.id, kind: 'park', name_th: p.name_th, sub: matched.site, status: p.status }];
-            return [];
-          }).slice(0, 5) : [];
-
-    const attrMatches = (typeof ATTRACTIONS_DATA !== 'undefined')
-        ? ATTRACTIONS_DATA.flatMap(a => {
-            if (a.name_th.includes(q) || a.province.includes(q))
-                return [{ id: a.id, kind: 'attraction', name_th: a.name_th, sub: a.province, status: a.status }];
-            const matched = a.closures && a.closures.find(c => c.site && c.site.toLowerCase().includes(q));
-            if (matched) return [{ id: a.id, kind: 'attraction', name_th: a.name_th, sub: matched.site, status: a.status }];
-            return [];
-          }).slice(0, 3) : [];
-
-    const matches = [...parkMatches, ...attrMatches].slice(0, 6);
-    if (!matches.length) { mapFsResults.classList.remove('open'); return; }
-
-    mapFsResults.innerHTML = matches.map(d => {
-        const color = PARK_STATUS_COLOR[d.status] || '#aaa';
-        const tag = d.kind === 'attraction' ? 'วนอุทยาน' : 'อุทยานแห่งชาติ';
-        return `<li onclick="goToResult('${d.kind}','${d.id}');mapFsInput.value='';mapFsResults.classList.remove('open')">
-            <span class="hs-pip" style="background:${color}"></span>
-            <span>${d.name_th}</span>
-            <span class="hs-tag">${tag}</span>
-        </li>`;
-    }).join('');
-    mapFsResults.classList.add('open');
+    renderSearchResults(getSearchMatches(q), mapFsResults, 'goToResultFs');
 });
 
 document.addEventListener('click', e => {
