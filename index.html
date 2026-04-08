@@ -936,15 +936,6 @@
             overflow: hidden;
         }
 
-        .news-img {
-            width: calc(100% + 56px);
-            margin: -28px -28px 20px;
-            height: 190px;
-            object-fit: cover;
-            border-radius: 20px 20px 0 0;
-            display: block;
-            background: var(--nature-light);
-        }
 
         .news-card:hover {
             transform: translateY(-4px);
@@ -1342,7 +1333,6 @@
     </div>
     <div class="news-grid">
         <a class="news-card" href="https://www.tatnews.org/2025/12/annual-seasonal-opening-closure-of-attractions-of-thailands-national-park-system/" target="_blank" rel="noopener">
-            <img class="news-img" src="https://image.thum.io/get/width/600/crop/315/https://www.tatnews.org/2025/12/annual-seasonal-opening-closure-of-attractions-of-thailands-national-park-system/" alt="" loading="lazy">
             <div class="news-meta">
                 <span class="news-tag policy">นโยบาย</span>
                 <span class="news-date">15 มกราคม 2569</span>
@@ -1352,7 +1342,6 @@
             <span class="news-read-more">อ่านต่อที่ TAT Newsroom →</span>
         </a>
         <a class="news-card" href="https://www.pattayamail.com/thailandnews/thailand-steps-up-aerial-and-ground-operations-to-tackle-northern-wildfires-and-pm2-5-crisis-540867" target="_blank" rel="noopener">
-            <img class="news-img" src="https://image.thum.io/get/width/600/crop/315/https://www.pattayamail.com/thailandnews/thailand-steps-up-aerial-and-ground-operations-to-tackle-northern-wildfires-and-pm2-5-crisis-540867" alt="" loading="lazy">
             <div class="news-meta">
                 <span class="news-tag policy">นโยบาย</span>
                 <span class="news-date">28 มีนาคม 2569</span>
@@ -1362,7 +1351,6 @@
             <span class="news-read-more">อ่านต่อที่ Pattaya Mail →</span>
         </a>
         <a class="news-card" href="https://www.nationthailand.com/news/general/40064502" target="_blank" rel="noopener">
-            <img class="news-img" src="https://image.thum.io/get/width/600/crop/315/https://www.nationthailand.com/news/general/40064502" alt="" loading="lazy">
             <div class="news-meta">
                 <span class="news-tag closure">การปิด</span>
                 <span class="news-date">31 มีนาคม 2569</span>
@@ -1372,7 +1360,6 @@
             <span class="news-read-more">อ่านต่อที่ Nation Thailand →</span>
         </a>
         <a class="news-card" href="https://www.bangkokpost.com/thailand/general/2863044" target="_blank" rel="noopener">
-            <img class="news-img" src="https://image.thum.io/get/width/600/crop/315/https://www.bangkokpost.com/thailand/general/2863044" alt="" loading="lazy">
             <div class="news-meta">
                 <span class="news-tag research">วิจัย</span>
                 <span class="news-date">18 กุมภาพันธ์ 2569</span>
@@ -2235,6 +2222,13 @@ document.addEventListener('click', e => {
 // ── FEATURED PARKS CARDS ─────────────────────────────────────────────────────
 const FEATURED_PARK_IDS = [1, 45, 137, 24, 42, 61];
 
+function setFeaturedImg(imgEl, src) {
+    imgEl.onload = () => { imgEl.style.opacity = '1'; };
+    imgEl.onerror = () => {};
+    imgEl.src = src;
+    if (imgEl.complete && imgEl.naturalWidth > 0) imgEl.style.opacity = '1';
+}
+
 async function fetchFeaturedPhoto(nameEn, imgEl) {
     if (!nameEn || !imgEl) return;
     for (const lang of ['en', 'th']) {
@@ -2243,8 +2237,7 @@ async function fetchFeaturedPhoto(nameEn, imgEl) {
             if (!r.ok) continue;
             const d = await r.json();
             if (!d.thumbnail?.source) continue;
-            imgEl.src = d.thumbnail.source.replace(/\/\d+px-/, '/800px-');
-            imgEl.onload = () => { imgEl.style.opacity = '1'; };
+            setFeaturedImg(imgEl, d.thumbnail.source.replace(/\/\d+px-/, '/800px-'));
             return;
         } catch {}
     }
@@ -2259,7 +2252,7 @@ async function fetchFeaturedPhoto(nameEn, imgEl) {
         const imgs = Object.values(d.query?.pages || {})
             .filter(p => { const ii = p.imageinfo?.[0] || {}; return /\.(jpg|jpeg|png)$/i.test(ii.url || '') && !EXCL.test(p.title || ''); })
             .map(p => p.imageinfo[0].thumburl);
-        if (imgs[0]) { imgEl.src = imgs[0]; imgEl.onload = () => { imgEl.style.opacity = '1'; }; }
+        if (imgs[0]) setFeaturedImg(imgEl, imgs[0]);
     } catch {}
 }
 
@@ -2286,7 +2279,7 @@ function initFeaturedCards() {
             setTimeout(() => flyToPark(p.id), 600);
         };
         card.innerHTML = `
-            <img class="featured-card-img" alt="${p.name_th}" loading="lazy">
+            <img class="featured-card-img" alt="${p.name_th}">
             <div class="featured-card-gradient"></div>
             <div class="featured-card-body">
                 <span class="featured-card-status" style="background:${color}">${label}</span>
