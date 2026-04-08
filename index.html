@@ -1876,6 +1876,9 @@ const PARK_STATUSES = ['fully_closed', 'temporary', 'indefinite', 'active_annual
 // ── Supercluster setup ────────────────────────────────────────────────────────
 let scIndex = null;
 let activeMarkerEls = []; // DOM marker elements currently on map
+let currentStatusFilter = 'all';
+let currentTypeFilter   = 'all';
+const parkPhotoCache = {};
 
 function buildClusterIndex() {
     const points = [];
@@ -2029,9 +2032,6 @@ function flyToPark(id) {
         setTimeout(() => openWavsPopup('park', id, [park.lon, park.lat]), 1300);
     }, 600);
 }
-
-let currentStatusFilter = 'all';
-let currentTypeFilter   = 'all';
 
 function getParkNatureType(p) {
     const allText = [p.name_th, ...(p.closures || []).map(c => c.site)].join(' ');
@@ -2350,7 +2350,6 @@ function initFeaturedCards() {
 initFeaturedCards();
 
 // ── PARK PHOTO CACHE + POPUP PHOTOS ──────────────────────────────────────────
-const parkPhotoCache = {};
 
 function showPhotoInHero(hero, src, pageUrl) {
     const img = hero.querySelector('.popup-hero-img');
