@@ -2110,8 +2110,8 @@ const parkPhotoCache = {};
 
 // ── Timeline: pre-compute which months each park has closures ─────────────────
 const MONTH_ABBR = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const MONTH_TH   = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
-const MONTH_TH_FULL = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const MONTH_TH_NAMES = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const MONTH_TH_FULL  = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
 const monthIdxMap = Object.fromEntries(MONTH_ABBR.map((m, i) => [m, i]));
 
 function parsePeriodMonths(period) {
@@ -2160,7 +2160,7 @@ function buildTimeline() {
     if (!container) return;
     const maxCount = Math.max(...monthlyCounts, 1);
     container.innerHTML = '';
-    MONTH_TH.forEach((name, i) => {
+    MONTH_TH_NAMES.forEach((name, i) => {
         const barH = Math.max(6, Math.round((monthlyCounts[i] / maxCount) * 40));
         const div = document.createElement('div');
         div.className = 'tl-month' + (i === currentMonthFilter ? ' active' : '');
