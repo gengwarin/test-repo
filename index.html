@@ -695,16 +695,16 @@
             transform: translateX(-50%) translateY(-8px);
         }
 
-        /* ── FULLSCREEN SEARCH BAR ── */
+        /* ── SEARCH BAR (always visible, top-center of map) ── */
         #map-fs-search {
-            display: none;
+            display: block;
             position: absolute;
-            bottom: 18px;
-            left: 68px;    /* clear of fullscreen btn */
-            right: 125px;  /* clear of bottomright legend + zoom */
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(320px, calc(100% - 100px));
             z-index: 1001;
         }
-        .parks-map-container.map-fs #map-fs-search { display: block; }
         #map-fs-search-wrap {
             display: flex;
             align-items: center;
@@ -729,7 +729,7 @@
         #map-fs-search-wrap input::placeholder { color: #bbb; }
         #map-fs-results {
             position: absolute;
-            bottom: calc(100% + 8px);
+            top: calc(100% + 8px);
             left: 0; right: 0;
             background: white;
             border-radius: 16px;
@@ -788,6 +788,39 @@
         .map-ctrl-btn:active { transform: scale(0.96); }
 
         /* fullscreen btn inherits .map-ctrl-btn styles */
+
+        /* ── MAP STYLE SWITCHER ── */
+        .map-style-group {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 1001;
+            display: flex;
+            flex-direction: row;
+            gap: 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+        }
+        .map-style-btn {
+            border: none;
+            background: transparent;
+            font-family: 'Cloud Soft', 'Sarabun', sans-serif;
+            font-size: 11px;
+            padding: 6px 10px;
+            cursor: pointer;
+            color: #666;
+            transition: background 0.15s, color 0.15s;
+            white-space: nowrap;
+            border-right: 1px solid rgba(0,0,0,0.08);
+        }
+        .map-style-btn:last-child { border-right: none; }
+        .map-style-btn:hover { background: rgba(0,0,0,0.05); }
+        .map-style-btn.active { background: var(--forest); color: white; font-weight: 600; }
 
         .parks-map-container.map-fs {
             position: fixed !important;
@@ -1332,6 +1365,11 @@
                 <input id="mapFsSearch" type="text" placeholder="ค้นหาอุทยาน..." autocomplete="off" />
             </div>
         </div>
+        <div class="map-style-group">
+            <button class="map-style-btn active" onclick="setMapStyle('light')" data-style="light">แสง</button>
+            <button class="map-style-btn" onclick="setMapStyle('dark')" data-style="dark">มืด</button>
+            <button class="map-style-btn" onclick="setMapStyle('satellite')" data-style="satellite">ดาวเทียม</button>
+        </div>
         <div class="map-ctrl-group">
             <button class="map-ctrl-btn" onclick="parksMap.easeTo({zoom: parksMap.getZoom()+1, duration: 300})" aria-label="ขยาย">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -1563,6 +1601,57 @@ const parksMap = new maplibregl.Map({
 // Smooth scroll zoom
 parksMap.scrollZoom.setWheelZoomRate(1 / 450);
 
+// ── MAP STYLE SWITCHER ────────────────────────────────────────────────────────
+const MAP_STYLES = {
+    light: {
+        tiles: [
+            'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+            'https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+            'https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+            'https://d.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+        ],
+        provinceLine: 'rgba(0,0,0,0.25)',
+        borderLine:   '#1b1b1b',
+        fogColor:     '#FBFAF2',
+        fogOpacity:   0.62,
+    },
+    dark: {
+        tiles: [
+            'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+            'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+            'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+            'https://d.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+        ],
+        provinceLine: 'rgba(255,255,255,0.2)',
+        borderLine:   'rgba(255,255,255,0.6)',
+        fogColor:     '#1a1a2e',
+        fogOpacity:   0.55,
+    },
+    satellite: {
+        tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],
+        provinceLine: 'rgba(255,255,255,0.4)',
+        borderLine:   'rgba(255,255,255,0.8)',
+        fogColor:     '#1a1a1a',
+        fogOpacity:   0.5,
+    },
+};
+
+function setMapStyle(mode) {
+    const s = MAP_STYLES[mode];
+    if (!s) return;
+    const src = parksMap.getSource('carto');
+    if (src) src.setTiles(s.tiles);
+    if (parksMap.getLayer('provinces-line'))  parksMap.setPaintProperty('provinces-line', 'line-color', s.provinceLine);
+    if (parksMap.getLayer('thailand-border')) parksMap.setPaintProperty('thailand-border', 'line-color', s.borderLine);
+    if (parksMap.getLayer('fog-mask-fill')) {
+        parksMap.setPaintProperty('fog-mask-fill', 'fill-color', s.fogColor);
+        parksMap.setPaintProperty('fog-mask-fill', 'fill-opacity', s.fogOpacity);
+    }
+    document.querySelectorAll('.map-style-btn').forEach(b =>
+        b.classList.toggle('active', b.dataset.style === mode)
+    );
+}
+
 // zoom + fullscreen controls are custom HTML buttons (map-ctrl-group)
 
 // Map legend (plain DOM — MapLibre has no L.control wrapper needed)
@@ -1572,7 +1661,13 @@ legendEl.id = 'map-legend-ctrl';
 legendEl.innerHTML = `
     <div class="map-legend-row"><span class="map-legend-dot" style="background:#B8583E"></span><span data-i18n="stat_closed">ปิดทั้งหมด</span></div>
     <div class="map-legend-row"><span class="map-legend-dot" style="background:#BF8E38"></span><span data-i18n="stat_partial">บางส่วนปิด</span></div>
-    <div class="map-legend-row"><span class="map-legend-dot" style="background:#3D9468"></span><span data-i18n="stat_open">เปิดปกติ</span></div>`;
+    <div class="map-legend-row"><span class="map-legend-dot" style="background:#3D9468"></span><span data-i18n="stat_open">เปิดปกติ</span></div>
+    <div style="border-top:1px solid rgba(0,0,0,0.08);margin:6px 0 4px"></div>
+    <div style="font-size:9px;color:#aaa;margin-bottom:4px;letter-spacing:0.5px;text-transform:uppercase">จำนวนอุทยานปิด/จังหวัด</div>
+    <div class="map-legend-row"><span class="map-legend-dot" style="background:#fde8d8;border:1px solid #e0c0a0"></span><span>1 แห่ง</span></div>
+    <div class="map-legend-row"><span class="map-legend-dot" style="background:#f4a563"></span><span>2–3 แห่ง</span></div>
+    <div class="map-legend-row"><span class="map-legend-dot" style="background:#e07030"></span><span>4–6 แห่ง</span></div>
+    <div class="map-legend-row"><span class="map-legend-dot" style="background:#b8401a"></span><span>7+ แห่ง</span></div>`;
 legendEl.addEventListener('click', e => e.stopPropagation());
 document.getElementById('parks-map').appendChild(legendEl);
 
@@ -2002,7 +2097,49 @@ parksMap.on('load', () => {
     fetch('brand_asset/thailand-provinces.geojson')
         .then(r => r.json())
         .then(provinces => {
+            // ── Choropleth: count non-open parks per province ──────────
+            function pointInRing(px, py, ring) {
+                let inside = false;
+                for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+                    const [xi, yi] = ring[i], [xj, yj] = ring[j];
+                    if ((yi > py) !== (yj > py) && px < (xj - xi) * (py - yi) / (yj - yi) + xi)
+                        inside = !inside;
+                }
+                return inside;
+            }
+            function parkProvince(lat, lon, features) {
+                for (const f of features) {
+                    const g = f.geometry;
+                    const polys = g.type === 'MultiPolygon' ? g.coordinates : [g.coordinates];
+                    if (polys.some(p => pointInRing(lon, lat, p[0])))
+                        return f.properties.name;
+                }
+                return null;
+            }
+            const closedStatuses = new Set(['fully_closed', 'temporary', 'indefinite', 'active_annual']);
+            const provCount = {};
+            if (typeof PARKS_CLOSURES !== 'undefined') {
+                PARKS_CLOSURES.forEach(p => {
+                    if (!closedStatuses.has(p.status)) return;
+                    const pname = parkProvince(p.lat, p.lon, provinces.features);
+                    if (pname) provCount[pname] = (provCount[pname] || 0) + 1;
+                });
+            }
+            // Build match expression for fill-color
+            const matchExpr = ['match', ['get', 'name']];
+            Object.entries(provCount).forEach(([name, cnt]) => {
+                matchExpr.push(name);
+                matchExpr.push(cnt >= 7 ? '#b8401a' : cnt >= 4 ? '#e07030' : cnt >= 2 ? '#f4a563' : '#fde8d8');
+            });
+            matchExpr.push('rgba(0,0,0,0)'); // default: transparent
+
             parksMap.addSource('provinces', { type: 'geojson', data: provinces });
+            parksMap.addLayer({
+                id: 'provinces-fill',
+                type: 'fill',
+                source: 'provinces',
+                paint: { 'fill-color': matchExpr, 'fill-opacity': 0.45 }
+            });
             parksMap.addLayer({
                 id: 'provinces-line',
                 type: 'line',
