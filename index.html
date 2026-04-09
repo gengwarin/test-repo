@@ -316,73 +316,114 @@
             letter-spacing: .03em; text-align: right;
         }
 
-        /* ── TIMELINE BAR ── */
-        .parks-timeline {
-            display: flex;
-            align-items: flex-end;
-            gap: 6px;
-            padding: 12px 4px 0;
+        /* ── MONTHLY CLOSURE PANEL ── */
+        .month-closure-panel {
+            margin-top: 28px;
+            padding: 24px 28px;
+            background: var(--surface);
+            border-radius: 20px;
+            border: 1px solid rgba(0,0,0,0.07);
         }
-        .tl-label {
-            font-size: 11px;
+        .mcp-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 12px;
+        }
+        .mcp-title-wrap { display: flex; flex-direction: column; gap: 3px; }
+        .mcp-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--dark);
+            letter-spacing: -0.01em;
+        }
+        .mcp-subtitle {
+            font-size: 12px;
             color: var(--muted);
+        }
+        .mcp-reset {
+            font-size: 12px;
+            color: var(--forest);
+            background: rgba(61,148,104,0.1);
+            border: none;
+            border-radius: 100px;
+            padding: 6px 14px;
+            cursor: pointer;
+            font-family: 'Cloud Soft','Sarabun',sans-serif;
             white-space: nowrap;
-            padding-bottom: 18px;
-            flex-shrink: 0;
+            transition: background 0.15s;
         }
-        .tl-months {
-            display: flex;
-            gap: 3px;
-            flex: 1;
-            align-items: flex-end;
-            height: 54px;
+        .mcp-reset:hover { background: rgba(61,148,104,0.18); }
+        .month-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 8px;
         }
-        .tl-month {
-            flex: 1;
+        .month-card {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 3px;
+            gap: 6px;
+            padding: 12px 6px 10px;
+            border-radius: 12px;
+            border: 1.5px solid rgba(0,0,0,0.07);
+            background: white;
             cursor: pointer;
-            border-radius: 4px;
-            padding: 2px 0;
-            transition: opacity 0.15s;
-        }
-        .tl-month:hover .tl-bar { opacity: 0.85; }
-        .tl-bar {
-            width: 100%;
-            border-radius: 3px 3px 0 0;
-            background: rgba(191,142,56,0.35);
-            transition: background 0.2s, height 0.2s;
-            min-height: 4px;
-        }
-        .tl-month.active .tl-bar { background: var(--forest); }
-        .tl-month.active .tl-name { color: var(--forest); font-weight: 700; }
-        .tl-name {
-            font-size: 9px;
-            color: var(--muted);
-            letter-spacing: 0;
-        }
-        .tl-reset {
-            font-size: 11px;
-            color: var(--muted);
-            padding-bottom: 18px;
-            flex-shrink: 0;
-            background: none;
-            border: none;
-            cursor: pointer;
-            text-decoration: underline;
+            transition: border-color 0.18s, background 0.18s, transform 0.12s;
             font-family: 'Cloud Soft','Sarabun',sans-serif;
         }
-        .tl-reset:hover { color: var(--dark); }
-        .tl-count {
-            font-size: 11px;
-            color: var(--muted);
-            padding-bottom: 18px;
-            flex-shrink: 0;
-            white-space: nowrap;
+        .month-card:hover {
+            border-color: var(--forest);
+            background: rgba(61,148,104,0.05);
+            transform: translateY(-2px);
         }
-        .tl-count strong { color: var(--forest); font-weight: 700; }
+        .month-card.active {
+            background: var(--forest);
+            border-color: var(--forest);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(61,148,104,0.28);
+        }
+        .mc-bar-wrap {
+            width: 100%;
+            height: 3px;
+            background: rgba(0,0,0,0.07);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .month-card.active .mc-bar-wrap { background: rgba(255,255,255,0.25); }
+        .mc-bar {
+            height: 100%;
+            background: rgba(191,142,56,0.55);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+        .month-card.active .mc-bar { background: rgba(255,255,255,0.7); }
+        .mc-count {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--dark);
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+        .month-card.active .mc-count { color: white; }
+        .mc-name {
+            font-size: 10px;
+            color: var(--muted);
+            letter-spacing: 0.02em;
+        }
+        .month-card.active .mc-name { color: rgba(255,255,255,0.8); }
+        @media (max-width: 768px) {
+            .month-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+            .month-closure-panel { padding: 18px 16px; }
+        }
+        @media (max-width: 480px) {
+            .month-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
 
         /* ── HERO SEARCH ── */
         .hero-search {
@@ -1420,13 +1461,6 @@
         <button class="pf-pill type-pill" onclick="filterByType('cliff', this)">🪨 ผา / แก่ง</button>
         <button class="pf-pill type-pill" onclick="filterByType('forest', this)">🌿 ป่า</button>
     </div>
-    <!-- ── TIMELINE BAR ── -->
-    <div class="parks-timeline" id="parksTimeline">
-        <span class="tl-label">ช่วงปิด</span>
-        <div class="tl-months" id="tlMonths"><!-- built by JS --></div>
-        <span class="tl-count" id="tlCount"></span>
-        <button class="tl-reset" id="tlReset" onclick="setMonthFilter(null)" style="display:none">รีเซ็ต</button>
-    </div>
     <div class="parks-map-container" id="mapContainer">
         <div id="parks-map"></div>
         <div id="map-hint">
@@ -1465,6 +1499,18 @@
         </div>
     </div>
     <div class="parks-updated" data-i18n="parks_updated">ข้อมูล ณ เมษายน 2569</div>
+
+    <!-- ── MONTHLY CLOSURE PANEL ── -->
+    <div class="month-closure-panel">
+        <div class="mcp-header">
+            <div class="mcp-title-wrap">
+                <span class="mcp-title">ช่วงปิด รายเดือน</span>
+                <span class="mcp-subtitle" id="tlCount">เลือกเดือนเพื่อกรองแผนที่ด้านบน</span>
+            </div>
+            <button class="mcp-reset" id="tlReset" onclick="setMonthFilter(null)" style="display:none">← แสดงทั้งปี</button>
+        </div>
+        <div class="month-grid" id="tlMonths"><!-- built by JS --></div>
+    </div>
 </section>
 
 <!-- ════════════════════════════ ABOUT ════════════════════════════ -->
@@ -2154,20 +2200,24 @@ function monthFilterMatches(p) {
     return parkMonthMap[p.id]?.has(currentMonthFilter) ?? false;
 }
 
-// ── Timeline UI ───────────────────────────────────────────────────────────────
+// ── Monthly Closure Panel ─────────────────────────────────────────────────────
 function buildTimeline() {
     const container = document.getElementById('tlMonths');
     if (!container) return;
     const maxCount = Math.max(...monthlyCounts, 1);
     container.innerHTML = '';
     MONTH_TH_NAMES.forEach((name, i) => {
-        const barH = Math.max(6, Math.round((monthlyCounts[i] / maxCount) * 40));
-        const div = document.createElement('div');
-        div.className = 'tl-month' + (i === currentMonthFilter ? ' active' : '');
-        div.title = `${MONTH_TH_FULL[i]}: ${monthlyCounts[i]} อุทยาน`;
-        div.innerHTML = `<div class="tl-bar" style="height:${barH}px"></div><span class="tl-name">${name}</span>`;
-        div.addEventListener('click', () => setMonthFilter(i === currentMonthFilter ? null : i));
-        container.appendChild(div);
+        const pct = Math.round((monthlyCounts[i] / maxCount) * 100);
+        const isActive = i === currentMonthFilter;
+        const btn = document.createElement('button');
+        btn.className = 'month-card' + (isActive ? ' active' : '');
+        btn.title = `${MONTH_TH_FULL[i]}: ${monthlyCounts[i]} อุทยาน`;
+        btn.innerHTML = `
+            <div class="mc-bar-wrap"><div class="mc-bar" style="width:${pct}%"></div></div>
+            <div class="mc-count">${monthlyCounts[i]}</div>
+            <div class="mc-name">${name}</div>`;
+        btn.addEventListener('click', () => setMonthFilter(i === currentMonthFilter ? null : i));
+        container.appendChild(btn);
     });
 }
 
@@ -2177,10 +2227,10 @@ function setMonthFilter(month) {
     const countEl  = document.getElementById('tlCount');
     const resetBtn = document.getElementById('tlReset');
     if (month === null) {
-        countEl.innerHTML = '';
+        countEl.textContent = 'เลือกเดือนเพื่อกรองแผนที่ด้านบน';
         resetBtn.style.display = 'none';
     } else {
-        countEl.innerHTML = `<strong>${monthlyCounts[month]}</strong> อุทยาน`;
+        countEl.innerHTML = `กรองแผนที่: <strong>${MONTH_TH_FULL[month]}</strong> — ${monthlyCounts[month]} อุทยานมีการปิด`;
         resetBtn.style.display = '';
     }
     applyFilters();
