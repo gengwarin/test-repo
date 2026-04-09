@@ -1333,10 +1333,10 @@
             </div>
         </div>
         <div class="map-ctrl-group">
-            <button class="map-ctrl-btn" onclick="parksMap.zoomIn()" aria-label="ขยาย">
+            <button class="map-ctrl-btn" onclick="parksMap.easeTo({zoom: parksMap.getZoom()+1, duration: 300})" aria-label="ขยาย">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             </button>
-            <button class="map-ctrl-btn" onclick="parksMap.zoomOut()" aria-label="ย่อ">
+            <button class="map-ctrl-btn" onclick="parksMap.easeTo({zoom: parksMap.getZoom()-1, duration: 300})" aria-label="ย่อ">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
             </button>
             <button class="map-ctrl-btn" id="map-fullscreen-btn" onclick="toggleMapFullscreen()" aria-label="เต็มจอ">
@@ -1559,6 +1559,9 @@ const parksMap = new maplibregl.Map({
     maxBounds: [[93.861, 4.074], [109.110, 22.539]],
     attributionControl: true,
 });
+
+// Smooth scroll zoom
+parksMap.scrollZoom.setWheelZoomRate(1 / 450);
 
 // zoom + fullscreen controls are custom HTML buttons (map-ctrl-group)
 
