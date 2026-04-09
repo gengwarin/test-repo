@@ -1612,16 +1612,25 @@
 </footer>
 
 <!-- ════════════════════════════ SCRIPTS ════════════════════════════ -->
+<!-- Splash hide: separate script tag so it runs even if main script has an error -->
+<script>
+(function() {
+    function hideSplash() {
+        var s = document.getElementById('splash');
+        if (!s) return;
+        s.style.transition = 'opacity 0.6s ease';
+        s.style.opacity = '0';
+        s.style.pointerEvents = 'none';
+        setTimeout(function() { if (s.parentNode) s.parentNode.removeChild(s); }, 650);
+    }
+    setTimeout(hideSplash, 2800);
+    // Absolute failsafe: force-hide after 6s no matter what
+    setTimeout(hideSplash, 6000);
+})();
+</script>
 <script>
 // ── LANG (must be before map code so buildParkPopup can read it) ──────────────
 let currentLang = 'th';
-
-// ── SPLASH ───────────────────────────────────────────────────────────────────
-setTimeout(() => {
-    const splash = document.getElementById('splash');
-    splash.classList.add('hidden');
-    setTimeout(() => splash.remove(), 600);
-}, 2800);
 
 
 // ── THAILAND BORDER ───────────────────────────────────────────────────────────
