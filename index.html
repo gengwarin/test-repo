@@ -1980,7 +1980,7 @@ function siteLabel(site, lang) {
 function periodLabel(period, lang) {
     if (!period || period === '–') return period;
     // Expand "D–D Mon" → "D Mon–D Mon" (e.g. "1–31 Mar" → "1 Mar–31 Mar")
-    let p = period.replace(/(\d+)[–\-](\d+)\s+([A-Za-z]+)/g, (_, d1, d2, mon) => `${d1} ${mon}–${d2} ${mon}`);
+    let p = period.replace(/(\d+)[-\u2013](\d+)\s+([A-Za-z]+)/g, (_, d1, d2, mon) => `${d1} ${mon}\u2013${d2} ${mon}`);
     if (lang === 'en') return p;
     p = p
         .replace(/\bFrom\b/g, 'ตั้งแต่')
@@ -2107,7 +2107,7 @@ const monthIdxMap = Object.fromEntries(MONTH_ABBR.map((m, i) => [m, i]));
 
 function parsePeriodMonths(period) {
     if (!period) return [];
-    const m = period.match(/\d+\s+(\w{3})[^–\-]*[–\-]\s*\d+\s+(\w{3})/);
+    const m = period.match(/\d+\s+(\w{3})[^-\u2013]*[-\u2013]\s*\d+\s+(\w{3})/);
     if (!m) return [];
     const sm = monthIdxMap[m[1]];
     const em = monthIdxMap[m[2]];
