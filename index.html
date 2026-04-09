@@ -316,6 +316,74 @@
             letter-spacing: .03em; text-align: right;
         }
 
+        /* ── TIMELINE BAR ── */
+        .parks-timeline {
+            display: flex;
+            align-items: flex-end;
+            gap: 6px;
+            padding: 12px 4px 0;
+        }
+        .tl-label {
+            font-size: 11px;
+            color: var(--muted);
+            white-space: nowrap;
+            padding-bottom: 18px;
+            flex-shrink: 0;
+        }
+        .tl-months {
+            display: flex;
+            gap: 3px;
+            flex: 1;
+            align-items: flex-end;
+            height: 54px;
+        }
+        .tl-month {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            cursor: pointer;
+            border-radius: 4px;
+            padding: 2px 0;
+            transition: opacity 0.15s;
+        }
+        .tl-month:hover .tl-bar { opacity: 0.85; }
+        .tl-bar {
+            width: 100%;
+            border-radius: 3px 3px 0 0;
+            background: rgba(191,142,56,0.35);
+            transition: background 0.2s, height 0.2s;
+            min-height: 4px;
+        }
+        .tl-month.active .tl-bar { background: var(--forest); }
+        .tl-month.active .tl-name { color: var(--forest); font-weight: 700; }
+        .tl-name {
+            font-size: 9px;
+            color: var(--muted);
+            letter-spacing: 0;
+        }
+        .tl-reset {
+            font-size: 11px;
+            color: var(--muted);
+            padding-bottom: 18px;
+            flex-shrink: 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-decoration: underline;
+            font-family: 'Cloud Soft','Sarabun',sans-serif;
+        }
+        .tl-reset:hover { color: var(--dark); }
+        .tl-count {
+            font-size: 11px;
+            color: var(--muted);
+            padding-bottom: 18px;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+        .tl-count strong { color: var(--forest); font-weight: 700; }
+
         /* ── HERO SEARCH ── */
         .hero-search {
             position: relative;
@@ -1352,6 +1420,13 @@
         <button class="pf-pill type-pill" onclick="filterByType('cliff', this)">🪨 ผา / แก่ง</button>
         <button class="pf-pill type-pill" onclick="filterByType('forest', this)">🌿 ป่า</button>
     </div>
+    <!-- ── TIMELINE BAR ── -->
+    <div class="parks-timeline" id="parksTimeline">
+        <span class="tl-label">ช่วงปิด</span>
+        <div class="tl-months" id="tlMonths"><!-- built by JS --></div>
+        <span class="tl-count" id="tlCount"></span>
+        <button class="tl-reset" id="tlReset" onclick="setMonthFilter(null)" style="display:none">รีเซ็ต</button>
+    </div>
     <div class="parks-map-container" id="mapContainer">
         <div id="parks-map"></div>
         <div id="map-hint">
@@ -1596,10 +1671,15 @@ const parksMap = new maplibregl.Map({
     maxZoom: 18,
     maxBounds: [[93.861, 4.074], [109.110, 22.539]],
     attributionControl: true,
+    touchPitch: false,
 });
 
-// Smooth scroll zoom
-parksMap.scrollZoom.setWheelZoomRate(1 / 450);
+// Smooth scroll zoom (desktop only — touch devices use pinch-to-zoom)
+if (!('ontouchstart' in window)) {
+    parksMap.scrollZoom.setWheelZoomRate(1 / 450);
+} else {
+    parksMap.scrollZoom.disable();
+}
 
 // ── MAP STYLE SWITCHER ────────────────────────────────────────────────────────
 const MAP_STYLES = {
@@ -2016,7 +2096,86 @@ let scIndex = null;
 let activeMarkerEls = []; // DOM marker elements currently on map
 let currentStatusFilter = 'all';
 let currentTypeFilter   = 'all';
+let currentMonthFilter  = null; // null = all months; 0–11 = Jan–Dec
 const parkPhotoCache = {};
+
+// ── Timeline: pre-compute which months each park has closures ─────────────────
+const MONTH_ABBR = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MONTH_TH   = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const MONTH_TH_FULL = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const monthIdxMap = Object.fromEntries(MONTH_ABBR.map((m, i) => [m, i]));
+
+function parsePeriodMonths(period) {
+    if (!period) return [];
+    const m = period.match(/\d+\s+(\w{3})[^–\-]*[–\-]\s*\d+\s+(\w{3})/);
+    if (!m) return [];
+    const sm = monthIdxMap[m[1]];
+    const em = monthIdxMap[m[2]];
+    if (sm === undefined || em === undefined) return [];
+    const months = [];
+    if (em >= sm) {
+        for (let i = sm; i <= em; i++) months.push(i);
+    } else { // wraps year-end (e.g. Dec–Feb)
+        for (let i = sm; i < 12; i++) months.push(i);
+        for (let i = 0; i <= em; i++) months.push(i);
+    }
+    return months;
+}
+
+const parkMonthMap = {}; // parkId → Set<monthIndex>
+const monthlyCounts = new Array(12).fill(0); // # parks w/ closure per month
+
+if (typeof PARKS_CLOSURES !== 'undefined') {
+    PARKS_CLOSURES.forEach(p => {
+        const closedMonths = new Set();
+        (p.closures || []).forEach(c => {
+            parsePeriodMonths(c.period || '').forEach(m => closedMonths.add(m));
+        });
+        if (closedMonths.size) {
+            parkMonthMap[p.id] = closedMonths;
+            closedMonths.forEach(m => monthlyCounts[m]++);
+        }
+    });
+}
+
+function monthFilterMatches(p) {
+    if (currentMonthFilter === null) return true;
+    // Fully closed parks always show (indefinitely shut, no seasonal data)
+    if (p.status === 'fully_closed') return true;
+    return parkMonthMap[p.id]?.has(currentMonthFilter) ?? false;
+}
+
+// ── Timeline UI ───────────────────────────────────────────────────────────────
+function buildTimeline() {
+    const container = document.getElementById('tlMonths');
+    if (!container) return;
+    const maxCount = Math.max(...monthlyCounts, 1);
+    container.innerHTML = '';
+    MONTH_TH.forEach((name, i) => {
+        const barH = Math.max(6, Math.round((monthlyCounts[i] / maxCount) * 40));
+        const div = document.createElement('div');
+        div.className = 'tl-month' + (i === currentMonthFilter ? ' active' : '');
+        div.title = `${MONTH_TH_FULL[i]}: ${monthlyCounts[i]} อุทยาน`;
+        div.innerHTML = `<div class="tl-bar" style="height:${barH}px"></div><span class="tl-name">${name}</span>`;
+        div.addEventListener('click', () => setMonthFilter(i === currentMonthFilter ? null : i));
+        container.appendChild(div);
+    });
+}
+
+function setMonthFilter(month) {
+    currentMonthFilter = month;
+    buildTimeline();
+    const countEl  = document.getElementById('tlCount');
+    const resetBtn = document.getElementById('tlReset');
+    if (month === null) {
+        countEl.innerHTML = '';
+        resetBtn.style.display = 'none';
+    } else {
+        countEl.innerHTML = `<strong>${monthlyCounts[month]}</strong> อุทยาน`;
+        resetBtn.style.display = '';
+    }
+    applyFilters();
+}
 
 function buildClusterIndex() {
     const points = [];
@@ -2025,6 +2184,7 @@ function buildClusterIndex() {
             if (!p.lat || !p.lon) return;
             if (!statusMatches(p.status, currentStatusFilter)) return;
             if (currentTypeFilter !== 'all' && getParkNatureType(p) !== currentTypeFilter) return;
+            if (!monthFilterMatches(p)) return;
             points.push({ type: 'Feature', geometry: { type: 'Point', coordinates: [p.lon, p.lat] }, properties: { id: p.id, kind: 'park', status: p.status } });
         });
     }
@@ -2176,6 +2336,7 @@ parksMap.on('load', () => {
     // ── Markers ───────────────────────────────────────────────────
     buildClusterIndex();
     renderClusters();
+    buildTimeline();
 });
 
 if (typeof PARKS_CLOSURES !== 'undefined') {
