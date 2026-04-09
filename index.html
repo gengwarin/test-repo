@@ -1861,7 +1861,7 @@ function buildParkPopup(p, lang) {
         return `<tr style="${bg}">
             <td class="popup-table-td">${siteLabel(c.site, lang)}</td>
             <td class="popup-table-td" style="white-space:nowrap;color:#666">${periodLabel(c.period, lang)}</td>
-            <td class="popup-table-td" style="white-space:nowrap;font-weight:600;color:${tc}">${typeLabel(c.type, lang)}</td>
+            <td class="popup-table-td" style="font-weight:600;color:${tc}">${typeLabel(c.type, lang)}</td>
         </tr>`;
     }).join('');
 
