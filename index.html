@@ -294,8 +294,8 @@
         /* ── MAP LEGEND ── */
         .map-legend {
             position: absolute;
-            bottom: 36px;
-            right: 10px;
+            bottom: 16px;
+            left: 16px;
             z-index: 10;
             background: rgba(255,255,255,0.94);
             backdrop-filter: blur(8px);
@@ -758,7 +758,7 @@
         .map-ctrl-group {
             position: absolute;
             bottom: 16px;
-            left: 16px;
+            right: 16px;
             z-index: 1000;
             display: flex;
             flex-direction: column;
@@ -842,6 +842,7 @@
             padding: 0 !important;
             border-radius: 20px !important;
             box-shadow: 0 12px 48px rgba(0,0,0,0.20) !important;
+            border: 1px solid rgba(0,0,0,0.08) !important;
             overflow: hidden;
             overscroll-behavior: contain;
             -webkit-overflow-scrolling: touch;
@@ -849,7 +850,8 @@
             font-family: 'Cloud Soft', 'Sarabun', sans-serif;
         }
         .wavs-popup .maplibregl-popup-content > div {
-            max-height: 70vh;
+            /* compensate zoom: 0.75 → actual visible height = 70vh / 0.75 */
+            max-height: calc(70vh / 0.75);
             overflow-y: auto;
             overscroll-behavior: contain;
         }
