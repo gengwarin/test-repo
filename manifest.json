@@ -1,0 +1,14 @@
+{
+  "name": "WAVS — อุทยานแห่งชาติไทย",
+  "short_name": "WAVS",
+  "description": "ติดตามสถานะการปิดอุทยานแห่งชาติทั่วประเทศไทย",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FBFAF2",
+  "theme_color": "#0F6C39",
+  "orientation": "any",
+  "icons": [
+    { "src": "/brand_asset/WAVS Logo.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/brand_asset/WAVS Logo.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WAVS — ติดตามสถานที่ธรรมชาติไทย</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0F6C39">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
     <!-- Social sharing (OG) -->
     <meta property="og:title"       content="WAVS — ติดตามสถานที่ธรรมชาติไทย">
@@ -291,6 +296,20 @@
             50%       { transform: translateY(7px); opacity: 0.75; }
         }
 
+        /* ── REGION FILTER ── */
+        .parks-filters-region {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 0 0 4px;
+        }
+        .region-pill.active {
+            background: var(--vitality);
+            color: white;
+            border-color: var(--vitality);
+        }
+
         /* ── MAP LEGEND ── */
         .map-legend {
             position: absolute;
@@ -314,6 +333,17 @@
         .parks-updated {
             font-size: 11px; color: var(--muted); margin-top: 8px;
             letter-spacing: .03em; text-align: right;
+        }
+
+        /* ── SCROLL ANIMATIONS ── */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.65s ease, transform 0.65s ease;
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* ── MONTHLY CLOSURE PANEL ── */
@@ -1461,6 +1491,14 @@
         <button class="pf-pill type-pill" onclick="filterByType('cliff', this)">🪨 ผา / แก่ง</button>
         <button class="pf-pill type-pill" onclick="filterByType('forest', this)">🌿 ป่า</button>
     </div>
+    <div class="parks-filters-region">
+        <span class="pf-label">ภาค</span>
+        <button class="pf-pill region-pill active" onclick="filterByRegion('all', this)">ทั้งหมด</button>
+        <button class="pf-pill region-pill" onclick="filterByRegion('north', this)">⛰ เหนือ</button>
+        <button class="pf-pill region-pill" onclick="filterByRegion('northeast', this)">🌾 อีสาน</button>
+        <button class="pf-pill region-pill" onclick="filterByRegion('central', this)">🏙 กลาง</button>
+        <button class="pf-pill region-pill" onclick="filterByRegion('south', this)">🏖 ใต้</button>
+    </div>
     <div class="parks-map-container" id="mapContainer">
         <div id="parks-map"></div>
         <div id="map-hint">
@@ -1486,6 +1524,11 @@
             <button class="map-ctrl-btn" onclick="parksMap.easeTo({zoom: parksMap.getZoom()-1, duration: 300})" aria-label="ย่อ">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
             </button>
+            <button class="map-ctrl-btn" id="terrain-btn" onclick="toggleTerrain()" aria-label="3D Terrain" title="3D">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8 3l4 8 5-5 5 15H2L8 3z"/>
+                </svg>
+            </button>
             <button class="map-ctrl-btn" id="map-fullscreen-btn" onclick="toggleMapFullscreen()" aria-label="เต็มจอ">
                 <svg id="fs-icon-expand" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/>
@@ -1501,7 +1544,7 @@
     <div class="parks-updated" data-i18n="parks_updated">ข้อมูล ณ เมษายน 2569</div>
 
     <!-- ── MONTHLY CLOSURE PANEL ── -->
-    <div class="month-closure-panel">
+    <div class="month-closure-panel fade-in-up">
         <div class="mcp-header">
             <div class="mcp-title-wrap">
                 <span class="mcp-title">ช่วงปิด รายเดือน</span>
@@ -1515,12 +1558,12 @@
 
 <!-- ════════════════════════════ ABOUT ════════════════════════════ -->
 <section class="about-section" id="about">
-    <div class="section-head" style="flex-direction:column;align-items:center;text-align:center">
+    <div class="section-head fade-in-up" style="flex-direction:column;align-items:center;text-align:center">
         <h2 class="section-title" style="max-width:100%" data-i18n="about_title">เกี่ยวกับ <em>WAVS</em></h2>
         <p class="section-desc" style="max-width:560px" data-i18n="about_desc">โครงการวิทยานิพนธ์ที่ติดตามสถานะการปิดอุทยานแห่งชาติทั่วประเทศไทย<br>เพื่อส่งเสริมการท่องเที่ยวเชิงอนุรักษ์อย่างยั่งยืน</p>
     </div>
     <div class="about-grid">
-        <div class="about-card">
+        <div class="about-card fade-in-up">
             <div class="about-icon" style="background:rgba(15,108,57,0.08)">
                 <!-- Map with pins illustration -->
                 <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
@@ -1540,7 +1583,7 @@
             <div class="about-card-title" data-i18n="about1_title">อัพเดทข้อมูลครอบคลุมทั่วประเทศ</div>
             <div class="about-card-text" data-i18n="about1_text">WAVS ติดตามสถานะการเปิด-ปิดของอุทยานทั่วประเทศไทย ครอบคลุมการปิดตามฤดูกาล ชั่วคราว และไม่มีกำหนด โดยใช้ข้อมูลอย่างเป็นทางการจาก DNP</div>
         </div>
-        <div class="about-card">
+        <div class="about-card fade-in-up">
             <div class="about-icon" style="background:rgba(196,136,42,0.10)">
                 <!-- Bar chart + magnifier illustration -->
                 <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
@@ -1555,7 +1598,7 @@
             <div class="about-card-title" data-i18n="about2_title">การวิจัยเชิงข้อมูล</div>
             <div class="about-card-text" data-i18n="about2_text">วิทยานิพนธ์ระดับบัณฑิตศึกษาที่ศึกษาสภาพแวดล้อมและนโยบายที่อยู่เบื้องหลังการปิดอุทยาน — ทำไมระบบนิเวศถึงต้องปิดตัว และหมายความว่าอย่างไรต่อความสัมพันธ์ของไทยกับมรดกทางธรรมชาติ</div>
         </div>
-        <div class="about-card">
+        <div class="about-card fade-in-up">
             <div class="about-icon" style="background:rgba(181,67,42,0.08)">
                 <!-- Branching path + leaves illustration -->
                 <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
@@ -1602,7 +1645,7 @@
         <h2 class="section-title" data-i18n="news_title">ข่าวสาร<em>ล่าสุด</em></h2>
     </div>
     <div class="news-grid">
-        <a class="news-card" href="https://www.tatnews.org/2025/12/annual-seasonal-opening-closure-of-attractions-of-thailands-national-park-system/" target="_blank" rel="noopener">
+        <a class="news-card fade-in-up" href="https://www.tatnews.org/2025/12/annual-seasonal-opening-closure-of-attractions-of-thailands-national-park-system/" target="_blank" rel="noopener">
             <div class="news-meta">
                 <span class="news-tag policy">นโยบาย</span>
                 <span class="news-date">15 มกราคม 2569</span>
@@ -1611,7 +1654,7 @@
             <div class="news-body">TAT เผยแพร่คู่มือสถานะเปิด–ปิดของสถานที่ท่องเที่ยวในอุทยานแห่งชาติทุกแห่ง แนะนำนักท่องเที่ยวตรวจสอบที่ portal.dnp.go.th ก่อนเดินทางทุกครั้ง</div>
             <span class="news-read-more">อ่านต่อที่ TAT Newsroom →</span>
         </a>
-        <a class="news-card" href="https://www.pattayamail.com/thailandnews/thailand-steps-up-aerial-and-ground-operations-to-tackle-northern-wildfires-and-pm2-5-crisis-540867" target="_blank" rel="noopener">
+        <a class="news-card fade-in-up" href="https://www.pattayamail.com/thailandnews/thailand-steps-up-aerial-and-ground-operations-to-tackle-northern-wildfires-and-pm2-5-crisis-540867" target="_blank" rel="noopener">
             <div class="news-meta">
                 <span class="news-tag policy">นโยบาย</span>
                 <span class="news-date">28 มีนาคม 2569</span>
@@ -1620,7 +1663,7 @@
             <div class="news-body">รองนายกฯ สั่งเดินหน้าปฏิบัติการทางอากาศและภาคพื้นดิน ปล่อยน้ำ 7,500 ลิตรใน 15 รอบที่อช.แม่ปิง ลำพูน ควบคุมสถานการณ์ได้แล้ว แต่ยังเฝ้าระวัง 17 จังหวัดภาคเหนือ</div>
             <span class="news-read-more">อ่านต่อที่ Pattaya Mail →</span>
         </a>
-        <a class="news-card" href="https://www.nationthailand.com/news/general/40064502" target="_blank" rel="noopener">
+        <a class="news-card fade-in-up" href="https://www.nationthailand.com/news/general/40064502" target="_blank" rel="noopener">
             <div class="news-meta">
                 <span class="news-tag closure">การปิด</span>
                 <span class="news-date">31 มีนาคม 2569</span>
@@ -1629,7 +1672,7 @@
             <div class="news-body">จังหวัดเชียงใหม่ประกาศพื้นที่ภัยพิบัติไฟป่าในอำเภอสะเมิงและอำเภอฮอด เร่งสำรวจความเสียหายและกระจายความช่วยเหลือฉุกเฉินแก่ชุมชนที่ได้รับผลกระทบ</div>
             <span class="news-read-more">อ่านต่อที่ Nation Thailand →</span>
         </a>
-        <a class="news-card" href="https://www.bangkokpost.com/thailand/general/2863044" target="_blank" rel="noopener">
+        <a class="news-card fade-in-up" href="https://www.bangkokpost.com/thailand/general/2863044" target="_blank" rel="noopener">
             <div class="news-meta">
                 <span class="news-tag research">วิจัย</span>
                 <span class="news-date">18 กุมภาพันธ์ 2569</span>
@@ -1658,6 +1701,13 @@
 </footer>
 
 <!-- ════════════════════════════ SCRIPTS ════════════════════════════ -->
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () =>
+        navigator.serviceWorker.register('/sw.js').catch(() => {})
+    );
+}
+</script>
 <!-- Splash hide: separate script tag so it runs even if main script has an error -->
 <script>
 (function() {
@@ -1770,6 +1820,32 @@ const MAP_STYLES = {
         fogOpacity:   0.5,
     },
 };
+
+// ── 3D TERRAIN ────────────────────────────────────────────────────────────────
+let terrainActive = false;
+
+function toggleTerrain() {
+    terrainActive = !terrainActive;
+    const btn = document.getElementById('terrain-btn');
+    if (terrainActive) {
+        if (!parksMap.getSource('terrain-dem')) {
+            parksMap.addSource('terrain-dem', {
+                type: 'raster-dem',
+                tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
+                encoding: 'terrarium',
+                tileSize: 256,
+                maxzoom: 14,
+            });
+        }
+        parksMap.setTerrain({ source: 'terrain-dem', exaggeration: 1.6 });
+        parksMap.easeTo({ pitch: 50, duration: 900 });
+        if (btn) btn.style.background = 'rgba(61,148,104,0.15)';
+    } else {
+        parksMap.setTerrain(null);
+        parksMap.easeTo({ pitch: 0, duration: 600 });
+        if (btn) btn.style.background = '';
+    }
+}
 
 function setMapStyle(mode) {
     const s = MAP_STYLES[mode];
@@ -2152,6 +2228,7 @@ let activeMarkerEls = []; // DOM marker elements currently on map
 let currentStatusFilter = 'all';
 let currentTypeFilter   = 'all';
 let currentMonthFilter  = null; // null = all months; 0–11 = Jan–Dec
+let currentRegionFilter = 'all';
 const parkPhotoCache = {};
 
 // ── Timeline: pre-compute which months each park has closures ─────────────────
@@ -2191,6 +2268,34 @@ if (typeof PARKS_CLOSURES !== 'undefined') {
             closedMonths.forEach(m => monthlyCounts[m]++);
         }
     });
+}
+
+const REGION_BOUNDS = {
+    all:       [[97.5,  4.5], [105.8, 20.6]],
+    north:     [[97.5, 16.5], [101.8, 20.5]],
+    northeast: [[99.8, 13.5], [105.5, 18.5]],
+    central:   [[97.5, 10.5], [103.0, 17.5]],
+    south:     [[97.5,  5.0], [103.5, 12.5]],
+};
+
+function getParkGeoRegion(park) {
+    const r = (park.region || '').match(/Region\s+(\d+)/i);
+    if (!r) return 'other';
+    const n = parseInt(r[1]);
+    if ([11, 13, 14, 15, 16].includes(n)) return 'north';
+    if ([7, 8, 9, 10].includes(n))        return 'northeast';
+    if ([1, 2, 3, 12].includes(n))        return 'central';
+    if ([4, 5, 6].includes(n))            return 'south';
+    return 'other';
+}
+
+function filterByRegion(region, btn) {
+    currentRegionFilter = region;
+    document.querySelectorAll('.region-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    const bounds = REGION_BOUNDS[region] || REGION_BOUNDS.all;
+    parksMap.fitBounds(bounds, { padding: 48, duration: 700, maxZoom: 9 });
+    applyFilters();
 }
 
 function monthFilterMatches(p) {
@@ -2244,6 +2349,7 @@ function buildClusterIndex() {
             if (!statusMatches(p.status, currentStatusFilter)) return;
             if (currentTypeFilter !== 'all' && getParkNatureType(p) !== currentTypeFilter) return;
             if (!monthFilterMatches(p)) return;
+            if (currentRegionFilter !== 'all' && getParkGeoRegion(p) !== currentRegionFilter) return;
             points.push({ type: 'Feature', geometry: { type: 'Point', coordinates: [p.lon, p.lat] }, properties: { id: p.id, kind: 'park', status: p.status } });
         });
     }
@@ -3045,6 +3151,29 @@ mapFsInput.addEventListener('input', () => {
 document.addEventListener('click', e => {
     if (!e.target.closest('#map-fs-search')) mapFsResults.classList.remove('open');
 });
+// ── SCROLL ANIMATIONS ─────────────────────────────────────────────────────────
+const scrollObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, idx) => {
+        if (entry.isIntersecting) {
+            setTimeout(() => entry.target.classList.add('visible'), idx * 80);
+            scrollObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+
+document.querySelectorAll('.fade-in-up').forEach(el => scrollObserver.observe(el));
+
+// Featured cards are dynamically created — observe after render
+const featuredGrid = document.querySelector('.featured-grid');
+if (featuredGrid) {
+    new MutationObserver(() => {
+        featuredGrid.querySelectorAll('.featured-card:not(.visible)').forEach(el => {
+            el.classList.add('fade-in-up');
+            scrollObserver.observe(el);
+        });
+    }).observe(featuredGrid, { childList: true });
+}
+
 navMenuBtn.addEventListener('click', () =>
     navSheet.classList.contains('open') ? closeSheet() : openSheet()
 );
