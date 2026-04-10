@@ -296,20 +296,6 @@
             50%       { transform: translateY(7px); opacity: 0.75; }
         }
 
-        /* ── REGION FILTER ── */
-        .parks-filters-region {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            padding: 0 0 4px;
-        }
-        .region-pill.active {
-            background: var(--vitality);
-            color: white;
-            border-color: var(--vitality);
-        }
-
         /* ── MAP LEGEND ── */
         .map-legend {
             position: absolute;
@@ -443,6 +429,41 @@
             letter-spacing: 0.02em;
         }
         .month-card.active .mc-name { color: rgba(255,255,255,0.8); }
+        .choro-legend {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(0,0,0,0.07);
+            flex-wrap: wrap;
+        }
+        .choro-legend-label {
+            font-size: 11px;
+            color: var(--muted);
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+        }
+        .choro-legend-swatches {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .choro-swatch {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            color: var(--dark);
+        }
+        .choro-swatch span {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
         @media (max-width: 768px) {
             .month-grid {
                 grid-template-columns: repeat(6, 1fr);
@@ -948,6 +969,9 @@
         .map-style-btn {
             border: none;
             background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-family: 'Cloud Soft', 'Sarabun', sans-serif;
             font-size: 11px;
             padding: 6px 10px;
@@ -1491,14 +1515,6 @@
         <button class="pf-pill type-pill" onclick="filterByType('cliff', this)">🪨 ผา / แก่ง</button>
         <button class="pf-pill type-pill" onclick="filterByType('forest', this)">🌿 ป่า</button>
     </div>
-    <div class="parks-filters-region">
-        <span class="pf-label">ภาค</span>
-        <button class="pf-pill region-pill active" onclick="filterByRegion('all', this)">ทั้งหมด</button>
-        <button class="pf-pill region-pill" onclick="filterByRegion('north', this)">⛰ เหนือ</button>
-        <button class="pf-pill region-pill" onclick="filterByRegion('northeast', this)">🌾 อีสาน</button>
-        <button class="pf-pill region-pill" onclick="filterByRegion('central', this)">🏙 กลาง</button>
-        <button class="pf-pill region-pill" onclick="filterByRegion('south', this)">🏖 ใต้</button>
-    </div>
     <div class="parks-map-container" id="mapContainer">
         <div id="parks-map"></div>
         <div id="map-hint">
@@ -1513,9 +1529,15 @@
             </div>
         </div>
         <div class="map-style-group">
-            <button class="map-style-btn active" onclick="setMapStyle('light')" data-style="light">แสง</button>
-            <button class="map-style-btn" onclick="setMapStyle('dark')" data-style="dark">มืด</button>
-            <button class="map-style-btn" onclick="setMapStyle('satellite')" data-style="satellite">ดาวเทียม</button>
+            <button class="map-style-btn active" onclick="setMapStyle('light')" data-style="light" title="สว่าง">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="6.34" y2="17.66"/><line x1="17.66" y1="6.34" x2="19.78" y2="4.22"/></svg>
+            </button>
+            <button class="map-style-btn" onclick="setMapStyle('dark')" data-style="dark" title="มืด">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
+            <button class="map-style-btn" onclick="setMapStyle('satellite')" data-style="satellite" title="ดาวเทียม">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </button>
         </div>
         <div class="map-ctrl-group">
             <button class="map-ctrl-btn" onclick="parksMap.easeTo({zoom: parksMap.getZoom()+1, duration: 300})" aria-label="ขยาย">
@@ -1553,6 +1575,15 @@
             <button class="mcp-reset" id="tlReset" onclick="setMonthFilter(null)" style="display:none">← แสดงทั้งปี</button>
         </div>
         <div class="month-grid" id="tlMonths"><!-- built by JS --></div>
+        <div class="choro-legend">
+            <span class="choro-legend-label">ความหนาแน่นการปิด/จังหวัด</span>
+            <div class="choro-legend-swatches">
+                <div class="choro-swatch"><span style="background:#fde8d8;border:1px solid #e0c0a0"></span>1 แห่ง</div>
+                <div class="choro-swatch"><span style="background:#f4a563"></span>2–3 แห่ง</div>
+                <div class="choro-swatch"><span style="background:#e07030"></span>4–6 แห่ง</div>
+                <div class="choro-swatch"><span style="background:#b8401a"></span>7+ แห่ง</div>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -1872,13 +1903,7 @@ legendEl.id = 'map-legend-ctrl';
 legendEl.innerHTML = `
     <div class="map-legend-row"><span class="map-legend-dot" style="background:#B8583E"></span><span data-i18n="stat_closed">ปิดทั้งหมด</span></div>
     <div class="map-legend-row"><span class="map-legend-dot" style="background:#BF8E38"></span><span data-i18n="stat_partial">บางส่วนปิด</span></div>
-    <div class="map-legend-row"><span class="map-legend-dot" style="background:#3D9468"></span><span data-i18n="stat_open">เปิดปกติ</span></div>
-    <div style="border-top:1px solid rgba(0,0,0,0.08);margin:6px 0 4px"></div>
-    <div style="font-size:9px;color:#aaa;margin-bottom:4px;letter-spacing:0.5px;text-transform:uppercase">จำนวนอุทยานปิด/จังหวัด</div>
-    <div class="map-legend-row"><span class="map-legend-dot" style="background:#fde8d8;border:1px solid #e0c0a0"></span><span>1 แห่ง</span></div>
-    <div class="map-legend-row"><span class="map-legend-dot" style="background:#f4a563"></span><span>2–3 แห่ง</span></div>
-    <div class="map-legend-row"><span class="map-legend-dot" style="background:#e07030"></span><span>4–6 แห่ง</span></div>
-    <div class="map-legend-row"><span class="map-legend-dot" style="background:#b8401a"></span><span>7+ แห่ง</span></div>`;
+    <div class="map-legend-row"><span class="map-legend-dot" style="background:#3D9468"></span><span data-i18n="stat_open">เปิดปกติ</span></div>`;
 legendEl.addEventListener('click', e => e.stopPropagation());
 document.getElementById('parks-map').appendChild(legendEl);
 
@@ -2228,7 +2253,6 @@ let activeMarkerEls = []; // DOM marker elements currently on map
 let currentStatusFilter = 'all';
 let currentTypeFilter   = 'all';
 let currentMonthFilter  = null; // null = all months; 0–11 = Jan–Dec
-let currentRegionFilter = 'all';
 const parkPhotoCache = {};
 
 // ── Timeline: pre-compute which months each park has closures ─────────────────
@@ -2270,33 +2294,6 @@ if (typeof PARKS_CLOSURES !== 'undefined') {
     });
 }
 
-const REGION_BOUNDS = {
-    all:       [[97.5,  4.5], [105.8, 20.6]],
-    north:     [[97.5, 16.5], [101.8, 20.5]],
-    northeast: [[99.8, 13.5], [105.5, 18.5]],
-    central:   [[97.5, 10.5], [103.0, 17.5]],
-    south:     [[97.5,  5.0], [103.5, 12.5]],
-};
-
-function getParkGeoRegion(park) {
-    const r = (park.region || '').match(/Region\s+(\d+)/i);
-    if (!r) return 'other';
-    const n = parseInt(r[1]);
-    if ([11, 13, 14, 15, 16].includes(n)) return 'north';
-    if ([7, 8, 9, 10].includes(n))        return 'northeast';
-    if ([1, 2, 3, 12].includes(n))        return 'central';
-    if ([4, 5, 6].includes(n))            return 'south';
-    return 'other';
-}
-
-function filterByRegion(region, btn) {
-    currentRegionFilter = region;
-    document.querySelectorAll('.region-pill').forEach(b => b.classList.remove('active'));
-    if (btn) btn.classList.add('active');
-    const bounds = REGION_BOUNDS[region] || REGION_BOUNDS.all;
-    parksMap.fitBounds(bounds, { padding: 48, duration: 700, maxZoom: 9 });
-    applyFilters();
-}
 
 function monthFilterMatches(p) {
     if (currentMonthFilter === null) return true;
@@ -2349,7 +2346,6 @@ function buildClusterIndex() {
             if (!statusMatches(p.status, currentStatusFilter)) return;
             if (currentTypeFilter !== 'all' && getParkNatureType(p) !== currentTypeFilter) return;
             if (!monthFilterMatches(p)) return;
-            if (currentRegionFilter !== 'all' && getParkGeoRegion(p) !== currentRegionFilter) return;
             points.push({ type: 'Feature', geometry: { type: 'Point', coordinates: [p.lon, p.lat] }, properties: { id: p.id, kind: 'park', status: p.status } });
         });
     }
