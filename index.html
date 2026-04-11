@@ -321,6 +321,161 @@
             letter-spacing: .03em; text-align: right;
         }
 
+        /* ── SLIDE-OVER PANEL ── */
+        #park-detail-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 3000;
+            background: rgba(0,0,0,0.45);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+        }
+        #park-detail-overlay.open { display: block; }
+        #park-detail-panel {
+            position: fixed;
+            top: 0; right: 0; bottom: 0;
+            width: min(480px, 100vw);
+            background: #fff;
+            z-index: 3001;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(100%);
+            transition: transform 0.38s cubic-bezier(0.32,0,0.08,1);
+            overflow: hidden;
+        }
+        #park-detail-panel.open { transform: translateX(0); }
+        .pdp-hero {
+            position: relative;
+            height: 200px;
+            flex-shrink: 0;
+            background: linear-gradient(150deg, #e8f4ee 0%, #c5e0ce 100%);
+            overflow: hidden;
+        }
+        .pdp-hero img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .pdp-hero-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%);
+        }
+        .pdp-close {
+            position: absolute;
+            top: 14px; right: 14px;
+            width: 34px; height: 34px;
+            background: rgba(0,0,0,0.35);
+            border: none; border-radius: 50%;
+            color: #fff; font-size: 18px; line-height: 1;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            backdrop-filter: blur(4px);
+            z-index: 10;
+        }
+        .pdp-status-badge {
+            position: absolute;
+            bottom: 14px; left: 16px;
+            font-size: 11px; font-weight: 700;
+            padding: 4px 10px; border-radius: 100px;
+            color: white; letter-spacing: 0.03em;
+        }
+        .pdp-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 22px 32px;
+            overscroll-behavior: contain;
+        }
+        .pdp-name-th {
+            font-size: 22px; font-weight: 800;
+            color: var(--dark); line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+        .pdp-name-en {
+            font-size: 13px; color: var(--muted);
+            margin-top: 2px; margin-bottom: 16px;
+        }
+        .pdp-section-title {
+            font-size: 11px; font-weight: 700;
+            color: var(--muted); letter-spacing: 0.08em;
+            text-transform: uppercase; margin: 20px 0 10px;
+        }
+        .pdp-table {
+            width: 100%; border-collapse: collapse;
+            font-size: 12px;
+        }
+        .pdp-table th {
+            text-align: left; font-size: 10px; font-weight: 600;
+            color: var(--muted); text-transform: uppercase;
+            letter-spacing: 0.05em; padding: 0 8px 6px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+        }
+        .pdp-table td {
+            padding: 7px 8px 7px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            color: var(--dark); vertical-align: top;
+        }
+        .pdp-table tr:last-child td { border-bottom: none; }
+        .pdp-type-badge {
+            display: inline-block; font-size: 10px; font-weight: 600;
+            padding: 2px 7px; border-radius: 100px;
+            white-space: nowrap;
+        }
+        .pdp-alt-card {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 12px; border-radius: 12px;
+            background: var(--surface); margin-bottom: 8px;
+            border: 1px solid rgba(0,0,0,0.06);
+        }
+        .pdp-alt-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .pdp-alt-name { font-size: 13px; font-weight: 600; color: var(--dark); }
+        .pdp-alt-region { font-size: 11px; color: var(--muted); }
+        .pdp-goto {
+            display: block; width: 100%; margin-top: 20px;
+            background: var(--forest); color: white;
+            border: none; border-radius: 12px; padding: 13px;
+            font-family: 'Cloud Soft','Sarabun',sans-serif;
+            font-size: 14px; font-weight: 700; cursor: pointer;
+            transition: background 0.15s;
+        }
+        .pdp-goto:hover { background: #0a5a30; }
+
+        /* ── REASON CHART ── */
+        .reason-chart-panel {
+            margin-top: 20px;
+            padding: 24px 28px;
+            background: var(--surface);
+            border-radius: 20px;
+            border: 1px solid rgba(0,0,0,0.07);
+        }
+        .rcp-title { font-size: 15px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+        .rcp-sub   { font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+        .reason-bar-row {
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 10px;
+        }
+        .reason-bar-label {
+            width: 110px; flex-shrink: 0;
+            font-size: 12px; color: var(--dark);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .reason-bar-track {
+            flex: 1; height: 8px;
+            background: rgba(0,0,0,0.07); border-radius: 4px; overflow: hidden;
+        }
+        .reason-bar-fill {
+            height: 100%; border-radius: 4px;
+            transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .reason-bar-count {
+            width: 40px; text-align: right; flex-shrink: 0;
+            font-size: 12px; font-weight: 700; color: var(--dark);
+        }
+        .reason-bar-pct {
+            width: 32px; flex-shrink: 0;
+            font-size: 11px; color: var(--muted); text-align: right;
+        }
+
         /* ── SCROLL ANIMATIONS ── */
         .fade-in-up {
             opacity: 0;
@@ -864,6 +1019,17 @@
             transform: translateX(-50%);
             width: min(320px, calc(100% - 100px));
             z-index: 1001;
+        }
+        /* In fullscreen: move search to bottom-center */
+        .parks-map-container.map-fs #map-fs-search {
+            top: auto;
+            bottom: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .parks-map-container.map-fs #map-fs-results {
+            top: auto;
+            bottom: calc(100% + 8px);
         }
         #map-fs-search-wrap {
             display: flex;
@@ -1427,6 +1593,18 @@
 <body>
 
 <!-- ════════════════════════════ SPLASH ════════════════════════════ -->
+<!-- ════════════════════ PARK DETAIL SLIDE-OVER ════════════════════ -->
+<div id="park-detail-overlay" onclick="closeParkDetail()"></div>
+<div id="park-detail-panel" role="dialog" aria-modal="true">
+    <div class="pdp-hero" id="pdpHero">
+        <img id="pdpHeroImg" src="" alt="" style="display:none">
+        <div class="pdp-hero-gradient"></div>
+        <button class="pdp-close" onclick="closeParkDetail()" aria-label="ปิด">×</button>
+        <span class="pdp-status-badge" id="pdpStatusBadge"></span>
+    </div>
+    <div class="pdp-body" id="pdpBody"></div>
+</div>
+
 <div id="splash">
     <img src="brand_asset/WAVS Logo.png" alt="WAVS" id="splash-logo">
     <p id="splash-tagline">ให้ธรรมชาติหยุดหายใจ ก่อนจะหายไป<br><span style="font-size:0.82em;opacity:0.6">Nature needs to breathe, before it ceases to be.</span></p>
@@ -1507,13 +1685,13 @@
     </div>
     <div class="parks-filters-type">
         <span class="pf-label">ประเภท</span>
-        <button class="pf-pill type-pill active" onclick="filterByType('all', this)">ทั้งหมด</button>
-        <button class="pf-pill type-pill" onclick="filterByType('waterfall', this)">🌊 น้ำตก</button>
-        <button class="pf-pill type-pill" onclick="filterByType('sea', this)">🏖️ ทะเล / เกาะ</button>
-        <button class="pf-pill type-pill" onclick="filterByType('mountain', this)">⛰️ ดอย</button>
-        <button class="pf-pill type-pill" onclick="filterByType('cave', this)">🕳️ ถ้ำ</button>
-        <button class="pf-pill type-pill" onclick="filterByType('cliff', this)">🪨 ผา / แก่ง</button>
-        <button class="pf-pill type-pill" onclick="filterByType('forest', this)">🌿 ป่า</button>
+        <button class="pf-pill type-pill active" onclick="filterByType('all', this)" title="ทั้งหมด">ทั้งหมด</button>
+        <button class="pf-pill type-pill" onclick="filterByType('waterfall', this)" title="น้ำตก">🌊</button>
+        <button class="pf-pill type-pill" onclick="filterByType('sea', this)" title="ทะเล / เกาะ">🏖️</button>
+        <button class="pf-pill type-pill" onclick="filterByType('mountain', this)" title="ดอย">⛰️</button>
+        <button class="pf-pill type-pill" onclick="filterByType('cave', this)" title="ถ้ำ">🕳️</button>
+        <button class="pf-pill type-pill" onclick="filterByType('cliff', this)" title="ผา / แก่ง">🪨</button>
+        <button class="pf-pill type-pill" onclick="filterByType('forest', this)" title="ป่า">🌿</button>
     </div>
     <div class="parks-map-container" id="mapContainer">
         <div id="parks-map"></div>
@@ -1584,6 +1762,13 @@
                 <div class="choro-swatch"><span style="background:#b8401a"></span>7+ แห่ง</div>
             </div>
         </div>
+    </div>
+
+    <!-- ── REASON BREAKDOWN CHART ── -->
+    <div class="reason-chart-panel fade-in-up" id="reasonChartPanel">
+        <div class="rcp-title">สาเหตุการปิด</div>
+        <div class="rcp-sub">จำนวนอุทยานที่มีการปิดแต่ละประเภท</div>
+        <div id="reasonBars"><!-- built by JS --></div>
     </div>
 </section>
 
@@ -2240,6 +2425,7 @@ function buildParkPopup(p, lang) {
                 <tbody>${rows}</tbody>
             </table>
             <div class="popup-alts">${altsHtml}</div>
+            <button onclick="openParkDetail(${p.id})" style="display:block;width:100%;margin-top:14px;padding:9px;background:var(--forest);color:#fff;border:none;border-radius:10px;font-family:'Cloud Soft','Sarabun',sans-serif;font-size:12px;font-weight:700;cursor:pointer">ดูรายละเอียด →</button>
         </div>
     </div>`;
 }
@@ -2922,17 +3108,20 @@ function showPhotoInHero(hero, src, pageUrl) {
 async function fetchPopupPhoto(query, cacheKey, hero, popup) {
     const baseName = query.replace(/ National Park$/i, '').trim();
 
+    // Try Wikipedia action API (more reliable than rest_v1)
     const wikiP = (async () => {
-        for (const lang of ['en', 'th']) {
-            try {
-                const r = await fetch(`https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`);
-                if (!r.ok) continue;
-                const d = await r.json();
-                if (!d.thumbnail?.source) continue;
-                return { src: d.thumbnail.source.replace(/\/\d+px-/, '/600px-'), page: d.content_urls?.desktop?.page || '' };
-            } catch {}
-        }
-        return null;
+        try {
+            const url = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(query)}&prop=pageimages&piprop=original|thumbnail&pithumbsize=800&format=json&origin=*`;
+            const r = await fetch(url);
+            if (!r.ok) return null;
+            const d = await r.json();
+            const pages = Object.values(d?.query?.pages || {});
+            if (!pages.length) return null;
+            const page = pages[0];
+            const src = page?.original?.source || page?.thumbnail?.source;
+            if (!src) return null;
+            return { src, page: `https://en.wikipedia.org/wiki/${encodeURIComponent(query.replace(/ /g,'_'))}` };
+        } catch { return null; }
     })();
 
     const commonsP = (async () => {
@@ -3173,6 +3362,151 @@ if (featuredGrid) {
 navMenuBtn.addEventListener('click', () =>
     navSheet.classList.contains('open') ? closeSheet() : openSheet()
 );
+
+// ── REASON BREAKDOWN CHART ────────────────────────────────────────────────────
+(function buildReasonChart() {
+    if (typeof PARKS_CLOSURES === 'undefined') return;
+    const cats = [
+        { key: 'annual',    label: 'ปิดประจำปี',       color: '#3D9468', parks: new Set() },
+        { key: 'perm',      label: 'ถาวร/ไม่มีกำหนด',  color: '#B8583E', parks: new Set() },
+        { key: 'temp',      label: 'ชั่วคราว',         color: '#BF8E38', parks: new Set() },
+        { key: 'drought',   label: 'ภัยแล้ง',          color: '#e07030', parks: new Set() },
+        { key: 'wildfire',  label: 'ไฟป่า',            color: '#c0392b', parks: new Set() },
+        { key: 'elephant',  label: 'ช้างป่า',          color: '#7d6b4e', parks: new Set() },
+    ];
+    PARKS_CLOSURES.forEach(p => {
+        (p.closures || []).forEach(c => {
+            const t = c.type || '';
+            if (!t || t === '–') return;
+            const pid = p.id;
+            if (t.includes('Annual'))                          cats[0].parks.add(pid);
+            else if (t.includes('Permanent') || t.includes('Indefinite')) cats[1].parks.add(pid);
+            else if (t.includes('drought'))                    cats[3].parks.add(pid);
+            else if (t.includes('wildfire') || t.includes('fire')) cats[4].parks.add(pid);
+            else if (t.includes('elephant'))                   cats[5].parks.add(pid);
+            else if (t.includes('Temporary'))                  cats[2].parks.add(pid);
+        });
+    });
+
+    const visible = cats.filter(c => c.parks.size > 0).sort((a, b) => b.parks.size - a.parks.size);
+    const max = visible[0]?.parks.size || 1;
+    const container = document.getElementById('reasonBars');
+    if (!container) return;
+
+    container.innerHTML = visible.map(c => `
+        <div class="reason-bar-row">
+            <div class="reason-bar-label">${c.label}</div>
+            <div class="reason-bar-track">
+                <div class="reason-bar-fill" style="width:0%;background:${c.color}" data-pct="${Math.round(c.parks.size/max*100)}"></div>
+            </div>
+            <div class="reason-bar-count">${c.parks.size}</div>
+            <div class="reason-bar-pct">${Math.round(c.parks.size/PARKS_CLOSURES.length*100)}%</div>
+        </div>`).join('');
+
+    // Animate bars when visible
+    const panel = document.getElementById('reasonChartPanel');
+    if (panel) {
+        const obs = new IntersectionObserver(entries => {
+            if (!entries[0].isIntersecting) return;
+            container.querySelectorAll('.reason-bar-fill').forEach(el => {
+                el.style.width = el.dataset.pct + '%';
+            });
+            obs.disconnect();
+        }, { threshold: 0.2 });
+        obs.observe(panel);
+    }
+})();
+
+// ── PARK DETAIL SLIDE-OVER ────────────────────────────────────────────────────
+const pdpOverlay = document.getElementById('park-detail-overlay');
+const pdpPanel   = document.getElementById('park-detail-panel');
+const pdpBody    = document.getElementById('pdpBody');
+const pdpHero    = document.getElementById('pdpHero');
+const pdpHeroImg = document.getElementById('pdpHeroImg');
+const pdpBadge   = document.getElementById('pdpStatusBadge');
+
+function openParkDetail(id) {
+    if (typeof PARKS_CLOSURES === 'undefined') return;
+    const p = PARKS_CLOSURES.find(x => x.id === id);
+    if (!p) return;
+
+    const lang = currentLang || 'th';
+    const color = PARK_STATUS_COLOR[p.status] || '#aaa';
+    const statusLabel = (PARK_STATUS_LABEL[lang] || PARK_STATUS_LABEL.th)[p.status] || p.status;
+
+    // Hero
+    pdpHeroImg.style.display = 'none';
+    pdpHero.style.background = `linear-gradient(150deg,${color}22 0%,${color}55 100%)`;
+    pdpBadge.textContent = statusLabel;
+    pdpBadge.style.background = color;
+
+    // Body
+    const closures = (p.closures || []);
+    const closureRows = closures.map(c => {
+        const typeTh = typeLabel(c.type, lang);
+        const badgeColor = closureTypeColor(c.type);
+        return `<tr>
+            <td>${c.site || '–'}</td>
+            <td>${c.period || '–'}</td>
+            <td><span class="pdp-type-badge" style="background:${badgeColor}22;color:${badgeColor}">${typeTh}</span></td>
+        </tr>`;
+    }).join('');
+
+    const region = (p.region || '').split('–').pop().trim();
+
+    pdpBody.innerHTML = `
+        <div class="pdp-name-th">${p.name_th || p.name_en}</div>
+        <div class="pdp-name-en">${p.name_en} · ${region}</div>
+        ${closureRows ? `
+        <div class="pdp-section-title">รายการปิด</div>
+        <table class="pdp-table">
+            <thead><tr><th>พื้นที่/จุด</th><th>ช่วงเวลา</th><th>ประเภท</th></tr></thead>
+            <tbody>${closureRows}</tbody>
+        </table>` : '<div style="font-size:13px;color:var(--muted);margin-top:8px">ไม่มีข้อมูลการปิดในขณะนี้</div>'}
+        <button class="pdp-goto" onclick="closeParkDetail();goToResult('park',${p.id})">ดูบนแผนที่ →</button>`;
+
+    // Open
+    pdpOverlay.classList.add('open');
+    requestAnimationFrame(() => pdpPanel.classList.add('open'));
+    document.body.style.overflow = 'hidden';
+
+    // Try load photo
+    const wikiQ = `${p.name_en} National Park Thailand`;
+    const cacheKey = 'pdp_' + p.id;
+    if (parkPhotoCache[cacheKey]) {
+        pdpHeroImg.src = parkPhotoCache[cacheKey].src;
+        pdpHeroImg.style.display = 'block';
+    } else {
+        fetchWikiPhoto(wikiQ, (src) => {
+            if (!src) return;
+            parkPhotoCache[cacheKey] = { src };
+            if (pdpPanel.classList.contains('open')) {
+                pdpHeroImg.src = src;
+                pdpHeroImg.style.display = 'block';
+            }
+        });
+    }
+}
+
+function closeParkDetail() {
+    pdpPanel.classList.remove('open');
+    pdpOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeParkDetail();
+});
+
+function fetchWikiPhoto(query, cb) {
+    const url = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(query)}&prop=pageimages&piprop=original&format=json&origin=*`;
+    fetch(url).then(r => r.json()).then(data => {
+        const pages = data?.query?.pages;
+        if (!pages) return cb(null);
+        const page = Object.values(pages)[0];
+        cb(page?.original?.source || null);
+    }).catch(() => cb(null));
+}
 navOverlay.addEventListener('click', closeSheet);
 
 </script>
