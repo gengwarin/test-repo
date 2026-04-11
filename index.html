@@ -1407,16 +1407,16 @@
             .parks-filters-type::-webkit-scrollbar { display: none; }
             .pf-pill { font-size: 12px; padding: 7px 14px; flex-shrink: 0; }
 
-            /* Popup — full width on mobile, no zoom */
+            /* Popup — compact on mobile */
             .maplibregl-popup {
-                max-width: 94vw !important;
+                max-width: 88vw !important;
             }
             .maplibregl-popup-content {
-                zoom: 1 !important;
+                zoom: 0.72 !important;
                 border-radius: 16px !important;
             }
             .wavs-popup .maplibregl-popup-content > div {
-                max-height: 60vh;
+                max-height: calc(55vh / 0.72);
             }
             /* Show only 2 alternatives */
             .popup-alts > div > div:nth-child(4) { display: none !important; }
