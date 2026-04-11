@@ -2498,7 +2498,7 @@ function buildParkPopup(p, lang) {
     }
 
     return `<div style="min-width:300px;max-width:420px">
-        ${popupHeader(color, label, L18.popup_nat_park || 'อุทยานแห่งชาติ', p.name_en + ' National Park', p.id)}
+        ${popupHeader(color, label, L18.popup_nat_park || 'อุทยานแห่งชาติ', p.name_en, p.id)}
         <div class="popup-body">
             <div class="popup-title">${p.name_th}</div>
             <div class="popup-subtitle">${p.name_en} &nbsp;·&nbsp; ${p.region}</div>
@@ -2811,30 +2811,40 @@ function openFsPanel(kind, id) {
         const color = PARK_STATUS_COLOR[p.status] || '#aaa';
         const lang  = currentLang || 'th';
         const statusLabel = (PARK_STATUS_LABEL[lang] || PARK_STATUS_LABEL.th)[p.status] || '';
-        const rows = (p.closures || []).map(c =>
-            `<tr><td>${c.site||'–'}</td><td>${c.period||'–'}</td><td><span style="font-size:10px;font-weight:600;padding:2px 6px;border-radius:100px;background:${closureTypeColor(c.type)}22;color:${closureTypeColor(c.type)}">${typeLabel(c.type,lang)}</span></td></tr>`
-        ).join('');
-        title.textContent = p.name_th || p.name_en;
+        const rows = (p.closures || []).map(c => {
+            const siteTh = siteLabel(c.site, lang);
+            const periodTh = periodLabel(c.period, lang);
+            return `<tr><td>${siteTh||'–'}</td><td>${periodTh||'–'}</td><td><span style="font-size:10px;font-weight:600;padding:2px 6px;border-radius:100px;background:${closureTypeColor(c.type)}22;color:${closureTypeColor(c.type)}">${typeLabel(c.type,lang)}</span></td></tr>`;
+        }).join('');
+        const displayName = lang === 'th' ? (p.name_th || p.name_en) : p.name_en;
+        const subName = lang === 'th' ? p.name_en : '';
+        const regionName = (p.region||'').split('–').pop().trim();
+        const sectionTitle = lang === 'th' ? 'รายการปิด' : 'Closures';
+        const noDataText = lang === 'th' ? 'ไม่มีข้อมูลการปิด' : 'No closure data';
+        const colSite = lang === 'th' ? 'พื้นที่' : 'Site';
+        const colPeriod = lang === 'th' ? 'ช่วงเวลา' : 'Period';
+        const colType = lang === 'th' ? 'ประเภท' : 'Type';
+        title.textContent = displayName;
         body.innerHTML = `
             <div class="mfp-hero" id="mfpHeroWrap">
                 <img id="mfpHeroImg" src="" alt="" style="display:none">
                 <div class="mfp-hero-grad"></div>
                 <span class="mfp-status" style="background:${color}">${statusLabel}</span>
             </div>
-            <div class="mfp-name-th">${p.name_th||p.name_en}</div>
-            <div class="mfp-name-en">${p.name_en} · ${(p.region||'').split('–').pop().trim()}</div>
-            ${rows ? `<div class="mfp-section">รายการปิด</div>
+            <div class="mfp-name-th">${displayName}</div>
+            ${subName ? `<div class="mfp-name-en">${subName} · ${regionName}</div>` : `<div class="mfp-name-en">${regionName}</div>`}
+            ${rows ? `<div class="mfp-section">${sectionTitle}</div>
             <table class="mfp-table">
-                <thead><tr><th>พื้นที่</th><th>ช่วงเวลา</th><th>ประเภท</th></tr></thead>
+                <thead><tr><th>${colSite}</th><th>${colPeriod}</th><th>${colType}</th></tr></thead>
                 <tbody>${rows}</tbody>
-            </table>` : '<p style="font-size:12px;color:var(--muted)">ไม่มีข้อมูลการปิด</p>'}`;
+            </table>` : `<p style="font-size:12px;color:var(--muted)">${noDataText}</p>`}`;
 
         panel.classList.add('open');
 
         // Load photo
         const heroWrap = document.getElementById('mfpHeroWrap');
         heroWrap.style.background = `linear-gradient(150deg,${color}22 0%,${color}55 100%)`;
-        const wikiQ = `${p.name_en} National Park`;
+        const wikiQ = p.name_en; // name_en already includes "National Park"
         const ck = 'mfp_' + p.id;
         if (parkPhotoCache[ck]) {
             const img = document.getElementById('mfpHeroImg');
@@ -3597,26 +3607,32 @@ function openParkDetail(id) {
     const closures = (p.closures || []);
     const closureRows = closures.map(c => {
         const typeTh = typeLabel(c.type, lang);
+        const siteTh = siteLabel(c.site, lang);
+        const periodTh = periodLabel(c.period, lang);
         const badgeColor = closureTypeColor(c.type);
         return `<tr>
-            <td>${c.site || '–'}</td>
-            <td>${c.period || '–'}</td>
+            <td>${siteTh || '–'}</td>
+            <td>${periodTh || '–'}</td>
             <td><span class="pdp-type-badge" style="background:${badgeColor}22;color:${badgeColor}">${typeTh}</span></td>
         </tr>`;
     }).join('');
 
+    const displayName = lang === 'th' ? (p.name_th || p.name_en) : p.name_en;
     const region = (p.region || '').split('–').pop().trim();
+    const sectionTitle = lang === 'th' ? 'รายการปิด' : 'Closures';
+    const noData = lang === 'th' ? 'ไม่มีข้อมูลการปิดในขณะนี้' : 'No closure data';
+    const goBtn = lang === 'th' ? 'ดูบนแผนที่ →' : 'View on map →';
 
     pdpBody.innerHTML = `
-        <div class="pdp-name-th">${p.name_th || p.name_en}</div>
-        <div class="pdp-name-en">${p.name_en} · ${region}</div>
+        <div class="pdp-name-th">${displayName}</div>
+        <div class="pdp-name-en">${lang === 'th' ? p.name_en + ' · ' + region : region}</div>
         ${closureRows ? `
-        <div class="pdp-section-title">รายการปิด</div>
+        <div class="pdp-section-title">${sectionTitle}</div>
         <table class="pdp-table">
-            <thead><tr><th>พื้นที่/จุด</th><th>ช่วงเวลา</th><th>ประเภท</th></tr></thead>
+            <thead><tr><th>${lang==='th'?'พื้นที่/จุด':'Site'}</th><th>${lang==='th'?'ช่วงเวลา':'Period'}</th><th>${lang==='th'?'ประเภท':'Type'}</th></tr></thead>
             <tbody>${closureRows}</tbody>
-        </table>` : '<div style="font-size:13px;color:var(--muted);margin-top:8px">ไม่มีข้อมูลการปิดในขณะนี้</div>'}
-        <button class="pdp-goto" onclick="closeParkDetail();goToResult('park',${p.id})">ดูบนแผนที่ →</button>`;
+        </table>` : `<div style="font-size:13px;color:var(--muted);margin-top:8px">${noData}</div>`}
+        <button class="pdp-goto" onclick="closeParkDetail();goToResult('park',${p.id})">${goBtn}</button>`;
 
     // Open
     pdpOverlay.classList.add('open');
@@ -3624,7 +3640,7 @@ function openParkDetail(id) {
     document.body.style.overflow = 'hidden';
 
     // Try load photo
-    const wikiQ = `${p.name_en} National Park Thailand`;
+    const wikiQ = p.name_en; // name_en already includes "National Park"
     const cacheKey = 'pdp_' + p.id;
     if (parkPhotoCache[cacheKey]) {
         pdpHeroImg.src = parkPhotoCache[cacheKey].src;
