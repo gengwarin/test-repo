@@ -3668,14 +3668,37 @@ document.addEventListener('keydown', e => {
 });
 
 function fetchWikiPhoto(query, cb) {
+    const EXCLUDE = /map|logo|icon|flag|coat|seal|emblem|diagram|chart|plan|portrait|people|sign|symbol|entrance|gate|info|board|poster|stamp|statue|grave|road|administrative/i;
+    const baseName = query.replace(/ National Park$/i, '').trim();
+
+    function tryCommons() {
+        const q = encodeURIComponent(baseName + ' national park thailand');
+        fetch(`https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${q}&gsrnamespace=6&gsrlimit=20&prop=imageinfo&iiprop=url%7Csize&iiurlwidth=800&format=json&origin=*`)
+            .then(r => r.json())
+            .then(d => {
+                const imgs = Object.values(d.query?.pages || {})
+                    .filter(p => {
+                        const t = p.title || '';
+                        const ii = p.imageinfo?.[0] || {};
+                        return /\.(jpg|jpeg|png)$/i.test(ii.url || '') && !EXCLUDE.test(t) && (ii.width || 0) >= 600 && (ii.width || 0) > (ii.height || 0);
+                    })
+                    .sort((a, b) => b.imageinfo[0].width - a.imageinfo[0].width);
+                if (!imgs.length) return cb(null);
+                const ii = imgs[0].imageinfo[0];
+                cb(ii.thumburl || ii.url);
+            }).catch(() => cb(null));
+    }
+
     const url = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(query)}&prop=pageimages&piprop=original%7Cthumbnail&pithumbsize=800&format=json&origin=*`;
     fetch(url).then(r => r.json()).then(data => {
         const pages = data?.query?.pages;
-        if (!pages) return cb(null);
+        if (!pages) return tryCommons();
         const page = Object.values(pages)[0];
+        if (!page || page.missing !== undefined) return tryCommons();
         const src = page?.original?.source || page?.thumbnail?.source || null;
-        cb(src);
-    }).catch(() => cb(null));
+        if (src) return cb(src);
+        tryCommons();
+    }).catch(() => tryCommons());
 }
 navOverlay.addEventListener('click', closeSheet);
 
