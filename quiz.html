@@ -613,7 +613,7 @@ function prevQ() {
 // ── RESULTS ───────────────────────────────────────────────────────
 function showResults() {
     // Tally
-    const raw = { planner:0, explorer:0, culture:0, comfort:0, aesthetic:0 };
+    const raw = { world_explorer:0, aesthete:0, meaning_finder:0, memories_collector:0, peace_seeker:0, gentle_traveler:0 };
     QUESTIONS.forEach((q, i) => {
         if (answers[i] !== null) raw[q.type] += SCALE[answers[i]].score;
     });
