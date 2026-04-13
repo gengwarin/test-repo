@@ -155,60 +155,35 @@
             margin-bottom: 36px; min-height: 72px;
         }
 
-        /* Likert scale */
-        .likert-labels {
-            display: flex; justify-content: space-between;
-            font-size: 11px; color: var(--muted); margin-bottom: 8px;
-            padding: 0 4px;
-        }
+        /* Likert color scale */
         .likert-options {
-            display: flex; gap: 8px; justify-content: center;
-            margin-bottom: 36px;
+            display: flex; gap: 10px; justify-content: center;
+            margin-bottom: 44px;
         }
         .likert-btn {
-            flex: 1; display: flex; flex-direction: column;
-            align-items: center; gap: 6px;
-            padding: 14px 4px 12px;
-            border-radius: 14px; border: 2px solid var(--line);
-            background: var(--white); cursor: pointer;
-            font-family: inherit; transition: all .15s;
-            position: relative; overflow: hidden;
+            width: 52px; height: 52px; border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer; transition: transform .15s, box-shadow .15s, border-color .15s;
+            flex-shrink: 0;
+            /* background-color set inline per button */
         }
-        .likert-btn:hover { border-color: rgba(0,0,0,0.2); transform: translateY(-2px); }
+        .likert-btn:hover { transform: scale(1.12); }
         .likert-btn.selected {
             border-color: var(--dark);
-            background: var(--dark);
-        }
-        .likert-btn.selected .likert-emoji { transform: scale(1.2); }
-        .likert-btn.selected .likert-word { color: rgba(255,255,255,0.7); }
-        .likert-emoji { font-size: 22px; transition: transform .2s; }
-        .likert-word {
-            font-size: 10px; font-weight: 600; color: var(--muted);
-            text-align: center; line-height: 1.2;
-            transition: color .15s;
+            transform: scale(1.18);
+            box-shadow: 0 0 0 3px rgba(0,0,0,.10);
         }
 
-        /* nav row */
-        .q-nav {
-            display: flex; justify-content: space-between; align-items: center;
-        }
+        /* nav row — back only */
+        .q-nav { margin-top: 0; }
         .btn-back {
             font-family: inherit; font-size: 14px; font-weight: 500;
             color: var(--muted); background: transparent; border: none;
-            padding: 10px 0; cursor: pointer; display: flex;
+            padding: 10px 0; cursor: pointer; display: inline-flex;
             align-items: center; gap: 6px; transition: color .15s;
         }
         .btn-back:hover { color: var(--dark); }
         .btn-back:disabled { opacity: 0; pointer-events: none; }
-        .btn-fwd {
-            font-family: inherit; font-size: 15px; font-weight: 700;
-            padding: 13px 26px; border-radius: 11px; border: none;
-            background: var(--dark); color: #fff; cursor: pointer;
-            opacity: 0; pointer-events: none;
-            transition: opacity .2s, background .15s, transform .12s;
-        }
-        .btn-fwd.show { opacity: 1; pointer-events: auto; }
-        .btn-fwd:hover { background: #333; transform: translateY(-1px); }
 
         /* ── RESULT ── */
         .result-wrap { padding: 40px 0 0; }
@@ -371,10 +346,6 @@
     <div class="screen" id="screenQ">
         <div class="q-wrap">
             <div class="q-text" id="qText"></div>
-            <div class="likert-labels">
-                <span>ไม่ชอบเลย</span>
-                <span>ชอบมากๆ</span>
-            </div>
             <div class="likert-options" id="likertOptions">
                 <!-- rendered by JS -->
             </div>
@@ -385,7 +356,6 @@
                     </svg>
                     ย้อนกลับ
                 </button>
-                <button class="btn-fwd" id="btnFwd" onclick="nextQ()">ถัดไป →</button>
             </div>
         </div>
     </div>
@@ -449,12 +419,13 @@ const QUESTIONS = [
     { text: 'ฉันเลือกจุดหมายตามความรู้สึก\nหรือแรงบันดาลใจ มากกว่าเหตุผล', type: 'aesthetic' },
 ];
 
+// Left = green (agree/like), right = red (disagree/dislike)
 const SCALE = [
-    { emoji: '😍', word: 'Love it', score: 2 },
-    { emoji: '😊', word: 'Like it', score: 1 },
-    { emoji: '😐', word: 'Neutral', score: 0 },
-    { emoji: '😕', word: 'Dislike', score: -1 },
-    { emoji: '😤', word: 'Hate it', score: -2 },
+    { color: '#27AE60', score:  2 },
+    { color: '#7CC96A', score:  1 },
+    { color: '#C8C8C8', score:  0 },
+    { color: '#F08060', score: -1 },
+    { color: '#E84040', score: -2 },
 ];
 
 const TYPES = {
@@ -556,13 +527,12 @@ function renderQuestion() {
         el.appendChild(document.createTextNode(line));
     });
 
-    // Likert buttons
+    // Likert color buttons
     const container = document.getElementById('likertOptions');
     container.innerHTML = SCALE.map((s, i) => `
         <button class="likert-btn${answers[current] === i ? ' selected' : ''}"
+                style="background:${s.color}"
                 onclick="selectAnswer(${i}, this)">
-            <span class="likert-emoji">${s.emoji}</span>
-            <span class="likert-word">${s.word}</span>
         </button>
     `).join('');
 
@@ -574,12 +544,7 @@ function renderQuestion() {
     void el.offsetHeight;
     el.classList.add('slide-in');
 
-    // Buttons
-    const btnFwd = document.getElementById('btnFwd');
-    btnFwd.textContent = current === QUESTIONS.length - 1 ? 'ดูผลลัพธ์ 🎉' : 'ถัดไป →';
-    btnFwd.classList.toggle('show', answers[current] !== null);
     document.getElementById('btnBack').disabled = current === 0;
-
     updateProgress();
 }
 
@@ -587,11 +552,11 @@ function selectAnswer(idx, el) {
     answers[current] = idx;
     document.querySelectorAll('.likert-btn').forEach(b => b.classList.remove('selected'));
     el.classList.add('selected');
-    document.getElementById('btnFwd').classList.add('show');
-    // Auto-advance on mobile
-    if (window.matchMedia('(max-width: 640px)').matches) {
-        setTimeout(nextQ, 380);
-    }
+    // Auto-advance after brief visual feedback
+    setTimeout(() => {
+        nextQ();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 260);
 }
 
 function nextQ() {
