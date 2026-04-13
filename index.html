@@ -2954,6 +2954,73 @@ function openFsPanel(kind, id) {
             });
         }
     }
+
+    if (kind === 'place' && typeof PLACES_DATA !== 'undefined') {
+        const p = PLACES_DATA.find(x => x.id === id);
+        if (!p) return;
+        const cat = CAT_COLOR[p.category] || CAT_COLOR.national_park;
+        const cl  = CROWD_LEVEL_LABEL[p.crowd_level] || CROWD_LEVEL_LABEL.low;
+        const reviews = p.reviews >= 1000 ? (p.reviews/1000).toFixed(1) + 'k' : p.reviews;
+        const dayLabels = ['จ','อ','พ','พฤ','ศ','ส','อา'];
+        const dayBars = (p.crowd_by_day || []).map((v,i) => {
+            const h = Math.round((v/100)*40);
+            const isWeekend = i >= 5;
+            return `<div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+                <div style="width:18px;height:${h}px;background:${isWeekend ? cat.color : 'rgba(0,0,0,0.12)'};border-radius:3px 3px 0 0;min-height:2px"></div>
+                <div style="font-size:9px;color:${isWeekend?cat.color:'#aaa'};font-weight:${isWeekend?'700':'400'}">${dayLabels[i]}</div>
+            </div>`;
+        }).join('');
+        const hours = p.crowd_by_hour || [];
+        const peakHour = hours.indexOf(Math.max(...hours));
+        const peakStr = peakHour >= 0 ? `${peakHour}:00–${peakHour+2}:00 น.` : '';
+
+        title.textContent = p.name;
+        body.innerHTML = `
+            <div class="mfp-hero" id="mfpHeroWrap" style="background:linear-gradient(150deg,${cat.color}18 0%,${cat.color}44 100%)">
+                <img id="mfpHeroImg" src="" alt="" style="display:none">
+                <div class="mfp-hero-grad"></div>
+                <span class="mfp-status" style="background:${cat.color}">${cat.label}</span>
+            </div>
+            <div class="mfp-name-th">${p.name}</div>
+            <div class="mfp-name-en">${p.address.split(',').slice(-2).join(',').trim()}</div>
+            <div style="display:flex;align-items:center;gap:12px;margin:12px 0 16px">
+                <div style="font-size:26px;font-weight:800;color:#F5A623;line-height:1">${p.rating.toFixed(1)}</div>
+                <div>
+                    <div style="font-size:13px;color:#F5A623;font-weight:700">${'★'.repeat(Math.round(p.rating))}${'☆'.repeat(5-Math.round(p.rating))}</div>
+                    <div style="font-size:11px;color:#aaa">${reviews} รีวิว</div>
+                </div>
+                <div style="margin-left:auto;text-align:right">
+                    <div style="font-size:11px;font-weight:700;color:${cl.color}">${cl.label}</div>
+                    <div style="font-size:10px;color:#aaa">ระดับความหนาแน่น</div>
+                </div>
+            </div>
+            <div class="mfp-section">ความหนาแน่นนักท่องเที่ยวตามวัน</div>
+            <div style="display:flex;align-items:flex-end;gap:5px;height:54px;margin:8px 0 4px">${dayBars}</div>
+            <div style="display:flex;gap:14px;font-size:11px;color:#888;margin-bottom:16px;flex-wrap:wrap">
+                ${peakStr ? `<span>⏰ ช่วงคนมาก: <b style="color:#555">${peakStr}</b></span>` : ''}
+                <span>📅 ฤดูกาล: <b style="color:#555">${p.season_label||''}</b></span>
+            </div>
+            ${p.hours?.length ? `<div class="mfp-section">เวลาทำการ</div>
+            <div style="font-size:12px;color:#555;line-height:1.8">${p.hours.map(h=>`<div>${h}</div>`).join('')}</div>` : ''}`;
+
+        panel.classList.add('open');
+
+        // Load photo
+        const heroWrap2 = document.getElementById('mfpHeroWrap');
+        heroWrap2.style.background = `linear-gradient(150deg,${cat.color}18 0%,${cat.color}44 100%)`;
+        const ck2 = 'place_' + p.id;
+        if (parkPhotoCache[ck2]) {
+            const img = document.getElementById('mfpHeroImg');
+            if (img) { img.src = parkPhotoCache[ck2].src; img.style.display = 'block'; }
+        } else {
+            fetchWikiPhoto(p.name, src => {
+                if (!src) return;
+                parkPhotoCache[ck2] = { src };
+                const img = document.getElementById('mfpHeroImg');
+                if (img && panel.classList.contains('open')) { img.src = src; img.style.display = 'block'; }
+            });
+        }
+    }
 }
 
 function openWavsPopup(kind, id, lngLat) {
@@ -2969,6 +3036,9 @@ function openWavsPopup(kind, id, lngLat) {
     if (kind === 'park') {
         const p = typeof PARKS_CLOSURES !== 'undefined' && PARKS_CLOSURES.find(x => x.id === id);
         if (p) html = buildParkPopup(p);
+    } else if (kind === 'place') {
+        const p = typeof PLACES_DATA !== 'undefined' && PLACES_DATA.find(x => x.id === id);
+        if (p) html = buildPlacePopup(p);
     } else {
         const a = typeof ATTRACTIONS_DATA !== 'undefined' && ATTRACTIONS_DATA.find(x => x.id === id);
         if (a) html = buildAttractionPopup(a);
@@ -3106,6 +3176,58 @@ function buildAttractionPopup(a, lang) {
                 <tbody>${rows}</tbody>
             </table>
             <div class="popup-alts">${altsHtml}</div>
+        </div>
+    </div>`;
+}
+
+function buildPlacePopup(p) {
+    if (!p) return '';
+    const cat = CAT_COLOR[p.category] || CAT_COLOR.national_park;
+    const cl  = CROWD_LEVEL_LABEL[p.crowd_level] || CROWD_LEVEL_LABEL.low;
+    const reviews = p.reviews >= 1000 ? (p.reviews/1000).toFixed(1) + 'k' : p.reviews;
+    // crowd_by_day bar chart (Mon–Sun)
+    const dayLabels = ['จ','อ','พ','พฤ','ศ','ส','อา'];
+    const dayBars = (p.crowd_by_day || []).map((v,i) => {
+        const h = Math.round((v/100)*32);
+        const isWeekend = i >= 5;
+        return `<div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+            <div style="width:14px;height:${h}px;background:${isWeekend ? cat.color : 'rgba(0,0,0,0.15)'};border-radius:3px 3px 0 0;min-height:2px"></div>
+            <div style="font-size:9px;color:${isWeekend?cat.color:'#aaa'};font-weight:${isWeekend?'700':'400'}">${dayLabels[i]}</div>
+        </div>`;
+    }).join('');
+    // crowd_by_hour sparkline (just peak label)
+    const hours = p.crowd_by_hour || [];
+    const peakHour = hours.indexOf(Math.max(...hours));
+    const peakStr = peakHour >= 0 ? `${peakHour}:00–${peakHour+2}:00 น.` : '';
+    return `<div style="min-width:300px;max-width:400px">
+        <div class="popup-hero" data-wiki="${p.name}" data-park-id="place_${p.id}"
+             style="height:160px;border-radius:10px;overflow:hidden;margin-bottom:14px;position:relative;background:linear-gradient(150deg,${cat.color}18 0%,${cat.color}44 100%)">
+            <svg viewBox="0 0 420 120" preserveAspectRatio="xMidYMax slice" style="position:absolute;bottom:0;left:0;width:100%;height:80px">
+                <path d="M0,120 L0,65 L55,42 L110,62 L170,24 L230,52 L290,18 L350,46 L420,30 L420,120 Z" fill="${cat.color}" opacity="0.18"/>
+                <path d="M0,120 L0,80 L65,58 L130,72 L195,46 L255,66 L315,40 L385,62 L420,52 L420,120 Z" fill="${cat.color}" opacity="0.28"/>
+            </svg>
+            <img class="popup-hero-img" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.5s">
+            <div class="popup-hero-overlay" style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.05),rgba(0,0,0,0.52));opacity:0;transition:opacity 0.5s;pointer-events:none"></div>
+            <div style="position:absolute;top:10px;left:12px;background:rgba(255,255,255,0.92);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;color:${cat.color};letter-spacing:.05em;z-index:2">${cat.label}</div>
+            <div style="position:absolute;bottom:10px;left:12px;background:${cat.color};border-radius:20px;padding:3px 12px;font-size:11px;font-weight:700;color:#fff;z-index:2">${cl.label}</div>
+        </div>
+        <div class="popup-body">
+            <div class="popup-title">${p.name}</div>
+            <div class="popup-subtitle" style="margin-bottom:10px">${p.address.split(',').slice(-2).join(',').trim()}</div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+                <div style="font-size:20px;font-weight:800;color:#F5A623">${p.rating.toFixed(1)}</div>
+                <div>
+                    <div style="font-size:12px;color:#F5A623;font-weight:700">${'★'.repeat(Math.round(p.rating))}${'☆'.repeat(5-Math.round(p.rating))}</div>
+                    <div style="font-size:11px;color:#aaa">${reviews} รีวิว</div>
+                </div>
+            </div>
+            <div style="font-size:10px;font-weight:700;color:#999;letter-spacing:.06em;margin-bottom:6px">ความหนาแน่นนักท่องเที่ยวตามวัน</div>
+            <div style="display:flex;align-items:flex-end;gap:4px;height:44px;margin-bottom:4px">${dayBars}</div>
+            <div style="display:flex;gap:12px;font-size:10px;color:#888;margin-bottom:10px;flex-wrap:wrap">
+                ${peakStr ? `<span>ช่วงคนมาก: <b style="color:#555">${peakStr}</b></span>` : ''}
+                <span>ช่วงปี: <b style="color:#555">${p.season_label||''}</b></span>
+            </div>
+            ${p.hours?.length ? `<div style="font-size:11px;color:#666;border-top:1px solid #f5f5f5;padding-top:8px">${p.hours[0]}</div>` : ''}
         </div>
     </div>`;
 }
@@ -3249,18 +3371,34 @@ function getSearchMatches(q) {
             return [];
           }).slice(0, 3) : [];
 
-    return [...parkMatches, ...attrMatches].slice(0, 6);
+    const placeMatches = (typeof PLACES_DATA !== 'undefined')
+        ? PLACES_DATA.filter(p => p.name.toLowerCase().includes(q) || (p.address && p.address.toLowerCase().includes(q)))
+            .slice(0, 4)
+            .map(p => ({ key: `place_${p.id}`, id: p.id, kind: 'place', name_th: p.name, sub: p.category_th, status: null }))
+        : [];
+
+    return [...parkMatches, ...attrMatches, ...placeMatches].slice(0, 8);
 }
 
 function renderSearchResults(matches, resultsEl, onClickFn) {
     if (!matches.length) { resultsEl.classList.remove('open'); return; }
     resultsEl.innerHTML = matches.map(d => {
-        const color = PARK_STATUS_COLOR[d.status] || '#aaa';
-        const tag = d.kind === 'attraction' ? 'วนอุทยาน' : 'อุทยานแห่งชาติ';
+        let color, tag;
+        if (d.kind === 'place') {
+            const cat = CAT_COLOR[d.sub] || CAT_COLOR[d.sub] || {};
+            // sub is category key for places; we want category_th
+            const p = typeof PLACES_DATA !== 'undefined' && PLACES_DATA.find(x => x.id === d.id);
+            const catColor = CAT_COLOR[p?.category] || { color: '#0F6C39', label: d.sub };
+            color = catColor.color;
+            tag = catColor.label;
+        } else {
+            color = PARK_STATUS_COLOR[d.status] || '#aaa';
+            tag = d.kind === 'attraction' ? 'วนอุทยาน' : 'อุทยานแห่งชาติ';
+        }
         return `<li onclick="${onClickFn}('${d.kind}','${d.id}')">
             <span class="hs-pip" style="background:${color}"></span>
             <span class="hs-name">${d.name_th}</span>
-            <span class="hs-tag">${tag} · ${d.sub}</span>
+            <span class="hs-tag">${tag}</span>
         </li>`;
     }).join('');
     resultsEl.classList.add('open');
@@ -3277,7 +3415,20 @@ function goToResult(kind, id) {
     searchResults.classList.remove('open');
     searchInput.value = '';
     if (kind === 'park') flyToPark(Number(id));
+    else if (kind === 'place') flyToPlaceById(id);
     else flyToAttraction(id);
+}
+
+function flyToPlaceById(id) {
+    if (typeof PLACES_DATA === 'undefined') return;
+    const p = PLACES_DATA.find(x => x.id === id);
+    if (!p) return;
+    document.getElementById('parks-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => {
+        closeActivePopup();
+        parksMap.flyTo({ center: [p.lng, p.lat], zoom: 13, duration: 1200, essential: true });
+        setTimeout(() => openWavsPopup('place', id, [p.lng, p.lat]), 1300);
+    }, 400);
 }
 
 document.addEventListener('click', e => {
@@ -3897,27 +4048,7 @@ function flyToPlace(lat, lng, id) {
     if (mapSection) mapSection.scrollIntoView({ behavior: 'smooth' });
     if (typeof parksMap !== 'undefined') {
         parksMap.flyTo({ center: [lng, lat], zoom: 13, duration: 1200 });
-        // show popup after fly
-        setTimeout(() => {
-            new maplibregl.Popup({ closeButton: true, className: 'wavs-popup' })
-                .setLngLat([lng, lat])
-                .setHTML(`<div style="font-size:13px;padding:4px 2px" id="place-popup-${id}">กำลังโหลด...</div>`)
-                .addTo(parksMap);
-            const p = PLACES_DATA.find(x => x.id === id);
-            if (p) {
-                const el = document.getElementById(`place-popup-${id}`);
-                const cl2 = CROWD_LEVEL_LABEL[p.crowd_level] || CROWD_LEVEL_LABEL.low;
-                const cat2 = CAT_COLOR[p.category] || CAT_COLOR.national_park;
-                if (el) el.innerHTML = `
-                    <div style="font-weight:700;font-size:14px;margin-bottom:4px">${p.name}</div>
-                    <span style="font-size:10px;background:${cat2.bg};color:${cat2.color};padding:2px 7px;border-radius:100px;font-weight:600">${cat2.label}</span>
-                    <div style="color:#F5A623;font-weight:700;margin-top:6px">${p.rating.toFixed(1)}★ <span style="color:#888;font-weight:400">${(p.reviews>=1000?(p.reviews/1000).toFixed(1)+'k':p.reviews)} รีวิว</span></div>
-                    <div style="font-size:11px;font-weight:600;color:${cl2.color};margin-top:3px">${cl2.label}</div>
-                    ${p.season_label ? `<div style="font-size:10px;color:#777;margin-top:3px">ช่วงแนะนำ: ${p.season_label}</div>` : ''}
-                    ${p.hours?.length ? `<div style="font-size:10px;color:#666;margin-top:4px">${p.hours[0]}</div>` : ''}
-                `;
-            }
-        }, 1300);
+        setTimeout(() => openWavsPopup('place', id, [lng, lat]), 1300);
     }
 }
 
@@ -3976,26 +4107,11 @@ function addPlacesLayer() {
         }
     });
 
-    // click popup
+    // click → open panel (same as parks)
     parksMap.on('click', 'places-circle', e => {
-        const p = e.features[0].properties;
-        const coords = e.features[0].geometry.coordinates;
-        const place = PLACES_DATA.find(x => x.id === p.id);
-        const reviews = p.reviews >= 1000 ? (p.reviews/1000).toFixed(1)+'k' : p.reviews;
-        const cl = CROWD_LEVEL_LABEL[place?.crowd_level] || CROWD_LEVEL_LABEL.low;
-        const cat = CAT_COLOR[place?.category] || CAT_COLOR.national_park;
-        new maplibregl.Popup({ closeButton: true, className: 'wavs-popup' })
-            .setLngLat(coords)
-            .setHTML(`
-                <div style="min-width:200px">
-                    <div style="font-weight:700;font-size:14px;margin-bottom:4px">${p.name}</div>
-                    <span style="font-size:10px;background:${cat.bg};color:${cat.color};padding:2px 7px;border-radius:100px;font-weight:600">${cat.label}</span>
-                    <div style="color:#F5A623;font-weight:700;font-size:13px;margin-top:6px">${parseFloat(p.rating).toFixed(1)}★ <span style="color:#888;font-weight:400">${reviews} รีวิว</span></div>
-                    <div style="font-size:11px;font-weight:600;color:${cl.color};margin-top:4px">${cl.label}</div>
-                    ${place?.season_label ? `<div style="font-size:10px;color:#777;margin-top:3px">ช่วงแนะนำ: ${place.season_label}</div>` : ''}
-                    ${place?.hours?.length ? `<div style="font-size:10px;color:#666;margin-top:4px">${place.hours[0]}</div>` : ''}
-                </div>`)
-            .addTo(parksMap);
+        const props  = e.features[0].properties;
+        const coords = e.features[0].geometry.coordinates.slice();
+        openWavsPopup('place', props.id, coords);
     });
 
     parksMap.on('mouseenter', 'places-circle', () => parksMap.getCanvas().style.cursor = 'pointer');
