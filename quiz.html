@@ -193,27 +193,27 @@
             margin-bottom: 32px; position: relative; overflow: hidden;
         }
         .result-card-inner {
-            display: flex; gap: 28px; align-items: center;
+            display: flex; flex-direction: column; align-items: center;
+            gap: 20px; text-align: center;
         }
         .result-type-img {
-            width: 130px; height: 130px;
-            object-fit: contain; flex-shrink: 0;
-            filter: drop-shadow(0 8px 20px rgba(0,0,0,.15));
+            width: 220px; height: 220px;
+            object-fit: contain;
+            filter: drop-shadow(0 12px 28px rgba(0,0,0,.18));
         }
-        .result-card-text { flex: 1; min-width: 0; }
+        .result-card-text { width: 100%; }
         .result-kicker {
             font-size: 11px; font-weight: 700; letter-spacing: .12em;
             text-transform: uppercase; margin-bottom: 6px; opacity: .65;
         }
         .result-name {
-            font-size: clamp(22px, 5vw, 36px);
+            font-size: clamp(26px, 6vw, 42px);
             font-weight: 800; line-height: 1.15; margin-bottom: 4px;
         }
         .result-sub { font-size: 13px; opacity: .6; margin-bottom: 14px; }
-        .result-desc { font-size: 14px; line-height: 1.75; opacity: .85; }
+        .result-desc { font-size: 14px; line-height: 1.75; opacity: .85; text-align: left; }
         @media (max-width: 480px) {
-            .result-card-inner { flex-direction: column; gap: 20px; align-items: flex-start; }
-            .result-type-img { width: 100px; height: 100px; }
+            .result-type-img { width: 170px; height: 170px; }
         }
 
         /* Score breakdown */
