@@ -189,20 +189,32 @@
         .result-wrap { padding: 40px 0 0; }
 
         .result-card {
-            border-radius: 22px; padding: 36px 32px;
+            border-radius: 22px; padding: 32px;
             margin-bottom: 32px; position: relative; overflow: hidden;
         }
-        .result-icon { font-size: 52px; display: block; margin-bottom: 14px; }
+        .result-card-inner {
+            display: flex; gap: 28px; align-items: center;
+        }
+        .result-type-img {
+            width: 130px; height: 130px;
+            object-fit: contain; flex-shrink: 0;
+            filter: drop-shadow(0 8px 20px rgba(0,0,0,.15));
+        }
+        .result-card-text { flex: 1; min-width: 0; }
         .result-kicker {
             font-size: 11px; font-weight: 700; letter-spacing: .12em;
             text-transform: uppercase; margin-bottom: 6px; opacity: .65;
         }
         .result-name {
-            font-size: clamp(28px, 7vw, 46px);
-            font-weight: 800; line-height: 1.1; margin-bottom: 4px;
+            font-size: clamp(22px, 5vw, 36px);
+            font-weight: 800; line-height: 1.15; margin-bottom: 4px;
         }
-        .result-sub { font-size: 14px; opacity: .6; margin-bottom: 18px; }
-        .result-desc { font-size: 15px; line-height: 1.75; opacity: .85; max-width: 440px; }
+        .result-sub { font-size: 13px; opacity: .6; margin-bottom: 14px; }
+        .result-desc { font-size: 14px; line-height: 1.75; opacity: .85; }
+        @media (max-width: 480px) {
+            .result-card-inner { flex-direction: column; gap: 20px; align-items: flex-start; }
+            .result-type-img { width: 100px; height: 100px; }
+        }
 
         /* Score breakdown */
         .section-label {
@@ -316,7 +328,7 @@
     <!-- Progress (hidden until quiz starts) -->
     <div class="progress-wrap" id="progressWrap" style="display:none">
         <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-        <div class="progress-label" id="progressLabel">1 / 10</div>
+        <div class="progress-label" id="progressLabel">1 / 12</div>
     </div>
 
     <!-- START SCREEN -->
@@ -324,13 +336,14 @@
         <div class="start-wrap fade-up">
             <span class="start-tag">WAVS · แบบทดสอบ</span>
             <h1 class="start-h1">คุณเป็น<span>นักท่องเที่ยว</span><br>ประเภทไหน?</h1>
-            <p class="start-sub">ตอบ 10 คำถามสั้นๆ แล้วค้นพบสไตล์การท่องเที่ยวของตัวเอง พร้อมอุทยานแห่งชาติที่เหมาะกับคุณ</p>
+            <p class="start-sub">ตอบ 12 คำถามสั้นๆ แล้วค้นพบสไตล์การท่องเที่ยวของตัวเอง พร้อมอุทยานแห่งชาติที่เหมาะกับคุณ</p>
             <div class="type-pills">
-                <div class="type-pill">🗓️ นักวางแผน</div>
-                <div class="type-pill">🧭 นักสำรวจ</div>
-                <div class="type-pill">🏛️ นักแสวงหาวัฒนธรรม</div>
-                <div class="type-pill">🛋️ นักท่องเที่ยวสบายๆ</div>
-                <div class="type-pill">📸 นักล่าความงาม</div>
+                <div class="type-pill">🌍 World Explorer</div>
+                <div class="type-pill">🎨 Aesthete</div>
+                <div class="type-pill">🔍 Meaning Finder</div>
+                <div class="type-pill">📷 Memories Collector</div>
+                <div class="type-pill">🕊️ Peace Seeker</div>
+                <div class="type-pill">🤝 Gentle Traveler</div>
             </div>
             <button class="btn-cta" onclick="startQuiz()">
                 เริ่มทดสอบ
@@ -364,11 +377,15 @@
     <div class="screen" id="screenResult">
         <div class="result-wrap fade-up">
             <div class="result-card" id="resultCard">
-                <span class="result-icon" id="rIcon"></span>
-                <div class="result-kicker">บุคลิกการท่องเที่ยวของคุณคือ</div>
-                <div class="result-name" id="rName"></div>
-                <div class="result-sub" id="rSub"></div>
-                <div class="result-desc" id="rDesc"></div>
+                <div class="result-card-inner">
+                    <img class="result-type-img" id="rImg" src="" alt="">
+                    <div class="result-card-text">
+                        <div class="result-kicker">บุคลิกการท่องเที่ยวของคุณคือ</div>
+                        <div class="result-name" id="rName"></div>
+                        <div class="result-sub" id="rSub"></div>
+                        <div class="result-desc" id="rDesc"></div>
+                    </div>
+                </div>
             </div>
 
             <div class="section-label">คะแนนรวมของคุณ</div>
@@ -407,16 +424,18 @@
 // ── DATA ───────────────────────────────────────────────────────────
 
 const QUESTIONS = [
-    { text: 'ฉันชอบวางแผนการเดินทางอย่างละเอียด\nเช่น ตารางเวลา ร้านอาหาร และกิจกรรมต่างๆ', type: 'planner' },
-    { text: 'ฉันชอบหลงทางหรือเปลี่ยนแผนกะทันหัน\nระหว่างการเดินทาง', type: 'explorer' },
-    { text: 'ฉันชอบสถานที่ซ่อนตัว ไม่ดัง\nมากกว่าแหล่งท่องเที่ยวยอดนิยม', type: 'culture' },
-    { text: 'ความสะดวกสบาย (โรงแรม อาหาร สิ่งอำนวยความสะดวก)\nสำคัญกว่าความแปลกใหม่สำหรับฉัน', type: 'comfort' },
-    { text: 'ฉันชอบกิจกรรมผจญภัย\nเช่น เดินป่า ดำน้ำ หรือปีนเขา', type: 'explorer' },
-    { text: 'ฉันชอบนั่งในคาเฟ่ ถ่ายรูปสวยๆ\nและประสบการณ์ที่มี aesthetic', type: 'aesthetic' },
-    { text: 'ฉันอยากเข้าใจวัฒนธรรมท้องถิ่นอย่างลึกซึ้ง\nและพูดคุยกับคนท้องถิ่น', type: 'culture' },
-    { text: 'ฉันชอบตารางเที่ยวที่แน่น\nและเที่ยวหลายที่ในทริปเดียว', type: 'planner' },
-    { text: 'ฉันสบายใจที่จะเดินทางคนเดียว', type: 'comfort' },
-    { text: 'ฉันเลือกจุดหมายตามความรู้สึก\nหรือแรงบันดาลใจ มากกว่าเหตุผล', type: 'aesthetic' },
+    { text: 'ฉันชอบกิจกรรมที่ท้าทายร่างกายและจิตใจ\nเช่น เดินป่าข้ามคืน ดำน้ำลึก หรือปีนเขา', type: 'world_explorer' },
+    { text: 'ฉันมักสังเกตแสง สี และบรรยากาศของสถานที่\nมากกว่าการเช็กลิสต์สิ่งที่ต้องทำ', type: 'aesthete' },
+    { text: 'ฉันอยากรู้จักวิถีชีวิตท้องถิ่นจริงๆ\nไม่ใช่แค่ถ่ายรูปกับสถานที่ดัง', type: 'meaning_finder' },
+    { text: 'ฉันชอบวางแผนทริปให้ละเอียด\nเพื่อไม่ให้พลาดสิ่งที่อยากทำและอยากเห็น', type: 'memories_collector' },
+    { text: 'ฉันต้องการความเงียบและพื้นที่ว่าง\nมากกว่าความตื่นเต้นในการเดินทาง', type: 'peace_seeker' },
+    { text: 'สำหรับฉัน ทริปที่ดีคือทริปที่ทุกคนในกลุ่มมีความสุข\nมากกว่าทริปที่ฉันคนเดียวได้ทำสิ่งที่อยากทำ', type: 'gentle_traveler' },
+    { text: 'ฉันรู้สึกมีชีวิตชีวาที่สุด\nเมื่ออยู่ในสถานที่ที่ไม่เคยไปมาก่อน', type: 'world_explorer' },
+    { text: 'ฉันเลือกจุดหมายจาก vibe และ aesthetic\nมากกว่าจากรีวิวหรือความคุ้มค่า', type: 'aesthete' },
+    { text: 'ฉันสนใจประวัติศาสตร์และความหมายที่ซ่อนอยู่\nมากกว่าความสวยงามบนพื้นผิว', type: 'meaning_finder' },
+    { text: 'ฉันชอบบันทึกทุก moment ไว้เป็นความทรงจำ\nด้วยรูป วิดีโอ หรือบันทึก', type: 'memories_collector' },
+    { text: 'หลังทริป ฉันอยากรู้สึกสงบและเติมพลัง\nไม่ใช่เหนื่อยจากกิจกรรมที่หนาแน่น', type: 'peace_seeker' },
+    { text: 'ฉันชอบเดินทางกับคนที่รัก\nมากกว่าออกคนเดียวเพื่อผจญภัย', type: 'gentle_traveler' },
 ];
 
 // Left = green (agree/like), right = red (disagree/dislike)
@@ -429,67 +448,81 @@ const SCALE = [
 ];
 
 const TYPES = {
-    planner: {
-        icon: '🗓️', name: 'นักวางแผน', sub: 'The Planner',
-        color: '#3B6FD4',
-        bg: 'linear-gradient(135deg,rgba(59,111,212,.12) 0%,rgba(59,111,212,.28) 100%)',
-        desc: 'คุณคือผู้เชี่ยวชาญด้านการวางแผน ชอบโครงสร้าง ประสิทธิภาพ และการเดินทางที่ได้ผลสูงสุดทุกวินาที ทริปที่ดีสำหรับคุณคือทริปที่ทำได้ตามแผน',
-        parks: [
-            { nameTh:'เขาใหญ่', nameEn:'Khao Yai National Park', region:'ภาคกลาง', desc:'สิ่งอำนวยความสะดวกครบ เส้นทางชัดเจน มรดกโลก UNESCO', status:'open' },
-            { nameTh:'ดอยอินทนนท์', nameEn:'Doi Inthanon National Park', region:'ภาคเหนือ', desc:'แผนที่ชัด กิจกรรมหลากหลาย จุดไฮไลท์หลายจุดในที่เดียว', status:'open' },
-            { nameTh:'เอราวัณ', nameEn:'Erawan National Park', region:'ภาคตะวันตก', desc:'น้ำตก 7 ชั้น เที่ยวได้ครบในวันเดียว เดินทางสะดวก', status:'open' },
-        ],
-    },
-    explorer: {
-        icon: '🧭', name: 'นักสำรวจ', sub: 'The Explorer',
+    world_explorer: {
+        img: 'brand_asset/Tourist%20Type/World%20Explorer.png',
+        name: 'World Explorer', sub: 'นักสำรวจโลก',
         color: '#2D6A4F',
-        bg: 'linear-gradient(135deg,rgba(45,106,79,.12) 0%,rgba(45,106,79,.28) 100%)',
-        desc: 'คุณคือผู้รักความตื่นเต้นและความไม่แน่นอน ชอบผจญภัย ยิ่งยากยิ่งดี ทริปที่ดีคือทริปที่บีบหัวใจและทำให้คุณเติบโต',
+        bg: 'linear-gradient(135deg,rgba(45,106,79,.10) 0%,rgba(45,106,79,.25) 100%)',
+        desc: 'คุณใช้ชีวิตเต็มที่ที่สุดเมื่ออยู่ในดินแดนที่ไม่คุ้นเคย ยิ่งยากยิ่งดี ยิ่งไกลยิ่งชอบ ความท้าทายคือเชื้อเพลิงของคุณ และทุกทริปคือบทใหม่ที่รอเขียน',
         parks: [
-            { nameTh:'ภูกระดึง', nameEn:'Phu Kradueng National Park', region:'อีสาน', desc:'เดินขึ้น 9 กม. สู่ที่ราบสูงสนสวย — challenge ที่คุ้มค่า', status:'open' },
-            { nameTh:'แก่งกระจาน', nameEn:'Kaeng Krachan National Park', region:'ภาคตะวันตก', desc:'อุทยานที่ใหญ่ที่สุดในไทย เส้นทาง multi-day trek สุดขีด', status:'partial' },
-            { nameTh:'ทีลอซู', nameEn:'Thi Lo Su Waterfall (Umphang)', region:'ภาคตะวันตก', desc:'น้ำตกที่ใหญ่ที่สุดในไทย การเดินทางที่เป็นการผจญภัยในตัวเอง', status:'open' },
+            { nameTh:'ภูกระดึง', nameEn:'Phu Kradueng National Park', region:'อีสาน', desc:'เดินขึ้น 9 กม. สู่ที่ราบสูงป่าสน — challenge ที่คุ้มค่าทุกก้าว', status:'open' },
+            { nameTh:'แก่งกระจาน', nameEn:'Kaeng Krachan National Park', region:'ภาคตะวันตก', desc:'อุทยานที่ใหญ่ที่สุดในไทย เส้นทาง multi-day trek สำหรับผู้กล้า', status:'partial' },
+            { nameTh:'อุ้มผาง', nameEn:'Umphang Wildlife Sanctuary', region:'ภาคตะวันตก', desc:'การเดินทางสู่ทีลอซูคือการผจญภัยในตัวเอง ถนนคดเคี้ยว 1,219 โค้ง', status:'open' },
         ],
     },
-    culture: {
-        icon: '🏛️', name: 'นักแสวงหาวัฒนธรรม', sub: 'The Cultural Seeker',
-        color: '#9B4DCA',
-        bg: 'linear-gradient(135deg,rgba(155,77,202,.12) 0%,rgba(155,77,202,.28) 100%)',
-        desc: 'คุณเดินทางเพื่อทำความเข้าใจผู้คนและวัฒนธรรม ธรรมชาติสำหรับคุณไม่ใช่แค่วิว แต่คือเรื่องราวที่ซ่อนอยู่รอการค้นพบ',
-        parks: [
-            { nameTh:'ผาแต้ม', nameEn:'Pha Taem National Park', region:'อีสาน', desc:'ภาพเขียนสีโบราณ 3,000 ปี ริมแม่น้ำโขง ประวัติศาสตร์ยาวนาน', status:'open' },
-            { nameTh:'ภูหินร่องกล้า', nameEn:'Phu Hin Rong Kla National Park', region:'ภาคเหนือ', desc:'อดีตฐานที่มั่น ประวัติศาสตร์การเมือง ธรรมชาติงาม', status:'open' },
-            { nameTh:'ภูพาน', nameEn:'Phu Phan National Park', region:'อีสาน', desc:'ป่าประวัติศาสตร์ วัฒนธรรมท้องถิ่น ใกล้จังหวัดสกลนคร', status:'open' },
-        ],
-    },
-    comfort: {
-        icon: '🛋️', name: 'นักท่องเที่ยวสบายๆ', sub: 'The Comfort Traveler',
-        color: '#C17A2B',
-        bg: 'linear-gradient(135deg,rgba(193,122,43,.12) 0%,rgba(193,122,43,.28) 100%)',
-        desc: 'คุณเดินทางเพื่อพักผ่อนจริงๆ ไม่ใช่เพื่อทรมานตัวเอง ความสะดวกสบาย บรรยากาศดี และไม่ต้องคิดอะไรมากคือนิยามทริปที่สมบูรณ์แบบของคุณ',
-        parks: [
-            { nameTh:'หมู่เกาะสิมิลัน', nameEn:'Mu Ko Similan National Park', region:'ภาคใต้', desc:'น้ำทะเลสีฟ้าใส ดำน้ำสวยงาม ที่พักบนเกาะ', status:'partial' },
-            { nameTh:'เอราวัณ', nameEn:'Erawan National Park', region:'ภาคตะวันตก', desc:'น้ำใสเย็น วิวสวย เดินทางง่าย เหมาะพักผ่อนทุกวัย', status:'open' },
-            { nameTh:'หมู่เกาะสุรินทร์', nameEn:'Mu Ko Surin National Park', region:'ภาคใต้', desc:'ห่างไกลความวุ่นวาย ปะการังสวย อากาศดีตลอดวัน', status:'partial' },
-        ],
-    },
-    aesthetic: {
-        icon: '📸', name: 'นักล่าความงาม', sub: 'The Aesthetic Traveler',
+    aesthete: {
+        img: 'brand_asset/Tourist%20Type/Aesthete.png',
+        name: 'Aesthete', sub: 'นักล่าสุนทรียะ',
         color: '#C04B7A',
-        bg: 'linear-gradient(135deg,rgba(192,75,122,.12) 0%,rgba(192,75,122,.28) 100%)',
-        desc: 'คุณมองเห็นความงามที่คนอื่นมองข้าม ทุก frame คือเรื่องราว ทุกจุดคือ potential shot อุทยานสำหรับคุณคือ studio กลางธรรมชาติ',
+        bg: 'linear-gradient(135deg,rgba(192,75,122,.10) 0%,rgba(192,75,122,.25) 100%)',
+        desc: 'คุณมองเห็นความงามที่คนอื่นมองข้าม แสง สี องค์ประกอบ — ทุกอย่างคือภาพ อุทยานสำหรับคุณคือ studio ขนาดใหญ่ที่ธรรมชาติเป็นผู้กำกับแสง',
         parks: [
             { nameTh:'ดอยอินทนนท์', nameEn:'Doi Inthanon National Park', region:'ภาคเหนือ', desc:'ทุ่งดอกไม้ กุหลาบพันปี ทะเลหมอก — ทุก frame เป็น wallpaper', status:'open' },
-            { nameTh:'ผาแต้ม', nameEn:'Pha Taem National Park', region:'อีสาน', desc:'พระอาทิตย์ขึ้นริมโขง หน้าผาสีส้ม — Golden hour ที่สมบูรณ์แบบ', status:'open' },
+            { nameTh:'ผาแต้ม', nameEn:'Pha Taem National Park', region:'อีสาน', desc:'พระอาทิตย์ขึ้นริมโขง หน้าผาสีส้ม — golden hour ที่สมบูรณ์แบบ', status:'open' },
             { nameTh:'เขาสก', nameEn:'Khao Sok National Park', region:'ภาคใต้', desc:'ทะเลสาบกลางป่า ภูเขาหินปูน — บรรยากาศที่ไม่เหมือนที่ไหน', status:'open' },
+        ],
+    },
+    meaning_finder: {
+        img: 'brand_asset/Tourist%20Type/Meaning%20Finder.png',
+        name: 'Meaning Finder', sub: 'นักค้นหาความหมาย',
+        color: '#7B3FA8',
+        bg: 'linear-gradient(135deg,rgba(123,63,168,.10) 0%,rgba(123,63,168,.25) 100%)',
+        desc: 'คุณเดินทางเพื่อทำความเข้าใจ ไม่ใช่แค่เพื่อดู ธรรมชาติและวัฒนธรรมสำหรับคุณคือบทสนทนาที่ลึกซึ้ง รอให้คุณฟังอย่างตั้งใจ',
+        parks: [
+            { nameTh:'ผาแต้ม', nameEn:'Pha Taem National Park', region:'อีสาน', desc:'ภาพเขียนสีโบราณอายุ 3,000 ปี บนหน้าผาริมโขง — ประวัติศาสตร์ที่จับต้องได้', status:'open' },
+            { nameTh:'ภูหินร่องกล้า', nameEn:'Phu Hin Rong Kla National Park', region:'ภาคเหนือ', desc:'อดีตฐานที่มั่น CPT ประวัติศาสตร์การเมืองไทยและธรรมชาติอยู่ร่วมกัน', status:'open' },
+            { nameTh:'ภูพาน', nameEn:'Phu Phan National Park', region:'อีสาน', desc:'ป่าดิบที่มีรอยเท้าประวัติศาสตร์ วัฒนธรรมอีสานที่ยังมีชีวิต', status:'open' },
+        ],
+    },
+    memories_collector: {
+        img: 'brand_asset/Tourist%20Type/Memories%20Collector.png',
+        name: 'Memories Collector', sub: 'นักเก็บความทรงจำ',
+        color: '#3B6FD4',
+        bg: 'linear-gradient(135deg,rgba(59,111,212,.10) 0%,rgba(59,111,212,.25) 100%)',
+        desc: 'คุณเดินทางเพื่อเก็บสะสมช่วงเวลา ทุกทริปคืออัลบั้มที่มีค่า คุณวางแผนอย่างพิถีพิถันเพื่อให้มั่นใจว่าจะไม่มีอะไรหลุดหายไปจากความทรงจำ',
+        parks: [
+            { nameTh:'เขาใหญ่', nameEn:'Khao Yai National Park', region:'ภาคกลาง', desc:'มรดกโลก UNESCO กิจกรรมหลากหลาย ช้างป่า น้ำตก ป่าดิบ — ครบจบในที่เดียว', status:'open' },
+            { nameTh:'ดอยอินทนนท์', nameEn:'Doi Inthanon National Park', region:'ภาคเหนือ', desc:'จุดสูงสุดในไทย ดอกไม้ ทะเลหมอก น้ำตก — moment สวยทุกก้าว', status:'open' },
+            { nameTh:'เอราวัณ', nameEn:'Erawan National Park', region:'ภาคตะวันตก', desc:'น้ำตก 7 ชั้น สีเขียวมรกต ทุกชั้นคือรูปที่อยากถ่าย', status:'open' },
+        ],
+    },
+    peace_seeker: {
+        img: 'brand_asset/Tourist%20Type/Peace%20Seeker.png',
+        name: 'Peace Seeker', sub: 'นักแสวงหาความสงบ',
+        color: '#4A8FA8',
+        bg: 'linear-gradient(135deg,rgba(74,143,168,.10) 0%,rgba(74,143,168,.25) 100%)',
+        desc: 'คุณมาอุทยานเพื่อ recharge ไม่ใช่เพื่อ perform เสียงน้ำ ลมเย็น และความเงียบที่ไม่มีการแจ้งเตือนโทรศัพท์ คือสิ่งที่คุณตามหา',
+        parks: [
+            { nameTh:'หมู่เกาะสุรินทร์', nameEn:'Mu Ko Surin National Park', region:'ภาคใต้ (อันดามัน)', desc:'ห่างจากฝั่ง เงียบ ปะการังสวย น้ำใส — ความสงบที่หายากในโลก', status:'partial' },
+            { nameTh:'ออบขาน', nameEn:'Ob Khan National Park', region:'ภาคเหนือ', desc:'หุบเขาน้อยๆ ริมลำน้ำ อากาศเย็น เงียบสงบ เหมาะนั่งฟังเสียงป่า', status:'open' },
+            { nameTh:'เขาสก', nameEn:'Khao Sok National Park', region:'ภาคใต้', desc:'เรือนแพกลางทะเลสาบ ตื่นมาเจอหมอกและเสียงนก — สงบจนลืมเวลา', status:'open' },
+        ],
+    },
+    gentle_traveler: {
+        img: 'brand_asset/Tourist%20Type/Gentle%20Traveler.png',
+        name: 'Gentle Traveler', sub: 'นักเดินทางใจดี',
+        color: '#C17A2B',
+        bg: 'linear-gradient(135deg,rgba(193,122,43,.10) 0%,rgba(193,122,43,.25) 100%)',
+        desc: 'คุณเดินทางเพื่อแบ่งปัน ความสุขของคนรอบข้างคือความสุขของคุณ ทริปที่ดีไม่ใช่ทริปที่คุณได้ทำทุกอย่างที่อยากทำ แต่คือทริปที่ทุกคนยิ้มได้เมื่อกลับบ้าน',
+        parks: [
+            { nameTh:'เอราวัณ', nameEn:'Erawan National Park', region:'ภาคตะวันตก', desc:'ว่ายน้ำ ปิกนิก เดินเบาๆ — เหมาะทุกวัย ทุกกลุ่ม', status:'open' },
+            { nameTh:'หมู่เกาะสิมิลัน', nameEn:'Mu Ko Similan National Park', region:'ภาคใต้ (อันดามัน)', desc:'ทะเลสวย ดำน้ำตื้น ชายหาดสะอาด — ทุกคนในกลุ่มมีความสุข', status:'partial' },
+            { nameTh:'เขาใหญ่', nameEn:'Khao Yai National Park', region:'ภาคกลาง', desc:'ที่พักหลากหลาย กิจกรรมครบ เดินทางง่าย เหมาะทริปครอบครัว', status:'open' },
         ],
     },
 };
 
-// score map: Love=2 Like=1 Neutral=0 Dislike=-1 Hate=-2
-// normalise to 0–100% for display: max possible per type = 2×(# questions for type)
-
-const TYPE_Q_COUNT = { planner:2, explorer:2, culture:2, comfort:2, aesthetic:2 };
+const TYPE_Q_COUNT = { world_explorer:2, aesthete:2, meaning_finder:2, memories_collector:2, peace_seeker:2, gentle_traveler:2 };
 
 // ── STATE ─────────────────────────────────────────────────────────
 let current = 0;
@@ -600,7 +633,9 @@ function showResults() {
     const t = TYPES[winKey];
 
     // Hero card
-    document.getElementById('rIcon').textContent = t.icon;
+    const imgEl = document.getElementById('rImg');
+    imgEl.src = t.img;
+    imgEl.alt = t.name;
     document.getElementById('rName').textContent = isHybrid
         ? `${t.name} + ${TYPES[sorted[1][0]].name}`
         : t.name;
@@ -616,11 +651,12 @@ function showResults() {
 
     // Score bars
     const typeLabels = {
-        planner:   '🗓️ นักวางแผน',
-        explorer:  '🧭 นักสำรวจ',
-        culture:   '🏛️ นักวัฒนธรรม',
-        comfort:   '🛋️ สบายๆ',
-        aesthetic: '📸 นักล่าความงาม',
+        world_explorer:     'World Explorer',
+        aesthete:           'Aesthete',
+        meaning_finder:     'Meaning Finder',
+        memories_collector: 'Memories Collector',
+        peace_seeker:       'Peace Seeker',
+        gentle_traveler:    'Gentle Traveler',
     };
     document.getElementById('scoreList').innerHTML = sorted.map(([key, pct]) => `
         <div class="score-row">

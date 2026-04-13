@@ -1021,24 +1021,18 @@
             transform: translateX(-50%) translateY(-8px);
         }
 
-        /* ── SEARCH BAR (always visible, top-center of map) ── */
+        /* ── SEARCH BAR (always visible, bottom-center of map) ── */
         #map-fs-search {
             display: block;
             position: absolute;
-            top: 12px;
+            top: auto;
+            bottom: 18px;
             left: 50%;
             transform: translateX(-50%);
             width: min(320px, calc(100% - 100px));
             z-index: 1001;
         }
-        /* In fullscreen: move search to bottom-center */
-        .parks-map-container.map-fs #map-fs-search {
-            top: auto;
-            bottom: 18px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        .parks-map-container.map-fs #map-fs-results {
+        #map-fs-results {
             top: auto;
             bottom: calc(100% + 8px);
         }
