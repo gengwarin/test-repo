@@ -1924,19 +1924,21 @@
     <div class="places-section">
         <div class="section-head fade-in-up" style="margin-bottom:32px">
             <div>
-                <h2 class="section-title">สถานที่ยอดนิยม<br><em>ทั่วประเทศไทย</em></h2>
-                <p class="section-sub" style="margin-top:8px;color:var(--muted);font-size:15px">170 สถานที่ เรียงตามความนิยม · ข้อมูลจาก Google</p>
+                <h2 class="section-title">แหล่งธรรมชาติยอดนิยม<br><em>ทั่วประเทศไทย</em></h2>
+                <p class="section-sub" style="margin-top:8px;color:var(--muted);font-size:15px">105 แหล่งธรรมชาติ · ข้อมูลจาก Google Places · รูปแบบความหนาแน่นนักท่องเที่ยว (historical average)</p>
             </div>
         </div>
         <div class="places-filters" id="placesFilters">
             <button class="places-filter-btn active" data-cat="all">ทั้งหมด</button>
-            <button class="places-filter-btn" data-cat="nature">🌿 ธรรมชาติ</button>
-            <button class="places-filter-btn" data-cat="attraction">🎡 ท่องเที่ยว</button>
-            <button class="places-filter-btn" data-cat="temple">🛕 วัด</button>
-            <button class="places-filter-btn" data-cat="beach">🏖️ ชายหาด</button>
-            <button class="places-filter-btn" data-cat="shopping">🛍️ ช้อปปิ้ง</button>
-            <button class="places-filter-btn" data-cat="food">🍜 อาหาร</button>
-            <button class="places-filter-btn" data-cat="museum">🏛️ พิพิธภัณฑ์</button>
+            <button class="places-filter-btn" data-cat="national_park">อุทยานแห่งชาติ</button>
+            <button class="places-filter-btn" data-cat="beach">ชายหาด</button>
+            <button class="places-filter-btn" data-cat="island">เกาะ</button>
+            <button class="places-filter-btn" data-cat="waterfall">น้ำตก</button>
+            <button class="places-filter-btn" data-cat="mountain">ภูเขา</button>
+            <button class="places-filter-btn" data-cat="viewpoint">จุดชมวิว</button>
+            <button class="places-filter-btn" data-cat="lake">ทะเลสาบ</button>
+            <button class="places-filter-btn" data-cat="cave">ถ้ำ</button>
+            <button class="places-filter-btn" data-cat="bay">อ่าว/ทะเล</button>
         </div>
         <div class="places-grid" id="placesGrid"></div>
         <div class="places-load-more" id="placesLoadMore">
@@ -3801,14 +3803,25 @@ navOverlay.addEventListener('click', closeSheet);
 // ── POPULAR PLACES ────────────────────────────────────────────────────────────
 
 const CAT_COLOR = {
-    nature:     { bg: 'rgba(15,108,57,.1)',  color: '#0F6C39', label: 'ธรรมชาติ' },
-    attraction: { bg: 'rgba(63,139,191,.1)', color: '#3F8BBF', label: 'ท่องเที่ยว' },
-    temple:     { bg: 'rgba(155,77,202,.1)', color: '#9B4DCA', label: 'วัด' },
-    beach:      { bg: 'rgba(74,143,168,.1)', color: '#4A8FA8', label: 'ชายหาด' },
-    shopping:   { bg: 'rgba(193,122,43,.1)', color: '#C17A2B', label: 'ช้อปปิ้ง' },
-    food:       { bg: 'rgba(233,78,59,.1)',  color: '#E94E3B', label: 'อาหาร' },
-    museum:     { bg: 'rgba(100,100,100,.1)',color: '#666',    label: 'พิพิธภัณฑ์' },
-    hotel:      { bg: 'rgba(90,90,90,.1)',   color: '#555',    label: 'ที่พัก' },
+    national_park: { bg: 'rgba(15,108,57,.12)',  color: '#0F6C39', label: 'อุทยานแห่งชาติ' },
+    beach:         { bg: 'rgba(29,153,194,.12)', color: '#1D99C2', label: 'ชายหาด' },
+    island:        { bg: 'rgba(0,128,128,.12)',  color: '#008080', label: 'เกาะ' },
+    waterfall:     { bg: 'rgba(52,120,200,.12)', color: '#3478C8', label: 'น้ำตก' },
+    mountain:      { bg: 'rgba(88,64,32,.12)',   color: '#584020', label: 'ภูเขา' },
+    viewpoint:     { bg: 'rgba(193,112,0,.12)',  color: '#C17000', label: 'จุดชมวิว' },
+    lake:          { bg: 'rgba(0,100,160,.12)',  color: '#0064A0', label: 'ทะเลสาบ' },
+    cave:          { bg: 'rgba(100,60,140,.12)', color: '#643C8C', label: 'ถ้ำ' },
+    bay:           { bg: 'rgba(0,150,180,.12)',  color: '#0096B4', label: 'อ่าว/ทะเล' },
+    hotspring:     { bg: 'rgba(200,60,30,.12)',  color: '#C83C1E', label: 'น้ำพุร้อน' },
+    valley:        { bg: 'rgba(120,160,40,.12)', color: '#78A028', label: 'หุบเขา' },
+    forest:        { bg: 'rgba(30,90,30,.12)',   color: '#1E5A1E', label: 'ป่า' },
+};
+
+const CROWD_LEVEL_LABEL = {
+    very_high: { label: 'นักท่องเที่ยวหนาแน่นมาก', color: '#C0392B' },
+    high:      { label: 'นักท่องเที่ยวหนาแน่น',     color: '#E67E22' },
+    medium:    { label: 'นักท่องเที่ยวปานกลาง',      color: '#F39C12' },
+    low:       { label: 'นักท่องเที่ยวน้อย',          color: '#27AE60' },
 };
 
 let placesShown = 24;
@@ -3827,10 +3840,21 @@ function renderPlaces() {
     const cat = CAT_COLOR;
 
     grid.innerHTML = visible.map(p => {
-        const c = cat[p.category] || cat.attraction;
-        const stars = '★'.repeat(Math.round(p.rating)) + '☆'.repeat(5 - Math.round(p.rating));
+        const c = CAT_COLOR[p.category] || CAT_COLOR.national_park;
         const reviews = p.reviews >= 1000 ? (p.reviews/1000).toFixed(1) + 'k' : p.reviews;
         const addr = p.address.split(',').slice(-2).join(',').trim();
+        const cl = CROWD_LEVEL_LABEL[p.crowd_level] || CROWD_LEVEL_LABEL.low;
+        // mini bar chart for crowd_by_day (Mon-Sun)
+        const dayLabels = ['จ','อ','พ','พฤ','ศ','ส','อา'];
+        const maxDay = Math.max(...p.crowd_by_day);
+        const dayBars = p.crowd_by_day.map((v,i) => {
+            const h = Math.round((v / 100) * 28);
+            const isWeekend = i >= 5;
+            return `<div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+                <div style="width:10px;height:${h}px;background:${isWeekend?c.color:'rgba(0,0,0,0.18)'};border-radius:2px 2px 0 0;min-height:2px"></div>
+                <div style="font-size:9px;color:#999">${dayLabels[i]}</div>
+            </div>`;
+        }).join('');
         return `<div class="place-card" onclick="flyToPlace(${p.lat},${p.lng},'${p.id}')">
             <div class="place-card-top">
                 <div class="place-card-name">${p.name}</div>
@@ -3839,7 +3863,10 @@ function renderPlaces() {
             <div class="place-card-rating">
                 <span class="place-stars">${p.rating.toFixed(1)}★</span>
                 <span class="place-reviews">${reviews} รีวิว</span>
+                <span style="margin-left:auto;font-size:10px;font-weight:600;color:${cl.color}">${cl.label}</span>
             </div>
+            <div style="margin:8px 0 4px;display:flex;align-items:flex-end;gap:3px;height:36px">${dayBars}</div>
+            <div style="font-size:10px;color:#888;margin-bottom:4px">ช่วงเวลาแนะนำ: <b style="color:#555">${p.season_label}</b></div>
             <div class="place-card-addr">${addr}</div>
         </div>`;
     }).join('');
@@ -3879,10 +3906,15 @@ function flyToPlace(lat, lng, id) {
             const p = PLACES_DATA.find(x => x.id === id);
             if (p) {
                 const el = document.getElementById(`place-popup-${id}`);
+                const cl2 = CROWD_LEVEL_LABEL[p.crowd_level] || CROWD_LEVEL_LABEL.low;
+                const cat2 = CAT_COLOR[p.category] || CAT_COLOR.national_park;
                 if (el) el.innerHTML = `
                     <div style="font-weight:700;font-size:14px;margin-bottom:4px">${p.name}</div>
-                    <div style="color:#F5A623;font-weight:700">${p.rating.toFixed(1)}★ <span style="color:#888;font-weight:400">${(p.reviews>=1000?(p.reviews/1000).toFixed(1)+'k':p.reviews)} รีวิว</span></div>
-                    ${p.hours.length ? `<div style="font-size:11px;color:#666;margin-top:6px">${p.hours[0]}</div>` : ''}
+                    <span style="font-size:10px;background:${cat2.bg};color:${cat2.color};padding:2px 7px;border-radius:100px;font-weight:600">${cat2.label}</span>
+                    <div style="color:#F5A623;font-weight:700;margin-top:6px">${p.rating.toFixed(1)}★ <span style="color:#888;font-weight:400">${(p.reviews>=1000?(p.reviews/1000).toFixed(1)+'k':p.reviews)} รีวิว</span></div>
+                    <div style="font-size:11px;font-weight:600;color:${cl2.color};margin-top:3px">${cl2.label}</div>
+                    ${p.season_label ? `<div style="font-size:10px;color:#777;margin-top:3px">ช่วงแนะนำ: ${p.season_label}</div>` : ''}
+                    ${p.hours?.length ? `<div style="font-size:10px;color:#666;margin-top:4px">${p.hours[0]}</div>` : ''}
                 `;
             }
         }, 1300);
@@ -3950,13 +3982,18 @@ function addPlacesLayer() {
         const coords = e.features[0].geometry.coordinates;
         const place = PLACES_DATA.find(x => x.id === p.id);
         const reviews = p.reviews >= 1000 ? (p.reviews/1000).toFixed(1)+'k' : p.reviews;
+        const cl = CROWD_LEVEL_LABEL[place?.crowd_level] || CROWD_LEVEL_LABEL.low;
+        const cat = CAT_COLOR[place?.category] || CAT_COLOR.national_park;
         new maplibregl.Popup({ closeButton: true, className: 'wavs-popup' })
             .setLngLat(coords)
             .setHTML(`
-                <div style="min-width:180px">
-                    <div style="font-weight:700;font-size:14px;margin-bottom:6px">${p.name}</div>
-                    <div style="color:#F5A623;font-weight:700;font-size:13px">${parseFloat(p.rating).toFixed(1)}★ <span style="color:#888;font-weight:400">${reviews} รีวิว</span></div>
-                    ${place?.hours?.length ? `<div style="font-size:11px;color:#666;margin-top:6px">${place.hours[0]}</div>` : ''}
+                <div style="min-width:200px">
+                    <div style="font-weight:700;font-size:14px;margin-bottom:4px">${p.name}</div>
+                    <span style="font-size:10px;background:${cat.bg};color:${cat.color};padding:2px 7px;border-radius:100px;font-weight:600">${cat.label}</span>
+                    <div style="color:#F5A623;font-weight:700;font-size:13px;margin-top:6px">${parseFloat(p.rating).toFixed(1)}★ <span style="color:#888;font-weight:400">${reviews} รีวิว</span></div>
+                    <div style="font-size:11px;font-weight:600;color:${cl.color};margin-top:4px">${cl.label}</div>
+                    ${place?.season_label ? `<div style="font-size:10px;color:#777;margin-top:3px">ช่วงแนะนำ: ${place.season_label}</div>` : ''}
+                    ${place?.hours?.length ? `<div style="font-size:10px;color:#666;margin-top:4px">${place.hours[0]}</div>` : ''}
                 </div>`)
             .addTo(parksMap);
     });
