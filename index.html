@@ -1899,10 +1899,8 @@
         <h2 class="section-title" data-i18n="parks_title">อุทยานแห่งชาติ<br><em>สถานะวันนี้</em></h2>
     </div>
     <div class="parks-filters">
-        <button class="pf-pill status-pill active" id="filter-all-btn" onclick="filterParks('all', this)"><span data-i18n="filter_all_text">ทั้งหมด</span>&nbsp;<span id="stat-n-total">–</span></button>
-        <button class="pf-pill status-pill" onclick="filterParks('fully_closed', this)"><span class="pf-dot" style="background:#B8583E"></span><span data-i18n="stat_closed">ปิดทั้งหมด</span>&nbsp;<span id="stat-n-closed">–</span></button>
-        <button class="pf-pill status-pill" onclick="filterParks('partial', this)"><span class="pf-dot" style="background:#BF8E38"></span><span data-i18n="stat_partial">บางส่วนปิด</span>&nbsp;<span id="stat-n-partial">–</span></button>
-        <button class="pf-pill status-pill" onclick="filterParks('open', this)"><span class="pf-dot" style="background:#3D9468"></span><span data-i18n="stat_open">เปิดปกติ</span>&nbsp;<span id="stat-n-open">–</span></button>
+        <button class="pf-pill status-pill active" id="filter-all-btn" onclick="filterKind('all', this)">ทั้งหมด</button>
+        <button class="pf-pill status-pill" onclick="filterKind('park', this)">เฉพาะอุทยาน</button>
     </div>
     <div class="parks-map-container" id="mapContainer">
         <div id="parks-map"></div>
@@ -2794,7 +2792,6 @@ function buildClusterIndex() {
         PARKS_CLOSURES.forEach(p => {
             if (!p.lat || !p.lon) return;
             if (!statusMatches(p.status, currentStatusFilter)) return;
-            if (currentTypeFilter !== 'all' && getParkNatureType(p) !== currentTypeFilter) return;
             if (!monthFilterMatches(p)) return;
             points.push({ type: 'Feature', geometry: { type: 'Point', coordinates: [p.lon, p.lat] }, properties: { id: p.id, kind: 'park', status: p.status } });
         });
@@ -2802,7 +2799,6 @@ function buildClusterIndex() {
     if (typeof ATTRACTIONS_DATA !== 'undefined') {
         ATTRACTIONS_DATA.forEach(a => {
             if (!statusMatches(a.status, currentStatusFilter)) return;
-            if (currentTypeFilter !== 'all' && getParkNatureType(a) !== currentTypeFilter) return;
             points.push({ type: 'Feature', geometry: { type: 'Point', coordinates: [a.lon, a.lat] }, properties: { id: a.id, kind: 'attraction', status: a.status } });
         });
     }
@@ -3232,6 +3228,19 @@ function filterParks(status, btn) {
     btn.classList.add('active');
     currentStatusFilter = status;
     applyFilters();
+}
+
+let currentKindFilter = 'all'; // 'all' | 'park'
+function filterKind(kind, btn) {
+    document.querySelectorAll('.pf-pill.status-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentKindFilter = kind;
+    applyFilters();
+    // toggle PLACES_DATA layer visibility
+    const vis = kind === 'all' ? 'visible' : 'none';
+    ['places-circle','places-label'].forEach(id => {
+        if (parksMap.getLayer(id)) parksMap.setLayoutProperty(id, 'visibility', vis);
+    });
 }
 
 function filterByType(type, btn) {
