@@ -2989,6 +2989,44 @@ function closeFsPanel() {
     document.getElementById('map-fs-panel')?.classList.remove('open');
 }
 
+// ── Helper: build crowd HTML block for left panel ──────────────────────────────
+function buildCrowdPanelHtml(crowd, accentColor) {
+    if (!crowd) return '';
+    const cl = CROWD_LEVEL_LABEL[crowd.crowd_level] || CROWD_LEVEL_LABEL.low;
+    const dayLabels = ['จ','อ','พ','พฤ','ศ','ส','อา'];
+    const dayBars = (crowd.crowd_by_day || []).map(function(v, i) {
+        const h = Math.round((v / 100) * 40);
+        const isWeekend = i >= 5;
+        const bg = isWeekend ? accentColor : 'rgba(0,0,0,0.12)';
+        const fc = isWeekend ? '#555' : '#aaa';
+        const fw = isWeekend ? '700' : '400';
+        return '<div style="display:flex;flex-direction:column;align-items:center;gap:2px">' +
+               '<div style="width:18px;height:' + h + 'px;background:' + bg + ';border-radius:3px 3px 0 0;min-height:2px"></div>' +
+               '<div style="font-size:9px;color:' + fc + ';font-weight:' + fw + '">' + dayLabels[i] + '</div>' +
+               '</div>';
+    }).join('');
+    const hours = crowd.crowd_by_hour || [];
+    const peakHour = hours.length ? hours.indexOf(Math.max.apply(null, hours)) : -1;
+    const peakStr = peakHour >= 0 ? (peakHour + ':00–' + (peakHour + 2) + ':00 น.') : '';
+    const reviews = crowd.reviews >= 1000 ? (crowd.reviews / 1000).toFixed(1) + 'k' : (crowd.reviews || '–');
+    const ratingHtml = crowd.rating
+        ? '<span style="margin-left:auto;color:#F5A623;font-weight:700">' + crowd.rating.toFixed(1) + '★ <span style="color:#aaa;font-weight:400">' + reviews + '</span></span>'
+        : '';
+    const peakHtml = peakStr ? '<span>⏰ <b style="color:#555">' + peakStr + '</b></span>' : '';
+    return '<div style="margin:12px 0 16px;padding:12px 14px;background:#f8fdf9;border-radius:10px;border:1px solid rgba(15,108,57,0.1)">' +
+           '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">' +
+           '<div style="font-size:10px;font-weight:700;color:#999;letter-spacing:.06em;flex:1">ความหนาแน่นนักท่องเที่ยว</div>' +
+           '<span style="font-size:10px;font-weight:700;color:' + cl.color + '">' + cl.label + '</span>' +
+           '</div>' +
+           '<div style="display:flex;align-items:flex-end;gap:4px;height:50px;margin-bottom:6px">' + dayBars + '</div>' +
+           '<div style="display:flex;gap:12px;font-size:11px;color:#888;flex-wrap:wrap">' +
+           peakHtml +
+           '<span>📅 <b style="color:#555">' + (crowd.season_label || '') + '</b></span>' +
+           ratingHtml +
+           '</div>' +
+           '</div>';
+}
+
 function openFsPanel(kind, id) {
     const panel = document.getElementById('map-fs-panel');
     const body  = document.getElementById('mfpBody');
@@ -3004,7 +3042,7 @@ function openFsPanel(kind, id) {
         const rows = (p.closures || []).map(c => {
             const siteTh = siteLabel(c.site, lang);
             const periodTh = periodLabel(c.period, lang);
-            return `<tr><td>${siteTh||'–'}</td><td>${periodTh||'–'}</td><td><span style="font-size:10px;font-weight:600;padding:2px 6px;border-radius:100px;background:${closureTypeColor(c.type)}22;color:${closureTypeColor(c.type)}">${typeLabel(c.type,lang)}</span></td></tr>`;
+            return '<tr><td>' + (siteTh||'–') + '</td><td>' + (periodTh||'–') + '</td><td><span style="font-size:10px;font-weight:600;padding:2px 6px;border-radius:100px;background:' + closureTypeColor(c.type) + '22;color:' + closureTypeColor(c.type) + '">' + typeLabel(c.type,lang) + '</span></td></tr>';
         }).join('');
         const displayName = lang === 'th' ? (p.name_th || p.name_en) : p.name_en;
         const subName = lang === 'th' ? p.name_en : '';
@@ -3014,63 +3052,86 @@ function openFsPanel(kind, id) {
         const colSite = lang === 'th' ? 'พื้นที่' : 'Site';
         const colPeriod = lang === 'th' ? 'ช่วงเวลา' : 'Period';
         const colType = lang === 'th' ? 'ประเภท' : 'Type';
+        const crowd = (typeof PARKS_CROWD !== 'undefined') ? PARKS_CROWD[p.id] : null;
+        const crowdHtml = buildCrowdPanelHtml(crowd, color);
+        const subLine = subName ? (subName + ' · ' + regionName) : regionName;
         title.textContent = displayName;
-        body.innerHTML = `
-            <div class="mfp-hero" id="mfpHeroWrap">
-                <img id="mfpHeroImg" src="" alt="" style="display:none">
-                <div class="mfp-hero-grad"></div>
-                <span class="mfp-status" style="background:${color}">${statusLabel}</span>
-            </div>
-            <div class="mfp-name-th">${displayName}</div>
-            ${subName ? `<div class="mfp-name-en">${subName} · ${regionName}</div>` : `<div class="mfp-name-en">${regionName}</div>`}
-            ${(() => {
-                const crowd = (typeof PARKS_CROWD !== 'undefined') ? PARKS_CROWD[p.id] : null;
-                if (!crowd) return '';
-                const cl = CROWD_LEVEL_LABEL[crowd.crowd_level] || CROWD_LEVEL_LABEL.low;
-                const dayLabels = ['จ','อ','พ','พฤ','ศ','ส','อา'];
-                const dayBars = (crowd.crowd_by_day || []).map((v,i) => {
-                    const h = Math.round((v/100)*40);
-                    const isWeekend = i >= 5;
-                    return `<div style="display:flex;flex-direction:column;align-items:center;gap:2px">
-                        <div style="width:18px;height:${h}px;background:${isWeekend ? color : 'rgba(0,0,0,0.12)'};border-radius:3px 3px 0 0;min-height:2px"></div>
-                        <div style="font-size:9px;color:${isWeekend?'#555':'#aaa'};font-weight:${isWeekend?'700':'400'}">${dayLabels[i]}</div>
-                    </div>`;
-                }).join('');
-                const hours = crowd.crowd_by_hour || [];
-                const peakHour = hours.indexOf(Math.max(...hours));
-                const peakStr = peakHour >= 0 ? `${peakHour}:00–${peakHour+2}:00 น.` : '';
-                const reviews = crowd.reviews >= 1000 ? (crowd.reviews/1000).toFixed(1)+'k' : (crowd.reviews||'–');
-                return `<div style="margin:12px 0 16px;padding:12px 14px;background:#f8fdf9;border-radius:10px;border:1px solid rgba(15,108,57,0.1)">
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-                        <div style="font-size:10px;font-weight:700;color:#999;letter-spacing:.06em;flex:1">ความหนาแน่นนักท่องเที่ยว</div>
-                        <span style="font-size:10px;font-weight:700;color:${cl.color}">${cl.label}</span>
-                    </div>
-                    <div style="display:flex;align-items:flex-end;gap:4px;height:50px;margin-bottom:6px">${dayBars}</div>
-                    <div style="display:flex;gap:12px;font-size:11px;color:#888;flex-wrap:wrap">
-                        ${peakStr ? `<span>⏰ <b style="color:#555">${peakStr}</b></span>` : ''}
-                        <span>📅 <b style="color:#555">${crowd.season_label}</b></span>
-                        ${crowd.rating ? `<span style="margin-left:auto;color:#F5A623;font-weight:700">${crowd.rating.toFixed(1)}★ <span style="color:#aaa;font-weight:400">${reviews}</span></span>` : ''}
-                    </div>
-                </div>`;
-            })()}
-            ${rows ? `<div class="mfp-section">${sectionTitle}</div>
-            <table class="mfp-table">
-                <thead><tr><th>${colSite}</th><th>${colPeriod}</th><th>${colType}</th></tr></thead>
-                <tbody>${rows}</tbody>
-            </table>` : `<p style="font-size:12px;color:var(--muted)">${noDataText}</p>`}`;
+        body.innerHTML =
+            '<div class="mfp-hero" id="mfpHeroWrap">' +
+            '<img id="mfpHeroImg" src="" alt="" style="display:none">' +
+            '<div class="mfp-hero-grad"></div>' +
+            '<span class="mfp-status" style="background:' + color + '">' + statusLabel + '</span>' +
+            '</div>' +
+            '<div class="mfp-name-th">' + displayName + '</div>' +
+            '<div class="mfp-name-en">' + subLine + '</div>' +
+            crowdHtml +
+            (rows
+                ? '<div class="mfp-section">' + sectionTitle + '</div>' +
+                  '<table class="mfp-table"><thead><tr><th>' + colSite + '</th><th>' + colPeriod + '</th><th>' + colType + '</th></tr></thead><tbody>' + rows + '</tbody></table>'
+                : '<p style="font-size:12px;color:var(--muted)">' + noDataText + '</p>');
 
         panel.classList.add('open');
 
         // Load photo
         const heroWrap = document.getElementById('mfpHeroWrap');
-        heroWrap.style.background = `linear-gradient(150deg,${color}22 0%,${color}55 100%)`;
-        const wikiQ = p.name_en; // name_en already includes "National Park"
+        heroWrap.style.background = 'linear-gradient(150deg,' + color + '22 0%,' + color + '55 100%)';
+        const wikiQ = p.name_en;
         const ck = 'mfp_' + p.id;
         if (parkPhotoCache[ck]) {
             const img = document.getElementById('mfpHeroImg');
             if (img) { img.src = parkPhotoCache[ck].src; img.style.display = 'block'; }
         } else {
             fetchWikiPhoto(wikiQ, src => {
+                if (!src) return;
+                parkPhotoCache[ck] = { src };
+                const img = document.getElementById('mfpHeroImg');
+                if (img && panel.classList.contains('open')) { img.src = src; img.style.display = 'block'; }
+            });
+        }
+    }
+
+    if (kind === 'attraction' && typeof ATTRACTIONS_DATA !== 'undefined') {
+        const a = ATTRACTIONS_DATA.find(x => x.id === id);
+        if (!a) return;
+        const color = PARK_STATUS_COLOR[a.status] || '#aaa';
+        const lang  = currentLang || 'th';
+        const statusLabel = (PARK_STATUS_LABEL[lang] || PARK_STATUS_LABEL.th)[a.status] || '';
+        const openLabel = lang === 'en' ? 'Open year-round' : 'เปิดตลอดปี';
+        const rows = (a.closures || []).map(c => {
+            const isOpen = c.open_yr && c.period === '–';
+            const periodTh = c.period === '–' ? (isOpen ? openLabel : '–') : periodLabel(c.period, lang);
+            const rowColor = isOpen ? '#999' : '#D4820E';
+            return '<tr><td>' + siteLabel(c.site, lang) + '</td><td style="color:' + rowColor + '">' + periodTh + '</td><td style="font-size:11px;color:#aaa">' + (c.reason || '–') + '</td></tr>';
+        }).join('');
+        const crowd = (typeof PARKS_CROWD !== 'undefined') ? PARKS_CROWD[a.id] : null;
+        const crowdHtml = buildCrowdPanelHtml(crowd, color);
+        const sectionTitle = lang === 'th' ? 'รายการปิด' : 'Closures';
+        const colSite = lang === 'th' ? 'แหล่งท่องเที่ยว' : 'Attraction';
+        const colPeriod = lang === 'th' ? 'ช่วงปิด' : 'Closed Period';
+        const colReason = lang === 'th' ? 'สาเหตุ' : 'Reason';
+        title.textContent = a.name_th;
+        body.innerHTML =
+            '<div class="mfp-hero" id="mfpHeroWrap">' +
+            '<img id="mfpHeroImg" src="" alt="" style="display:none">' +
+            '<div class="mfp-hero-grad"></div>' +
+            '<span class="mfp-status" style="background:' + color + '">' + statusLabel + '</span>' +
+            '</div>' +
+            '<div class="mfp-name-th">' + a.name_th + '</div>' +
+            '<div class="mfp-name-en">' + (a.province || '') + '</div>' +
+            crowdHtml +
+            '<div class="mfp-section">' + sectionTitle + '</div>' +
+            '<table class="mfp-table"><thead><tr><th>' + colSite + '</th><th>' + colPeriod + '</th><th>' + colReason + '</th></tr></thead><tbody>' + rows + '</tbody></table>';
+
+        panel.classList.add('open');
+
+        const heroWrap = document.getElementById('mfpHeroWrap');
+        heroWrap.style.background = 'linear-gradient(150deg,' + color + '22 0%,' + color + '55 100%)';
+        const ck = 'mfp_att_' + a.id;
+        if (parkPhotoCache[ck]) {
+            const img = document.getElementById('mfpHeroImg');
+            if (img) { img.src = parkPhotoCache[ck].src; img.style.display = 'block'; }
+        } else {
+            fetchWikiPhoto(a.name_th, src => {
                 if (!src) return;
                 parkPhotoCache[ck] = { src };
                 const img = document.getElementById('mfpHeroImg');
