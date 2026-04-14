@@ -1904,16 +1904,6 @@
         <button class="pf-pill status-pill" onclick="filterParks('partial', this)"><span class="pf-dot" style="background:#BF8E38"></span><span data-i18n="stat_partial">บางส่วนปิด</span>&nbsp;<span id="stat-n-partial">–</span></button>
         <button class="pf-pill status-pill" onclick="filterParks('open', this)"><span class="pf-dot" style="background:#3D9468"></span><span data-i18n="stat_open">เปิดปกติ</span>&nbsp;<span id="stat-n-open">–</span></button>
     </div>
-    <div class="parks-filters-type">
-        <span class="pf-label">ประเภท</span>
-        <button class="pf-pill type-pill active" onclick="filterByType('all', this)" title="ทั้งหมด">ทั้งหมด</button>
-        <button class="pf-pill type-pill" onclick="filterByType('waterfall', this)" title="น้ำตก">🌊</button>
-        <button class="pf-pill type-pill" onclick="filterByType('sea', this)" title="ทะเล / เกาะ">🏖️</button>
-        <button class="pf-pill type-pill" onclick="filterByType('mountain', this)" title="ดอย">⛰️</button>
-        <button class="pf-pill type-pill" onclick="filterByType('cave', this)" title="ถ้ำ">🕳️</button>
-        <button class="pf-pill type-pill" onclick="filterByType('cliff', this)" title="ผา / แก่ง">🪨</button>
-        <button class="pf-pill type-pill" onclick="filterByType('forest', this)" title="ป่า">🌿</button>
-    </div>
     <div class="parks-map-container" id="mapContainer">
         <div id="parks-map"></div>
         <!-- Fullscreen left panel -->
@@ -1971,27 +1961,6 @@
         </div>
     </div>
     <div class="parks-updated" data-i18n="parks_updated">ข้อมูล ณ เมษายน 2569</div>
-
-    <!-- ── MONTHLY CLOSURE PANEL ── -->
-    <div class="month-closure-panel fade-in-up">
-        <div class="mcp-header">
-            <div class="mcp-title-wrap">
-                <span class="mcp-title">ช่วงปิด รายเดือน</span>
-                <span class="mcp-subtitle" id="tlCount">เลือกเดือนเพื่อกรองแผนที่ด้านบน</span>
-            </div>
-            <button class="mcp-reset" id="tlReset" onclick="setMonthFilter(null)" style="display:none">← แสดงทั้งปี</button>
-        </div>
-        <div class="month-grid" id="tlMonths"><!-- built by JS --></div>
-        <div class="choro-legend">
-            <span class="choro-legend-label">ความหนาแน่นการปิด/จังหวัด</span>
-            <div class="choro-legend-swatches">
-                <div class="choro-swatch"><span style="background:#fde8d8;border:1px solid #e0c0a0"></span>1 แห่ง</div>
-                <div class="choro-swatch"><span style="background:#f4a563"></span>2–3 แห่ง</div>
-                <div class="choro-swatch"><span style="background:#e07030"></span>4–6 แห่ง</div>
-                <div class="choro-swatch"><span style="background:#b8401a"></span>7+ แห่ง</div>
-            </div>
-        </div>
-    </div>
 
     <!-- ── REASON BREAKDOWN CHART ── -->
     <div class="reason-chart-panel fade-in-up" id="reasonChartPanel">
