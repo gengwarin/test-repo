@@ -139,6 +139,101 @@ PLACES = [
     ("Mae Hong Son Valley Thailand",           "valley"),
     ("Khao Yai Forest Thailand",               "forest"),
     ("Khao Sok Rainforest Thailand",           "forest"),
+
+    # ── ชายหาด เพิ่ม (อ่าวไทย + ภาคใต้) ──────────────────────────────────────
+    ("Ao Manao Beach Prachuap Khiri Khan",     "beach"),
+    ("Hat Sai Kaew Koh Samet",                 "beach"),
+    ("Koh Lan Beach Pattaya",                  "beach"),
+    ("Hat Sichon Beach Nakhon Si Thammarat",   "beach"),
+    ("Hat Khanom Nakhon Si Thammarat",         "beach"),
+    ("Ban Krut Beach Prachuap",                "beach"),
+    ("Hat Wanakon Beach Prachuap",             "beach"),
+    ("Pakbara Beach Satun",                    "beach"),
+    ("Hat Yao Beach Trang Thailand",           "beach"),
+    ("Haad Rin Beach Koh Phangan",             "beach"),
+    ("Thong Nai Pan Beach Koh Phangan",        "beach"),
+    ("Maenam Beach Koh Samui",                 "beach"),
+    ("Bophut Beach Koh Samui",                 "beach"),
+    ("Hat Yong Ling Trang Thailand",           "beach"),
+    ("Hat Pak Meng Trang Thailand",            "beach"),
+
+    # ── เกาะ เพิ่ม ──────────────────────────────────────────────────────────
+    ("Koh Sichang Chonburi Thailand",          "island"),
+    ("Koh Lan Pattaya Thailand",               "island"),
+    ("Koh Wai Kanchanaburi Thailand",          "island"),
+    ("Koh Ngai Trang Thailand",                "island"),
+    ("Koh Libong Trang Thailand",              "island"),
+    ("Koh Tarutao Satun Thailand",             "island"),
+    ("Koh Adang Satun Thailand",               "island"),
+    ("Koh Rok Krabi Thailand",                 "island"),
+    ("Koh Racha Phuket Thailand",              "island"),
+    ("Koh Yao Noi Phang Nga Thailand",         "island"),
+
+    # ── น้ำตก เพิ่ม (ภาคเหนือ / อีสาน / กลาง) ──────────────────────────────
+    ("Mok Fa Waterfall Chiang Mai",            "waterfall"),
+    ("Wachirathan Waterfall Doi Inthanon",     "waterfall"),
+    ("Sirithan Waterfall Doi Inthanon",        "waterfall"),
+    ("Namtok Mae Klang Chiang Mai",            "waterfall"),
+    ("Namtok Mae Ya Chiang Mai",               "waterfall"),
+    ("Namtok Huai Kaeo Chiang Mai",            "waterfall"),
+    ("Namtok Mae Surin Mae Hong Son",          "waterfall"),
+    ("Kaeng Sopha Waterfall Phitsanulok",      "waterfall"),
+    ("Saeng Chan Waterfall Nakhon Ratchasima", "waterfall"),
+    ("Namtok Chattrakan Phitsanulok",          "waterfall"),
+    ("Namtok Wang Kaew Loei",                  "waterfall"),
+    ("Namtok Phrom Lok Nakhon Si Thammarat",   "waterfall"),
+    ("Namtok Ton Nga Chang Songkhla",          "waterfall"),
+    ("Namtok Khlong Lan Kamphaeng Phet",       "waterfall"),
+    ("Namtok Siriphum Doi Inthanon",           "waterfall"),
+    ("Namtok Tat Mok Chaiyaphum",              "waterfall"),
+    ("Namtok Huai Yang Prachuap",              "waterfall"),
+    ("Namtok Phlio Waterfall Chanthaburi",     "waterfall"),
+    ("Kroeng Krawia Waterfall Kanchanaburi",   "waterfall"),
+    ("Namtok Sai Yok Yai Kanchanaburi",        "waterfall"),
+
+    # ── จุดชมวิว / ทะเลหมอก ──────────────────────────────────────────────────
+    ("Doi Mon Jam Chiang Mai",                 "viewpoint"),
+    ("Phu Thap Boek Phetchabun",               "viewpoint"),
+    ("Phu Pha Man Khon Kaen",                  "viewpoint"),
+    ("Noen Chang Suek Kanchanaburi",           "viewpoint"),
+    ("Lan Hin Pum Phitsanulok",                "viewpoint"),
+    ("Kong Lor Cave Khammuan Viewpoint",       "viewpoint"),
+    ("Doi Luang Tak Viewpoint",                "viewpoint"),
+    ("Khao Sam Roi Yot Viewpoint",             "viewpoint"),
+    ("Lan Hin Dat Phetchabun",                 "viewpoint"),
+    ("Doi Chiang Dao Chiang Mai",              "mountain"),
+    ("Doi Samur Dao Nan Thailand",             "viewpoint"),
+    ("Yod Doi Luang Chiang Dao",               "mountain"),
+
+    # ── ทะเลสาบ / แหล่งน้ำ / แก่ง เพิ่ม ────────────────────────────────────
+    ("Rajjaprabha Dam Khao Sok",               "lake"),
+    ("Srinakarin Dam Kanchanaburi",            "lake"),
+    ("Kaeng Krachan Dam Phetchaburi",          "lake"),
+    ("Ubolratana Dam Khon Kaen",               "lake"),
+    ("Lam Pao Dam Kalasin",                    "lake"),
+    ("Sirindhorn Dam Ubon Ratchathani",        "lake"),
+    ("Bung Kan Reservoir Nong Khai",           "lake"),
+    ("Huai Nam Man Loei",                      "lake"),
+
+    # ── ถ้ำ เพิ่ม ────────────────────────────────────────────────────────────
+    ("Tham Pha Thai Cave Phayao",              "cave"),
+    ("Tham Khao Bin Ratchaburi",               "cave"),
+    ("Tham Lot Cave Chiang Rai",               "cave"),
+    ("Tham Chiang Dao Cave Chiang Mai",        "cave"),
+    ("Tham Erawan Cave Loei",                  "cave"),
+
+    # ── อ่าว / ดำน้ำ / ทะเล เพิ่ม ──────────────────────────────────────────
+    ("Hin Daeng Hin Muang Diving Krabi",       "bay"),
+    ("Shark Point Diving Phuket",              "bay"),
+    ("Sail Rock Koh Tao Diving",               "bay"),
+    ("Koh Ha Krabi Diving Thailand",           "bay"),
+    ("Richelieu Rock Similan Diving",          "bay"),
+
+    # ── น้ำพุร้อน / ป่า เพิ่ม ────────────────────────────────────────────────
+    ("Fang Hot Spring Chiang Mai",             "hotspring"),
+    ("San Kamphaeng Hot Spring Chiang Mai",    "hotspring"),
+    ("Doi Inthanon Forest Trail Chiang Mai",   "forest"),
+    ("Khao Yai Wildlife Thailand",             "forest"),
 ]
 
 # ── Crowd pattern templates by place type ──────────────────────────────────────
