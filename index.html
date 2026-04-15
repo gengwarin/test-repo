@@ -2354,12 +2354,13 @@ document.getElementById('parks-map').appendChild(legendEl);
 function makeParkIconEl(status) {
     const color = PARK_STATUS_COLOR[status] || '#aaa';
     const el = document.createElement('div');
-    el.style.cssText = `width:22px;height:22px;cursor:pointer;transition:transform 0.15s ease,filter 0.15s ease`;
-    el.innerHTML = `<svg width="22" height="22" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+    el.style.cssText = `width:22px;height:22px;cursor:pointer`;
+    el.innerHTML = `<svg width="22" height="22" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg" style="transition:transform 0.15s ease,filter 0.15s ease;transform-origin:50% 50%;display:block">
         <circle cx="11" cy="11" r="8" fill="${color}" stroke="white" stroke-width="2.5"/>
     </svg>`;
-    el.addEventListener('mouseenter', () => { el.style.transform = 'scale(1.35)'; el.style.filter = 'drop-shadow(0 2px 6px rgba(0,0,0,0.35))'; });
-    el.addEventListener('mouseleave', () => { el.style.transform = ''; el.style.filter = ''; });
+    const svg = el.querySelector('svg');
+    el.addEventListener('mouseenter', () => { svg.style.transform = 'scale(1.45)'; svg.style.filter = 'drop-shadow(0 2px 8px rgba(0,0,0,0.4))'; });
+    el.addEventListener('mouseleave', () => { svg.style.transform = ''; svg.style.filter = ''; });
     return el;
 }
 
@@ -2995,10 +2996,14 @@ if (typeof PARKS_CLOSURES !== 'undefined') {
         else                                      nOpen++;
     });
     const nTotal = PARKS_CLOSURES.length;
-    document.getElementById('stat-n-total').textContent   = nTotal;
-    document.getElementById('stat-n-closed').textContent  = nClosed;
-    document.getElementById('stat-n-partial').textContent = nPartial;
-    document.getElementById('stat-n-open').textContent    = nOpen;
+    const _sTotal   = document.getElementById('stat-n-total');
+    const _sClosed  = document.getElementById('stat-n-closed');
+    const _sPartial = document.getElementById('stat-n-partial');
+    const _sOpen    = document.getElementById('stat-n-open');
+    if (_sTotal)   _sTotal.textContent   = nTotal;
+    if (_sClosed)  _sClosed.textContent  = nClosed;
+    if (_sPartial) _sPartial.textContent = nPartial;
+    if (_sOpen)    _sOpen.textContent    = nOpen;
 }
 
 let activePopup = null;
