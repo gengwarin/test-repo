@@ -3159,34 +3159,40 @@ function openFsPanel(kind, id) {
         const peakHour = hours.indexOf(Math.max(...hours));
         const peakStr = peakHour >= 0 ? `${peakHour}:00–${peakHour+2}:00 น.` : '';
 
+        const starsHtml = '★'.repeat(Math.round(p.rating)) + '☆'.repeat(5 - Math.round(p.rating));
+        const peakHtml2 = peakStr ? '<span>⏰ ช่วงคนมาก: <b style="color:#555">' + peakStr + '</b></span>' : '';
+        const hoursHtml = p.hours && p.hours.length
+            ? '<div class="mfp-section">เวลาทำการ</div><div style="font-size:12px;color:#555;line-height:1.8">' +
+              p.hours.map(h => '<div>' + h + '</div>').join('') + '</div>'
+            : '';
+        const addressShort = p.address.split(',').slice(-2).join(',').trim();
         title.textContent = p.name;
-        body.innerHTML = `
-            <div class="mfp-hero" id="mfpHeroWrap" style="background:linear-gradient(150deg,${cat.color}18 0%,${cat.color}44 100%)">
-                <img id="mfpHeroImg" src="" alt="" style="display:none">
-                <div class="mfp-hero-grad"></div>
-                <span class="mfp-status" style="background:${cat.color}">${cat.label}</span>
-            </div>
-            <div class="mfp-name-th">${p.name}</div>
-            <div class="mfp-name-en">${p.address.split(',').slice(-2).join(',').trim()}</div>
-            <div style="display:flex;align-items:center;gap:12px;margin:12px 0 16px">
-                <div style="font-size:26px;font-weight:800;color:#F5A623;line-height:1">${p.rating.toFixed(1)}</div>
-                <div>
-                    <div style="font-size:13px;color:#F5A623;font-weight:700">${'★'.repeat(Math.round(p.rating))}${'☆'.repeat(5-Math.round(p.rating))}</div>
-                    <div style="font-size:11px;color:#aaa">${reviews} รีวิว</div>
-                </div>
-                <div style="margin-left:auto;text-align:right">
-                    <div style="font-size:11px;font-weight:700;color:${cl.color}">${cl.label}</div>
-                    <div style="font-size:10px;color:#aaa">ระดับความหนาแน่น</div>
-                </div>
-            </div>
-            <div class="mfp-section">ความหนาแน่นนักท่องเที่ยวตามวัน</div>
-            <div style="display:flex;align-items:flex-end;gap:5px;height:54px;margin:8px 0 4px">${dayBars}</div>
-            <div style="display:flex;gap:14px;font-size:11px;color:#888;margin-bottom:16px;flex-wrap:wrap">
-                ${peakStr ? `<span>⏰ ช่วงคนมาก: <b style="color:#555">${peakStr}</b></span>` : ''}
-                <span>📅 ฤดูกาล: <b style="color:#555">${p.season_label||''}</b></span>
-            </div>
-            ${p.hours?.length ? `<div class="mfp-section">เวลาทำการ</div>
-            <div style="font-size:12px;color:#555;line-height:1.8">${p.hours.map(h=>`<div>${h}</div>`).join('')}</div>` : ''}`;
+        body.innerHTML =
+            '<div class="mfp-hero" id="mfpHeroWrap" style="background:linear-gradient(150deg,' + cat.color + '18 0%,' + cat.color + '44 100%)">' +
+            '<img id="mfpHeroImg" src="" alt="" style="display:none">' +
+            '<div class="mfp-hero-grad"></div>' +
+            '<span class="mfp-status" style="background:' + cat.color + '">' + cat.label + '</span>' +
+            '</div>' +
+            '<div class="mfp-name-th">' + p.name + '</div>' +
+            '<div class="mfp-name-en">' + addressShort + '</div>' +
+            '<div style="display:flex;align-items:center;gap:12px;margin:12px 0 16px">' +
+            '<div style="font-size:26px;font-weight:800;color:#F5A623;line-height:1">' + p.rating.toFixed(1) + '</div>' +
+            '<div>' +
+            '<div style="font-size:13px;color:#F5A623;font-weight:700">' + starsHtml + '</div>' +
+            '<div style="font-size:11px;color:#aaa">' + reviews + ' รีวิว</div>' +
+            '</div>' +
+            '<div style="margin-left:auto;text-align:right">' +
+            '<div style="font-size:11px;font-weight:700;color:' + cl.color + '">' + cl.label + '</div>' +
+            '<div style="font-size:10px;color:#aaa">ระดับความหนาแน่น</div>' +
+            '</div>' +
+            '</div>' +
+            '<div class="mfp-section">ความหนาแน่นนักท่องเที่ยวตามวัน</div>' +
+            '<div style="display:flex;align-items:flex-end;gap:5px;height:54px;margin:8px 0 4px">' + dayBars + '</div>' +
+            '<div style="display:flex;gap:14px;font-size:11px;color:#888;margin-bottom:16px;flex-wrap:wrap">' +
+            peakHtml2 +
+            '<span>📅 ฤดูกาล: <b style="color:#555">' + (p.season_label || '') + '</b></span>' +
+            '</div>' +
+            hoursHtml;
 
         panel.classList.add('open');
 
