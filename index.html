@@ -1819,6 +1819,7 @@
     </style>
 </head>
 <body>
+<div id="_errBanner" style="display:none;position:fixed;top:0;left:0;right:0;z-index:99999;background:#c0392b;color:#fff;padding:10px 14px;font-size:12px;font-family:monospace;word-break:break-all;white-space:pre-wrap;max-height:40vh;overflow:auto"></div>
 
 <!-- ════════════════════════════ SPLASH ════════════════════════════ -->
 <!-- ════════════════════ PARK DETAIL SLIDE-OVER ════════════════════ -->
@@ -2178,6 +2179,23 @@ if ('serviceWorker' in navigator) {
 })();
 </script>
 <script>
+// ── GLOBAL ERROR CATCHER (remove after debugging) ──────────────────────────────
+window.onerror = function(msg, src, line, col, err) {
+    const b = document.getElementById('_errBanner');
+    if (b) {
+        b.style.display = 'block';
+        b.textContent += 'JS ERROR: ' + msg + '\n  at line ' + line + '\n  ' + (err && err.stack ? err.stack.split('\n').slice(0,3).join('\n') : '') + '\n\n';
+    }
+    return false;
+};
+window.addEventListener('unhandledrejection', function(e) {
+    const b = document.getElementById('_errBanner');
+    if (b) {
+        b.style.display = 'block';
+        b.textContent += 'PROMISE ERROR: ' + (e.reason || e) + '\n\n';
+    }
+});
+
 // ── LANG (must be before map code so buildParkPopup can read it) ──────────────
 let currentLang = 'th';
 
@@ -2336,10 +2354,12 @@ document.getElementById('parks-map').appendChild(legendEl);
 function makeParkIconEl(status) {
     const color = PARK_STATUS_COLOR[status] || '#aaa';
     const el = document.createElement('div');
-    el.style.cssText = `width:22px;height:22px;cursor:pointer`;
+    el.style.cssText = `width:22px;height:22px;cursor:pointer;transition:transform 0.15s ease,filter 0.15s ease`;
     el.innerHTML = `<svg width="22" height="22" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
         <circle cx="11" cy="11" r="8" fill="${color}" stroke="white" stroke-width="2.5"/>
     </svg>`;
+    el.addEventListener('mouseenter', () => { el.style.transform = 'scale(1.35)'; el.style.filter = 'drop-shadow(0 2px 6px rgba(0,0,0,0.35))'; });
+    el.addEventListener('mouseleave', () => { el.style.transform = ''; el.style.filter = ''; });
     return el;
 }
 
@@ -2848,8 +2868,10 @@ function renderClusters() {
             }
             const color = PARK_STATUS_COLOR[dominantStatus] || '#aaa';
             const el = document.createElement('div');
-            el.style.cssText = `background:${color};border-radius:50%;width:${size}px;height:${size}px;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px rgba(0,0,0,0.25);border:2px solid rgba(255,255,255,0.5);font-size:9px;font-weight:600;color:#fff;font-family:'Cloud Soft','Sarabun',sans-serif;cursor:pointer`;
+            el.style.cssText = `background:${color};border-radius:50%;width:${size}px;height:${size}px;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px rgba(0,0,0,0.25);border:2px solid rgba(255,255,255,0.5);font-size:9px;font-weight:600;color:#fff;font-family:'Cloud Soft','Sarabun',sans-serif;cursor:pointer;transition:transform 0.15s ease,box-shadow 0.15s ease`;
             el.textContent = count;
+            el.addEventListener('mouseenter', () => { el.style.transform = 'scale(1.15)'; el.style.boxShadow = '0 5px 18px rgba(0,0,0,0.35)'; });
+            el.addEventListener('mouseleave', () => { el.style.transform = ''; el.style.boxShadow = '0 3px 12px rgba(0,0,0,0.25)'; });
             el.addEventListener('click', () => {
                 const expansionZoom = Math.min(scIndex.getClusterExpansionZoom(props.cluster_id), 16);
                 parksMap.flyTo({ center: [lng, lat], zoom: expansionZoom, duration: 600 });
