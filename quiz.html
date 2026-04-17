@@ -382,7 +382,7 @@
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                         <path d="M11 7H3M7 11L3 7l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    ย้อนกลับ
+                    <span data-i18n="btn_back">ย้อนกลับ</span>
                 </button>
             </div>
         </div>
@@ -395,7 +395,7 @@
                 <div class="result-card-inner">
                     <img class="result-type-img" id="rImg" src="" alt="">
                     <div class="result-card-text">
-                        <div class="result-kicker">บุคลิกการท่องเที่ยวของคุณคือ</div>
+                        <div class="result-kicker" data-i18n="result_kicker">บุคลิกการท่องเที่ยวของคุณคือ</div>
                         <div class="result-name" id="rName"></div>
                         <div class="result-sub" id="rSub"></div>
                         <div class="result-desc" id="rDesc"></div>
@@ -403,10 +403,10 @@
                 </div>
             </div>
 
-            <div class="section-label">คะแนนรวมของคุณ</div>
+            <div class="section-label" data-i18n="result_score_label">คะแนนรวมของคุณ</div>
             <div class="score-list" id="scoreList"></div>
 
-            <div class="section-label">อุทยานที่เหมาะกับคุณ</div>
+            <div class="section-label" data-i18n="result_parks_label">อุทยานที่เหมาะกับคุณ</div>
             <div class="park-grid" id="parkGrid"></div>
 
             <div class="result-actions">
@@ -417,15 +417,15 @@
                         <circle cx="2.5" cy="7.5" r="1.5" stroke="currentColor" stroke-width="1.4"/>
                         <path d="M10.5 3.5L4 6.5M4 8.5l6.5 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
                     </svg>
-                    แชร์ผลลัพธ์
+                    <span data-i18n="btn_share">แชร์ผลลัพธ์</span>
                 </button>
-                <button class="btn-outline" onclick="retake()">ทำใหม่อีกครั้ง</button>
+                <button class="btn-outline" onclick="retake()"><span data-i18n="btn_retake">ทำใหม่อีกครั้ง</span></button>
                 <a href="index.html#parks-section" class="btn-primary">
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                         <path d="M7 1C4.8 1 3 2.8 3 5c0 3 4 8 4 8s4-5 4-8c0-2.2-1.8-4-4-4z" stroke="currentColor" stroke-width="1.4" fill="none"/>
                         <circle cx="7" cy="5" r="1.3" stroke="currentColor" stroke-width="1.4" fill="none"/>
                     </svg>
-                    ดูบน Map
+                    <span data-i18n="btn_map">ดูบน Map</span>
                 </a>
             </div>
         </div>
@@ -436,21 +436,84 @@
 <div class="toast" id="toast">คัดลอกผลลัพธ์แล้ว ✓</div>
 
 <script>
+// ── LANG ──────────────────────────────────────────────────────────
+let lang = 'th';
+
+const I18N = {
+    th: {
+        nav_status: 'สถานะอุทยาน', nav_about: 'เกี่ยวกับ', nav_news: 'ข่าวสาร', nav_quiz: 'แบบทดสอบ',
+        start_tag: 'WAVS · แบบทดสอบ',
+        start_sub: 'ตอบ 12 คำถามสั้นๆ แล้วค้นพบสไตล์การท่องเที่ยวของตัวเอง พร้อมอุทยานแห่งชาติที่เหมาะกับคุณ',
+        start_btn: 'เริ่มทดสอบ', start_note: 'ใช้เวลา ~2 นาที · ไม่มีคำตอบผิดหรือถูก',
+        label_agree: 'ชอบ', label_disagree: 'ไม่ชอบ',
+        btn_back: 'ย้อนกลับ', btn_share: 'แชร์ผลลัพธ์', btn_retake: 'ทำใหม่อีกครั้ง', btn_map: 'ดูบน Map',
+        result_kicker: 'บุคลิกการท่องเที่ยวของคุณคือ',
+        result_score_label: 'คะแนนรวมของคุณ', result_parks_label: 'อุทยานที่เหมาะกับคุณ',
+        park_cta: 'ดูสถานะบน Map →', toast_copied: 'คัดลอกผลลัพธ์แล้ว ✓',
+        start_h1: 'คุณเป็น<span>นักท่องเที่ยว</span><br>ประเภทไหน?',
+    },
+    en: {
+        nav_status: 'Park Status', nav_about: 'About', nav_news: 'News', nav_quiz: 'Quiz',
+        start_tag: 'WAVS · Quiz',
+        start_sub: 'Answer 12 short questions and discover your travel style, plus the national parks that suit you best.',
+        start_btn: 'Start Quiz', start_note: '~2 minutes · No right or wrong answers',
+        label_agree: 'Agree', label_disagree: 'Disagree',
+        btn_back: 'Back', btn_share: 'Share Result', btn_retake: 'Retake Quiz', btn_map: 'View on Map',
+        result_kicker: 'Your travel personality is',
+        result_score_label: 'Your scores', result_parks_label: 'Parks that match you',
+        park_cta: 'Check Status on Map →', toast_copied: 'Result copied ✓',
+        start_h1: 'What type of <span>traveler</span><br>are you?',
+    },
+};
+
+function toggleLang() {
+    lang = lang === 'th' ? 'en' : 'th';
+    document.getElementById('langBtn').textContent = lang === 'th' ? 'EN' : 'TH';
+    applyI18n();
+    // Re-render current state
+    const qScreen = document.getElementById('screenQ');
+    const rScreen = document.getElementById('screenResult');
+    if (qScreen.classList.contains('active')) renderQuestion();
+    if (rScreen.classList.contains('active')) showResults();
+}
+
+function applyI18n() {
+    const s = I18N[lang];
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (s[key] !== undefined) el.textContent = s[key];
+    });
+    // start h1 has inner HTML span
+    document.getElementById('startH1').innerHTML = s.start_h1;
+}
+
 // ── DATA ───────────────────────────────────────────────────────────
 
 const QUESTIONS = [
-    { text: 'ฉันชอบกิจกรรมที่ท้าทายร่างกายและจิตใจ\nเช่น เดินป่าข้ามคืน ดำน้ำลึก หรือปีนเขา', type: 'world_explorer' },
-    { text: 'ฉันมักสังเกตแสง สี และบรรยากาศของสถานที่\nมากกว่าการเช็กลิสต์สิ่งที่ต้องทำ', type: 'aesthete' },
-    { text: 'ฉันอยากรู้จักวิถีชีวิตท้องถิ่นจริงๆ\nไม่ใช่แค่ถ่ายรูปกับสถานที่ดัง', type: 'meaning_finder' },
-    { text: 'ฉันชอบวางแผนทริปให้ละเอียด\nเพื่อไม่ให้พลาดสิ่งที่อยากทำและอยากเห็น', type: 'memories_collector' },
-    { text: 'ฉันต้องการความเงียบและพื้นที่ว่าง\nมากกว่าความตื่นเต้นในการเดินทาง', type: 'peace_seeker' },
-    { text: 'สำหรับฉัน ทริปที่ดีคือทริปที่ทุกคนในกลุ่มมีความสุข\nมากกว่าทริปที่ฉันคนเดียวได้ทำสิ่งที่อยากทำ', type: 'gentle_traveler' },
-    { text: 'ฉันรู้สึกมีชีวิตชีวาที่สุด\nเมื่ออยู่ในสถานที่ที่ไม่เคยไปมาก่อน', type: 'world_explorer' },
-    { text: 'ฉันเลือกจุดหมายจาก vibe และ aesthetic\nมากกว่าจากรีวิวหรือความคุ้มค่า', type: 'aesthete' },
-    { text: 'ฉันสนใจประวัติศาสตร์และความหมายที่ซ่อนอยู่\nมากกว่าความสวยงามบนพื้นผิว', type: 'meaning_finder' },
-    { text: 'ฉันชอบบันทึกทุก moment ไว้เป็นความทรงจำ\nด้วยรูป วิดีโอ หรือบันทึก', type: 'memories_collector' },
-    { text: 'หลังทริป ฉันอยากรู้สึกสงบและเติมพลัง\nไม่ใช่เหนื่อยจากกิจกรรมที่หนาแน่น', type: 'peace_seeker' },
-    { text: 'ฉันชอบเดินทางกับคนที่รัก\nมากกว่าออกคนเดียวเพื่อผจญภัย', type: 'gentle_traveler' },
+    { th: 'ฉันชอบกิจกรรมที่ท้าทายร่างกายและจิตใจ\nเช่น เดินป่าข้ามคืน ดำน้ำลึก หรือปีนเขา',
+      en: 'I enjoy physically and mentally challenging activities\nlike overnight treks, scuba diving, or rock climbing', type: 'world_explorer' },
+    { th: 'ฉันมักสังเกตแสง สี และบรรยากาศของสถานที่\nมากกว่าการเช็กลิสต์สิ่งที่ต้องทำ',
+      en: 'I tend to notice the light, color, and atmosphere of a place\nrather than checking off a to-do list', type: 'aesthete' },
+    { th: 'ฉันอยากรู้จักวิถีชีวิตท้องถิ่นจริงๆ\nไม่ใช่แค่ถ่ายรูปกับสถานที่ดัง',
+      en: 'I want to truly understand local ways of life\nnot just take photos at famous spots', type: 'meaning_finder' },
+    { th: 'ฉันชอบวางแผนทริปให้ละเอียด\nเพื่อไม่ให้พลาดสิ่งที่อยากทำและอยากเห็น',
+      en: 'I like planning trips in detail\nso I don\'t miss anything I want to do or see', type: 'memories_collector' },
+    { th: 'ฉันต้องการความเงียบและพื้นที่ว่าง\nมากกว่าความตื่นเต้นในการเดินทาง',
+      en: 'I need quiet and open space\nmore than excitement when traveling', type: 'peace_seeker' },
+    { th: 'สำหรับฉัน ทริปที่ดีคือทริปที่ทุกคนในกลุ่มมีความสุข\nมากกว่าทริปที่ฉันคนเดียวได้ทำสิ่งที่อยากทำ',
+      en: 'For me, a great trip is one where everyone in the group is happy\nmore than one where I alone get to do everything I want', type: 'gentle_traveler' },
+    { th: 'ฉันรู้สึกมีชีวิตชีวาที่สุด\nเมื่ออยู่ในสถานที่ที่ไม่เคยไปมาก่อน',
+      en: 'I feel most alive\nwhen I\'m somewhere I\'ve never been before', type: 'world_explorer' },
+    { th: 'ฉันเลือกจุดหมายจาก vibe และ aesthetic\nมากกว่าจากรีวิวหรือความคุ้มค่า',
+      en: 'I choose destinations based on vibe and aesthetic\nmore than reviews or value for money', type: 'aesthete' },
+    { th: 'ฉันสนใจประวัติศาสตร์และความหมายที่ซ่อนอยู่\nมากกว่าความสวยงามบนพื้นผิว',
+      en: 'I\'m more interested in the history and hidden meaning of places\nthan their surface beauty', type: 'meaning_finder' },
+    { th: 'ฉันชอบบันทึกทุก moment ไว้เป็นความทรงจำ\nด้วยรูป วิดีโอ หรือบันทึก',
+      en: 'I love capturing every moment as a memory\nthrough photos, videos, or notes', type: 'memories_collector' },
+    { th: 'หลังทริป ฉันอยากรู้สึกสงบและเติมพลัง\nไม่ใช่เหนื่อยจากกิจกรรมที่หนาแน่น',
+      en: 'After a trip, I want to feel calm and recharged\nnot exhausted from a packed itinerary', type: 'peace_seeker' },
+    { th: 'ฉันชอบเดินทางกับคนที่รัก\nมากกว่าออกคนเดียวเพื่อผจญภัย',
+      en: 'I prefer traveling with loved ones\nrather than going solo for adventure', type: 'gentle_traveler' },
 ];
 
 // Left = green (agree/like), right = red (disagree/dislike)
@@ -465,74 +528,80 @@ const SCALE = [
 const TYPES = {
     world_explorer: {
         img: 'brand_asset/Tourist%20Type/World%20Explorer.png',
-        name: 'World Explorer', sub: 'นักสำรวจโลก',
+        name: 'World Explorer', sub: 'นักสำรวจโลก', sub_en: 'World Explorer',
         color: '#2D6A4F',
         bg: 'linear-gradient(135deg,rgba(45,106,79,.10) 0%,rgba(45,106,79,.25) 100%)',
         desc: 'คุณใช้ชีวิตเต็มที่ที่สุดเมื่ออยู่ในดินแดนที่ไม่คุ้นเคย ยิ่งยากยิ่งดี ยิ่งไกลยิ่งชอบ ความท้าทายคือเชื้อเพลิงของคุณ และทุกทริปคือบทใหม่ที่รอเขียน',
+        desc_en: 'You\'re most alive when in unfamiliar territory — the harder, the better; the further, the more you love it. Challenge is your fuel, and every trip is a new chapter waiting to be written.',
         parks: [
-            { nameTh:'ภูกระดึง', nameEn:'Phu Kradueng National Park', region:'อีสาน', desc:'เดินขึ้น 9 กม. สู่ที่ราบสูงป่าสน — challenge ที่คุ้มค่าทุกก้าว', status:'open' },
-            { nameTh:'แก่งกระจาน', nameEn:'Kaeng Krachan National Park', region:'ภาคตะวันตก', desc:'อุทยานที่ใหญ่ที่สุดในไทย เส้นทาง multi-day trek สำหรับผู้กล้า', status:'partial' },
-            { nameTh:'อุ้มผาง', nameEn:'Umphang Wildlife Sanctuary', region:'ภาคตะวันตก', desc:'การเดินทางสู่ทีลอซูคือการผจญภัยในตัวเอง ถนนคดเคี้ยว 1,219 โค้ง', status:'open' },
+            { nameTh:'ภูกระดึง', nameEn:'Phu Kradueng NP', region:'อีสาน', region_en:'Northeast', desc:'เดินขึ้น 9 กม. สู่ที่ราบสูงป่าสน — challenge ที่คุ้มค่าทุกก้าว', desc_en:'Hike 9 km to a pine-forested plateau — every step earns the view', status:'open' },
+            { nameTh:'แก่งกระจาน', nameEn:'Kaeng Krachan NP', region:'ภาคตะวันตก', region_en:'West', desc:'อุทยานที่ใหญ่ที่สุดในไทย เส้นทาง multi-day trek สำหรับผู้กล้า', desc_en:'Thailand\'s largest national park, with multi-day trek routes for the bold', status:'partial' },
+            { nameTh:'อุ้มผาง', nameEn:'Umphang Wildlife Sanctuary', region:'ภาคตะวันตก', region_en:'West', desc:'การเดินทางสู่ทีลอซูคือการผจญภัยในตัวเอง ถนนคดเคี้ยว 1,219 โค้ง', desc_en:'The road to Thi Lo Su is an adventure in itself — 1,219 winding curves', status:'open' },
         ],
     },
     aesthete: {
         img: 'brand_asset/Tourist%20Type/Aesthete.png',
-        name: 'Aesthete', sub: 'นักล่าสุนทรียะ',
+        name: 'Aesthete', sub: 'นักล่าสุนทรียะ', sub_en: 'Aesthete',
         color: '#C04B7A',
         bg: 'linear-gradient(135deg,rgba(192,75,122,.10) 0%,rgba(192,75,122,.25) 100%)',
         desc: 'คุณมองเห็นความงามที่คนอื่นมองข้าม แสง สี องค์ประกอบ — ทุกอย่างคือภาพ อุทยานสำหรับคุณคือ studio ขนาดใหญ่ที่ธรรมชาติเป็นผู้กำกับแสง',
+        desc_en: 'You see beauty that others overlook — light, color, composition. Everything is a photograph. A national park for you is a vast studio where nature directs the light.',
         parks: [
-            { nameTh:'ดอยอินทนนท์', nameEn:'Doi Inthanon National Park', region:'ภาคเหนือ', desc:'ทุ่งดอกไม้ กุหลาบพันปี ทะเลหมอก — ทุก frame เป็น wallpaper', status:'open' },
-            { nameTh:'ผาแต้ม', nameEn:'Pha Taem National Park', region:'อีสาน', desc:'พระอาทิตย์ขึ้นริมโขง หน้าผาสีส้ม — golden hour ที่สมบูรณ์แบบ', status:'open' },
-            { nameTh:'เขาสก', nameEn:'Khao Sok National Park', region:'ภาคใต้', desc:'ทะเลสาบกลางป่า ภูเขาหินปูน — บรรยากาศที่ไม่เหมือนที่ไหน', status:'open' },
+            { nameTh:'ดอยอินทนนท์', nameEn:'Doi Inthanon NP', region:'ภาคเหนือ', region_en:'North', desc:'ทุ่งดอกไม้ กุหลาบพันปี ทะเลหมอก — ทุก frame เป็น wallpaper', desc_en:'Wildflower meadows, rhododendrons, sea of mist — every frame is a wallpaper', status:'open' },
+            { nameTh:'ผาแต้ม', nameEn:'Pha Taem NP', region:'อีสาน', region_en:'Northeast', desc:'พระอาทิตย์ขึ้นริมโขง หน้าผาสีส้ม — golden hour ที่สมบูรณ์แบบ', desc_en:'Sunrise over the Mekong, orange cliffs — a perfect golden hour', status:'open' },
+            { nameTh:'เขาสก', nameEn:'Khao Sok NP', region:'ภาคใต้', region_en:'South', desc:'ทะเลสาบกลางป่า ภูเขาหินปูน — บรรยากาศที่ไม่เหมือนที่ไหน', desc_en:'Lake in the jungle, limestone mountains — an atmosphere unlike anywhere else', status:'open' },
         ],
     },
     meaning_finder: {
         img: 'brand_asset/Tourist%20Type/Meaning%20Finder.png',
-        name: 'Meaning Finder', sub: 'นักค้นหาความหมาย',
+        name: 'Meaning Finder', sub: 'นักค้นหาความหมาย', sub_en: 'Meaning Finder',
         color: '#7B3FA8',
         bg: 'linear-gradient(135deg,rgba(123,63,168,.10) 0%,rgba(123,63,168,.25) 100%)',
         desc: 'คุณเดินทางเพื่อทำความเข้าใจ ไม่ใช่แค่เพื่อดู ธรรมชาติและวัฒนธรรมสำหรับคุณคือบทสนทนาที่ลึกซึ้ง รอให้คุณฟังอย่างตั้งใจ',
+        desc_en: 'You travel to understand, not just to see. Nature and culture are deep conversations waiting for you to listen carefully.',
         parks: [
-            { nameTh:'ผาแต้ม', nameEn:'Pha Taem National Park', region:'อีสาน', desc:'ภาพเขียนสีโบราณอายุ 3,000 ปี บนหน้าผาริมโขง — ประวัติศาสตร์ที่จับต้องได้', status:'open' },
-            { nameTh:'ภูหินร่องกล้า', nameEn:'Phu Hin Rong Kla National Park', region:'ภาคเหนือ', desc:'อดีตฐานที่มั่น CPT ประวัติศาสตร์การเมืองไทยและธรรมชาติอยู่ร่วมกัน', status:'open' },
-            { nameTh:'ภูพาน', nameEn:'Phu Phan National Park', region:'อีสาน', desc:'ป่าดิบที่มีรอยเท้าประวัติศาสตร์ วัฒนธรรมอีสานที่ยังมีชีวิต', status:'open' },
+            { nameTh:'ผาแต้ม', nameEn:'Pha Taem NP', region:'อีสาน', region_en:'Northeast', desc:'ภาพเขียนสีโบราณอายุ 3,000 ปี บนหน้าผาริมโขง — ประวัติศาสตร์ที่จับต้องได้', desc_en:'3,000-year-old cave paintings on cliffs above the Mekong — history you can touch', status:'open' },
+            { nameTh:'ภูหินร่องกล้า', nameEn:'Phu Hin Rong Kla NP', region:'ภาคเหนือ', region_en:'North', desc:'อดีตฐานที่มั่น CPT ประวัติศาสตร์การเมืองไทยและธรรมชาติอยู่ร่วมกัน', desc_en:'Former CPT stronghold — Thai political history and nature side by side', status:'open' },
+            { nameTh:'ภูพาน', nameEn:'Phu Phan NP', region:'อีสาน', region_en:'Northeast', desc:'ป่าดิบที่มีรอยเท้าประวัติศาสตร์ วัฒนธรรมอีสานที่ยังมีชีวิต', desc_en:'Ancient forest with footprints of history, living Isan culture', status:'open' },
         ],
     },
     memories_collector: {
         img: 'brand_asset/Tourist%20Type/Memories%20Collector.png',
-        name: 'Memories Collector', sub: 'นักเก็บความทรงจำ',
+        name: 'Memories Collector', sub: 'นักเก็บความทรงจำ', sub_en: 'Memories Collector',
         color: '#3B6FD4',
         bg: 'linear-gradient(135deg,rgba(59,111,212,.10) 0%,rgba(59,111,212,.25) 100%)',
         desc: 'คุณเดินทางเพื่อเก็บสะสมช่วงเวลา ทุกทริปคืออัลบั้มที่มีค่า คุณวางแผนอย่างพิถีพิถันเพื่อให้มั่นใจว่าจะไม่มีอะไรหลุดหายไปจากความทรงจำ',
+        desc_en: 'You travel to collect moments. Every trip is a precious album. You plan meticulously to ensure nothing slips through the cracks of memory.',
         parks: [
-            { nameTh:'เขาใหญ่', nameEn:'Khao Yai National Park', region:'ภาคกลาง', desc:'มรดกโลก UNESCO กิจกรรมหลากหลาย ช้างป่า น้ำตก ป่าดิบ — ครบจบในที่เดียว', status:'open' },
-            { nameTh:'ดอยอินทนนท์', nameEn:'Doi Inthanon National Park', region:'ภาคเหนือ', desc:'จุดสูงสุดในไทย ดอกไม้ ทะเลหมอก น้ำตก — moment สวยทุกก้าว', status:'open' },
-            { nameTh:'เอราวัณ', nameEn:'Erawan National Park', region:'ภาคตะวันตก', desc:'น้ำตก 7 ชั้น สีเขียวมรกต ทุกชั้นคือรูปที่อยากถ่าย', status:'open' },
+            { nameTh:'เขาใหญ่', nameEn:'Khao Yai NP', region:'ภาคกลาง', region_en:'Central', desc:'มรดกโลก UNESCO กิจกรรมหลากหลาย ช้างป่า น้ำตก ป่าดิบ — ครบจบในที่เดียว', desc_en:'UNESCO World Heritage, wild elephants, waterfalls, jungle — all in one place', status:'open' },
+            { nameTh:'ดอยอินทนนท์', nameEn:'Doi Inthanon NP', region:'ภาคเหนือ', region_en:'North', desc:'จุดสูงสุดในไทย ดอกไม้ ทะเลหมอก น้ำตก — moment สวยทุกก้าว', desc_en:'Thailand\'s highest peak, flowers, mist, waterfalls — beautiful at every step', status:'open' },
+            { nameTh:'เอราวัณ', nameEn:'Erawan NP', region:'ภาคตะวันตก', region_en:'West', desc:'น้ำตก 7 ชั้น สีเขียวมรกต ทุกชั้นคือรูปที่อยากถ่าย', desc_en:'7-tier emerald waterfall — each tier is a photo you\'ll want to take', status:'open' },
         ],
     },
     peace_seeker: {
         img: 'brand_asset/Tourist%20Type/Peace%20Seeker.png',
-        name: 'Peace Seeker', sub: 'นักแสวงหาความสงบ',
+        name: 'Peace Seeker', sub: 'นักแสวงหาความสงบ', sub_en: 'Peace Seeker',
         color: '#4A8FA8',
         bg: 'linear-gradient(135deg,rgba(74,143,168,.10) 0%,rgba(74,143,168,.25) 100%)',
         desc: 'คุณมาอุทยานเพื่อ recharge ไม่ใช่เพื่อ perform เสียงน้ำ ลมเย็น และความเงียบที่ไม่มีการแจ้งเตือนโทรศัพท์ คือสิ่งที่คุณตามหา',
+        desc_en: 'You come to national parks to recharge, not to perform. The sound of water, cool breeze, and silence without phone notifications — that\'s what you seek.',
         parks: [
-            { nameTh:'หมู่เกาะสุรินทร์', nameEn:'Mu Ko Surin National Park', region:'ภาคใต้ (อันดามัน)', desc:'ห่างจากฝั่ง เงียบ ปะการังสวย น้ำใส — ความสงบที่หายากในโลก', status:'partial' },
-            { nameTh:'ออบขาน', nameEn:'Ob Khan National Park', region:'ภาคเหนือ', desc:'หุบเขาน้อยๆ ริมลำน้ำ อากาศเย็น เงียบสงบ เหมาะนั่งฟังเสียงป่า', status:'open' },
-            { nameTh:'เขาสก', nameEn:'Khao Sok National Park', region:'ภาคใต้', desc:'เรือนแพกลางทะเลสาบ ตื่นมาเจอหมอกและเสียงนก — สงบจนลืมเวลา', status:'open' },
+            { nameTh:'หมู่เกาะสุรินทร์', nameEn:'Mu Ko Surin NP', region:'ภาคใต้ (อันดามัน)', region_en:'South (Andaman)', desc:'ห่างจากฝั่ง เงียบ ปะการังสวย น้ำใส — ความสงบที่หายากในโลก', desc_en:'Far from shore, quiet, stunning coral, crystal water — rare peace in the world', status:'partial' },
+            { nameTh:'ออบขาน', nameEn:'Ob Khan NP', region:'ภาคเหนือ', region_en:'North', desc:'หุบเขาน้อยๆ ริมลำน้ำ อากาศเย็น เงียบสงบ เหมาะนั่งฟังเสียงป่า', desc_en:'A small valley by a stream, cool air, serene — perfect for listening to the forest', status:'open' },
+            { nameTh:'เขาสก', nameEn:'Khao Sok NP', region:'ภาคใต้', region_en:'South', desc:'เรือนแพกลางทะเลสาบ ตื่นมาเจอหมอกและเสียงนก — สงบจนลืมเวลา', desc_en:'Floating raft house on the lake, wake up to mist and birdsong — so peaceful time fades', status:'open' },
         ],
     },
     gentle_traveler: {
         img: 'brand_asset/Tourist%20Type/Gentle%20Traveler.png',
-        name: 'Gentle Traveler', sub: 'นักเดินทางใจดี',
+        name: 'Gentle Traveler', sub: 'นักเดินทางใจดี', sub_en: 'Gentle Traveler',
         color: '#C17A2B',
         bg: 'linear-gradient(135deg,rgba(193,122,43,.10) 0%,rgba(193,122,43,.25) 100%)',
         desc: 'คุณเดินทางเพื่อแบ่งปัน ความสุขของคนรอบข้างคือความสุขของคุณ ทริปที่ดีไม่ใช่ทริปที่คุณได้ทำทุกอย่างที่อยากทำ แต่คือทริปที่ทุกคนยิ้มได้เมื่อกลับบ้าน',
+        desc_en: 'You travel to share. The happiness of those around you is your happiness. A great trip isn\'t one where you did everything you wanted — it\'s one where everyone comes home smiling.',
         parks: [
-            { nameTh:'เอราวัณ', nameEn:'Erawan National Park', region:'ภาคตะวันตก', desc:'ว่ายน้ำ ปิกนิก เดินเบาๆ — เหมาะทุกวัย ทุกกลุ่ม', status:'open' },
-            { nameTh:'หมู่เกาะสิมิลัน', nameEn:'Mu Ko Similan National Park', region:'ภาคใต้ (อันดามัน)', desc:'ทะเลสวย ดำน้ำตื้น ชายหาดสะอาด — ทุกคนในกลุ่มมีความสุข', status:'partial' },
-            { nameTh:'เขาใหญ่', nameEn:'Khao Yai National Park', region:'ภาคกลาง', desc:'ที่พักหลากหลาย กิจกรรมครบ เดินทางง่าย เหมาะทริปครอบครัว', status:'open' },
+            { nameTh:'เอราวัณ', nameEn:'Erawan NP', region:'ภาคตะวันตก', region_en:'West', desc:'ว่ายน้ำ ปิกนิก เดินเบาๆ — เหมาะทุกวัย ทุกกลุ่ม', desc_en:'Swimming, picnics, easy walks — suitable for all ages and groups', status:'open' },
+            { nameTh:'หมู่เกาะสิมิลัน', nameEn:'Mu Ko Similan NP', region:'ภาคใต้ (อันดามัน)', region_en:'South (Andaman)', desc:'ทะเลสวย ดำน้ำตื้น ชายหาดสะอาด — ทุกคนในกลุ่มมีความสุข', desc_en:'Beautiful sea, snorkeling, clean beaches — everyone in the group will be happy', status:'partial' },
+            { nameTh:'เขาใหญ่', nameEn:'Khao Yai NP', region:'ภาคกลาง', region_en:'Central', desc:'ที่พักหลากหลาย กิจกรรมครบ เดินทางง่าย เหมาะทริปครอบครัว', desc_en:'Varied accommodation, full activities, easy to reach — ideal for family trips', status:'open' },
         ],
     },
 };
@@ -570,7 +639,8 @@ function renderQuestion() {
     // Question text (respect newlines)
     const el = document.getElementById('qText');
     el.innerHTML = '';
-    q.text.split('\n').forEach((line, i) => {
+    const qText = lang === 'en' ? q.en : q.th;
+    qText.split('\n').forEach((line, i) => {
         if (i > 0) el.appendChild(document.createElement('br'));
         el.appendChild(document.createTextNode(line));
     });
@@ -651,13 +721,14 @@ function showResults() {
     const imgEl = document.getElementById('rImg');
     imgEl.src = t.img;
     imgEl.alt = t.name;
+    const t2 = isHybrid ? TYPES[sorted[1][0]] : null;
     document.getElementById('rName').textContent = isHybrid
-        ? `${t.name} + ${TYPES[sorted[1][0]].name}`
+        ? `${t.name} + ${t2.name}`
         : t.name;
     document.getElementById('rSub').textContent = isHybrid
-        ? `${t.sub} / ${TYPES[sorted[1][0]].sub}`
-        : t.sub;
-    document.getElementById('rDesc').textContent = t.desc;
+        ? `${lang === 'en' ? t.sub_en : t.sub} / ${lang === 'en' ? t2.sub_en : t2.sub}`
+        : (lang === 'en' ? t.sub_en : t.sub);
+    document.getElementById('rDesc').textContent = lang === 'en' ? t.desc_en : t.desc;
 
     const card = document.getElementById('resultCard');
     card.style.background = t.bg;
@@ -685,12 +756,13 @@ function showResults() {
 
     // Park grid
     const statusColor = { open:'#0F6C39', partial:'#D4820E', closed:'#E94E3B' };
+    const s = I18N[lang];
     document.getElementById('parkGrid').innerHTML = t.parks.map(p => `
         <a href="index.html#parks-section" class="park-card">
             <div class="park-top">
                 <div>
-                    <div class="park-name-th">${p.nameTh}</div>
-                    <div class="park-name-en">${p.nameEn}</div>
+                    <div class="park-name-th">${lang === 'en' ? p.nameEn : p.nameTh}</div>
+                    <div class="park-name-en">${lang === 'en' ? p.nameTh : p.nameEn}</div>
                 </div>
                 <div class="park-dot" style="background:${statusColor[p.status]}"></div>
             </div>
@@ -698,10 +770,10 @@ function showResults() {
                 <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
                     <path d="M5 .8C3.3.8 2 2.1 2 3.8c0 2.3 3 5.5 3 5.5s3-3.2 3-5.5C8 2.1 6.7.8 5 .8z" stroke="currentColor" stroke-width="1.1" fill="none"/>
                 </svg>
-                ${p.region}
+                ${lang === 'en' ? p.region_en : p.region}
             </div>
-            <div class="park-desc">${p.desc}</div>
-            <div class="park-cta">ดูสถานะบน Map →</div>
+            <div class="park-desc">${lang === 'en' ? p.desc_en : p.desc}</div>
+            <div class="park-cta">${s.park_cta}</div>
         </a>
     `).join('');
 
@@ -722,8 +794,8 @@ function showResults() {
 
     // Store for share
     window._quizResult = {
-        name: isHybrid ? `${t.name} + ${TYPES[sorted[1][0]].name}` : t.name,
-        sub: isHybrid ? `${t.sub} / ${TYPES[sorted[1][0]].sub}` : t.sub,
+        name: isHybrid ? `${t.name} + ${t2.name}` : t.name,
+        sub: isHybrid ? `${t.sub} / ${t2.sub}` : t.sub,
     };
 }
 
@@ -742,15 +814,14 @@ function shareResult() {
     if (!r) return;
     const text = `ฉันคือ "${r.name}" (${r.sub}) จากแบบทดสอบ WAVS 🌿\nค้นพบสไตล์การท่องเที่ยวของคุณ → ${location.href}`;
     if (navigator.clipboard) {
-        navigator.clipboard.writeText(text).then(() => showToast('คัดลอกผลลัพธ์แล้ว ✓'));
+        navigator.clipboard.writeText(text).then(() => showToast(I18N[lang].toast_copied));
     } else {
-        // fallback
         const ta = document.createElement('textarea');
         ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
         document.body.appendChild(ta); ta.select();
         document.execCommand('copy');
         document.body.removeChild(ta);
-        showToast('คัดลอกผลลัพธ์แล้ว ✓');
+        showToast(I18N[lang].toast_copied);
     }
 }
 
