@@ -156,10 +156,18 @@
         }
 
         /* Likert color scale */
+        .likert-wrap { margin-bottom: 44px; }
         .likert-options {
             display: flex; gap: 10px; justify-content: center;
-            margin-bottom: 44px;
+            margin-bottom: 6px;
         }
+        .likert-labels {
+            display: flex; justify-content: space-between;
+            padding: 0 4px; font-size: 11px; font-weight: 600;
+            letter-spacing: .04em;
+        }
+        .likert-labels span:first-child { color: #27AE60; }
+        .likert-labels span:last-child  { color: #E84040; }
         .likert-btn {
             width: 52px; height: 52px; border-radius: 50%;
             border: 3px solid transparent;
@@ -359,8 +367,14 @@
     <div class="screen" id="screenQ">
         <div class="q-wrap">
             <div class="q-text" id="qText"></div>
-            <div class="likert-options" id="likertOptions">
-                <!-- rendered by JS -->
+            <div class="likert-wrap">
+                <div class="likert-options" id="likertOptions">
+                    <!-- rendered by JS -->
+                </div>
+                <div class="likert-labels">
+                    <span>ชอบ</span>
+                    <span>ไม่ชอบ</span>
+                </div>
             </div>
             <div class="q-nav">
                 <button class="btn-back" id="btnBack" onclick="prevQ()">
