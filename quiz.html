@@ -68,6 +68,14 @@
         }
         .nav-links a:hover { background: rgba(0,0,0,0.05); color: var(--dark); }
         .nav-links a.active { color: var(--dark); font-weight: 600; }
+        .lang-btn {
+            font-family: inherit; font-size: 12px; font-weight: 700;
+            padding: 6px 13px; border-radius: 8px; border: 1.5px solid rgba(0,0,0,0.12);
+            background: transparent; color: var(--muted); cursor: pointer;
+            letter-spacing: .04em; transition: background .15s, color .15s, border-color .15s;
+            white-space: nowrap;
+        }
+        .lang-btn:hover { background: rgba(0,0,0,0.05); color: var(--dark); border-color: rgba(0,0,0,0.2); }
         @media (max-width: 768px) {
             .nav-inner { padding: 0 20px; height: 58px; }
             .nav-logo img { height: 52px; }
@@ -323,11 +331,12 @@
             <img src="brand_asset/WAVS Logo.png" alt="WAVS">
         </a>
         <div class="nav-links">
-            <a href="index.html#parks-section">สถานะอุทยาน</a>
-            <a href="index.html#about">เกี่ยวกับ</a>
-            <a href="index.html#news-section">ข่าวสาร</a>
-            <a href="quiz.html" class="active">แบบทดสอบ</a>
+            <a href="index.html#parks-section" data-i18n="nav_status">สถานะอุทยาน</a>
+            <a href="index.html#about" data-i18n="nav_about">เกี่ยวกับ</a>
+            <a href="index.html#news-section" data-i18n="nav_news">ข่าวสาร</a>
+            <a href="quiz.html" class="active" data-i18n="nav_quiz">แบบทดสอบ</a>
         </div>
+        <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
     </div>
 </nav>
 
@@ -342,16 +351,16 @@
     <!-- START SCREEN -->
     <div class="screen active" id="screenStart">
         <div class="start-wrap fade-up">
-            <span class="start-tag">WAVS · แบบทดสอบ</span>
-            <h1 class="start-h1">คุณเป็น<span>นักท่องเที่ยว</span><br>ประเภทไหน?</h1>
-            <p class="start-sub">ตอบ 12 คำถามสั้นๆ แล้วค้นพบสไตล์การท่องเที่ยวของตัวเอง พร้อมอุทยานแห่งชาติที่เหมาะกับคุณ</p>
+            <span class="start-tag" data-i18n="start_tag">WAVS · แบบทดสอบ</span>
+            <h1 class="start-h1" id="startH1">คุณเป็น<span>นักท่องเที่ยว</span><br>ประเภทไหน?</h1>
+            <p class="start-sub" data-i18n="start_sub">ตอบ 12 คำถามสั้นๆ แล้วค้นพบสไตล์การท่องเที่ยวของตัวเอง พร้อมอุทยานแห่งชาติที่เหมาะกับคุณ</p>
             <button class="btn-cta" onclick="startQuiz()">
-                เริ่มทดสอบ
+                <span data-i18n="start_btn">เริ่มทดสอบ</span>
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                     <path d="M3 8h10M8 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </button>
-            <p class="start-note">ใช้เวลา ~2 นาที · ไม่มีคำตอบผิดหรือถูก</p>
+            <p class="start-note" data-i18n="start_note">ใช้เวลา ~2 นาที · ไม่มีคำตอบผิดหรือถูก</p>
         </div>
     </div>
 
@@ -364,8 +373,8 @@
                     <!-- rendered by JS -->
                 </div>
                 <div class="likert-labels">
-                    <span>ชอบ</span>
-                    <span>ไม่ชอบ</span>
+                    <span data-i18n="label_agree">ชอบ</span>
+                    <span data-i18n="label_disagree">ไม่ชอบ</span>
                 </div>
             </div>
             <div class="q-nav">
