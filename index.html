@@ -77,6 +77,7 @@
             --bg:           #FBFAF2;
             --surface:      #ffffff;
             --nav-bg:       rgba(251,250,242,0.92);
+            --glass:        rgba(255,255,255,0.94);
         }
         [data-theme="dark"] {
             --nature:       #3DB870;
@@ -89,13 +90,14 @@
             --bg:           #141412;
             --surface:      #1e1d1b;
             --nav-bg:       rgba(20,20,18,0.92);
+            --glass:        rgba(30,29,27,0.94);
         }
 
         html { scroll-behavior: smooth; }
 
         body {
             font-family: 'Cloud Soft', 'Sarabun', sans-serif;
-            background: #FBFAF2;
+            background: var(--bg);
             color: var(--text);
             overflow-x: hidden;
         }
@@ -106,7 +108,7 @@
             top: 0;
             z-index: 1000;
             width: 100%;
-            background: rgba(251,250,242,0.95);
+            background: var(--nav-bg);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border-bottom: none;
@@ -182,6 +184,18 @@
             color: var(--dark);
             border-color: var(--dark);
         }
+        .dark-toggle {
+            font-size: 15px;
+            background: transparent;
+            border: 1.5px solid rgba(0,0,0,0.12);
+            border-radius: 6px;
+            padding: 4px 8px;
+            cursor: pointer;
+            transition: border-color 0.15s;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+        .dark-toggle:hover { border-color: var(--dark); }
 
         /* ── NAV MOBILE TOGGLE ── */
         .nav-menu-btn {
@@ -230,7 +244,7 @@
             top: 0; left: 0; bottom: 0;
             width: 75%;
             max-width: 300px;
-            background: rgba(255,255,255,0.97);
+            background: var(--nav-bg);
             backdrop-filter: blur(16px);
             z-index: 1101;
             display: flex;
@@ -278,7 +292,7 @@
             width: 100%;
             text-align: center;
             position: relative;
-            background: #FBFAF2;
+            background: var(--bg);
         }
 
         .hero-glow {
@@ -321,7 +335,7 @@
             bottom: 16px;
             left: 16px;
             z-index: 10;
-            background: rgba(255,255,255,0.94);
+            background: var(--glass);
             backdrop-filter: blur(8px);
             border-radius: 12px;
             padding: 10px 14px;
@@ -355,7 +369,7 @@
             position: fixed;
             top: 0; right: 0; bottom: 0;
             width: min(480px, 100vw);
-            background: #fff;
+            background: var(--surface);
             z-index: 3001;
             display: flex;
             flex-direction: column;
@@ -569,7 +583,7 @@
             padding: 12px 6px 10px;
             border-radius: 12px;
             border: 1.5px solid rgba(0,0,0,0.07);
-            background: white;
+            background: var(--surface);
             cursor: pointer;
             transition: border-color 0.18s, background 0.18s, transform 0.12s;
             font-family: 'Cloud Soft','Sarabun',sans-serif;
@@ -672,7 +686,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            background: white;
+            background: var(--surface);
             border: 1.5px solid var(--line);
             border-radius: 100px;
             padding: 13px 22px;
@@ -700,7 +714,7 @@
             position: absolute;
             top: calc(100% + 8px);
             left: 0; right: 0;
-            background: white;
+            background: var(--surface);
             border-radius: 18px;
             box-shadow: 0 12px 40px rgba(0,0,0,0.12);
             overflow: hidden;
@@ -791,7 +805,7 @@
             border: 1px solid var(--line);
             border-radius: 18px;
             overflow: hidden;
-            background: white;
+            background: var(--surface);
             width: fit-content;
         }
 
@@ -1047,7 +1061,7 @@
         }
 
         .about-card {
-            background: white;
+            background: var(--surface);
             border-radius: 20px;
             padding: 32px 28px;
             border: 1px solid var(--line);
@@ -1124,7 +1138,7 @@
             padding: 8px 20px;
             border-radius: 100px;
             border: 1.5px solid var(--line);
-            background: white;
+            background: var(--surface);
             display: inline-flex; align-items: center; gap: 7px;
             font-size: 13px;
             font-weight: 500;
@@ -1149,9 +1163,18 @@
         .parks-map-container {
             border-radius: 24px;
             overflow: hidden;
-            border: 1px solid var(--line);
             box-shadow: 0 16px 56px rgba(0,0,0,0.1);
             position: relative;
+            isolation: isolate;
+        }
+        .parks-map-container::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            border: 1px solid var(--line);
+            pointer-events: none;
+            z-index: 9999;
         }
 
         /* ── MAP ONBOARDING HINT ── */
@@ -1161,7 +1184,7 @@
             left: 50%;
             transform: translateX(-50%);
             z-index: 999;
-            background: rgba(255,255,255,0.92);
+            background: var(--glass);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             border: 1px solid rgba(0,0,0,0.08);
@@ -1201,7 +1224,7 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            background: rgba(255,255,255,0.95);
+            background: var(--glass);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(0,0,0,0.1);
@@ -1224,7 +1247,7 @@
             bottom: calc(100% + 8px);
             top: auto;
             left: 0; right: 0;
-            background: white;
+            background: var(--surface);
             border-radius: 16px;
             box-shadow: 0 4px 24px rgba(0,0,0,0.15);
             overflow: hidden;
@@ -1260,7 +1283,7 @@
 
         .map-ctrl-btn {
             display: flex;
-            background: rgba(255,255,255,0.95);
+            background: var(--glass);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             border: 1px solid rgba(0,0,0,0.1);
@@ -1291,7 +1314,7 @@
             display: flex;
             flex-direction: row;
             gap: 0;
-            background: rgba(255,255,255,0.95);
+            background: var(--glass);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             border: 1px solid rgba(0,0,0,0.1);
@@ -1332,7 +1355,7 @@
             position: absolute;
             top: 0; left: 0; bottom: 0;
             width: 300px;
-            background: rgba(255,255,255,0.97);
+            background: var(--glass);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             z-index: 2010;
@@ -1616,7 +1639,7 @@
 
         .news-card {
             display: block;
-            background: white;
+            background: var(--surface);
             border-radius: 20px;
             padding: 28px;
             border: 1px solid var(--line);
@@ -1868,6 +1891,7 @@
             <a href="quiz.html"      data-i18n="nav_quiz">แบบทดสอบ</a>
             <a href="#" class="nav-cta" data-i18n="nav_research">งานวิจัย</a>
         </div>
+        <button id="darkToggle" class="dark-toggle" aria-label="Toggle dark mode">🌙</button>
         <button id="langToggle" class="lang-toggle">EN</button>
         <button class="nav-menu-btn" id="navMenuBtn" aria-label="เปิดเมนู">
             <svg class="nav-menu-icon" viewBox="0 0 32 32" width="24" height="24"
@@ -3961,6 +3985,22 @@ function applyLang(lang) {
 document.getElementById('langToggle').addEventListener('click', () => {
     applyLang(currentLang === 'th' ? 'en' : 'th');
 });
+
+// ── DARK MODE ────────────────────────────────────────────────────
+(function() {
+    const btn = document.getElementById('darkToggle');
+    function applyDark(dark) {
+        document.documentElement.setAttribute('data-theme', dark ? 'dark' : '');
+        btn.textContent = dark ? '☀️' : '🌙';
+        localStorage.setItem('wavs_dark', dark ? '1' : '');
+        // sync map tile style
+        try { setMapStyle(dark ? 'dark' : 'light'); } catch(e) {}
+    }
+    if (localStorage.getItem('wavs_dark') === '1') applyDark(true);
+    btn.addEventListener('click', () => {
+        applyDark(document.documentElement.getAttribute('data-theme') !== 'dark');
+    });
+})();
 
 // ── MOBILE NAV SHEET ─────────────────────────────────────────────
 const navMenuBtn  = document.getElementById('navMenuBtn');
